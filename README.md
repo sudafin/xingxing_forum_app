@@ -1,4 +1,4 @@
-# electricity_bill_app
+# xingxing_forum_app
 
 A new Flutter project.
 
