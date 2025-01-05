@@ -12,7 +12,7 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (pageType.name == 'message') {
+    if (pageType==PageType.message) {
       return AppBar(
         leading: IconButton(
           onPressed: () {
@@ -38,7 +38,7 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             onPressed: () {
               //跳转添加好友页面
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => AddFriendPage()));
+              Navigator.pushNamed(context, '/add_friend');
             },
             icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
             alignment: Alignment.centerRight,
@@ -65,32 +65,17 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
         ),
         leadingWidth: 60,
         //如果是群组页面index为1，则显示搜索框
-        title: (pageType.name == 'group') ? SearchBar() : null,
+        title: (pageType==PageType.group) ? SearchBar() : null,
         //听歌图标和邮件图标太靠右
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 0),
             child: IconButton(
               onPressed: () {
-                //跳转日历页面
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => CalendarPage()));
+                Navigator.pushNamed(context, '/task');
               },
               icon: Icon(
                 Icons.calendar_month_outlined,
-                color: Colors.blue,
-                size: 30,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 0),
-            child: IconButton(
-              onPressed: () {
-                //跳转通知页面
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
-              },
-              icon: Icon(
-                Icons.notifications,
                 color: Colors.blue,
                 size: 30,
               ),
@@ -108,12 +93,11 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+        Navigator.pushNamed(context, '/search');
       },
       child: Container(
-        padding: EdgeInsets.only(left: 10),
-        width: 280,
-        height: 36,
+        width: 300,
+        height: 40,
         decoration: BoxDecoration(
           color: Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(5),

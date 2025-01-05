@@ -9,7 +9,9 @@ import '../pages/menu/drafts/drafts_page.dart';
 import '../pages/menu/favorite/favorite_page.dart';
 import '../pages/menu/history/history_page.dart';
 import '../pages/menu/settings/settings_page.dart';
-
+import '../pages/menu/task/task_page.dart';
+import '../pages/search/search_page.dart';
+import '../pages/message/add_friend_page.dart';
 
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
@@ -23,5 +25,8 @@ class RouterConstant{
   '/favorite':(context) => const FavoritePage(),
   '/history':(context) => const HistoryPage(),
   '/settings':(context) => const SettingsPage(),
+  '/task':(context) => const TaskPage(),
+  '/search':(context) => const SearchPage(),
+  '/add_friend':(context) => const AddFriendPage(),
   };
 }

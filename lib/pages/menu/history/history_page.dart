@@ -7,6 +7,9 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('浏览历史')),
+      body: Center(
+        child: Text('浏览历史'),
+      ),
     );
   }
 }
