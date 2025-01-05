@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../enum/page_type_enum.dart';
-import '../../widgets/appbar_widget.dart';
-import '../../widgets/menu_drawer.dart';
+import '../main/appbar_widget.dart';
+import '../main/menu_drawer.dart';
 class GroupPage extends StatelessWidget {
   const GroupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GroupPageBody();
+    return Scaffold(
+      appBar: AppBarWidgetHome(pageType: PageType.group),
+      drawer: MenuDrawer(),
+      body: GroupPageBody(),
+    );
   }
 }
 class GroupPageBody extends StatefulWidget {

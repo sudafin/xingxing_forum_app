@@ -1,6 +1,5 @@
 // 页面类型枚举
 enum PageType implements Comparable<PageType> {
-  main(id: 0, name: "初始"),
   home(id: 1, name: "首页"),
   group(id: 2, name: "群组"),
   message(id: 3, name: "消息"),

@@ -1,17 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../store/store_viewmodel.dart';
-import '../../pages/main/main.dart';
+import '../../../store/store_viewmodel.dart';
+import '../../../enum/page_type_enum.dart';
 
 class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarWidgetHome({super.key});
+  final PageType pageType;
+  const AppBarWidgetHome({super.key, required this.pageType});
 
   @override
   Size get preferredSize => Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
-    if (MainPageState.currentPageIndex != 2) {
+    if (pageType.name == 'message') {
+      return AppBar(
+        leading: IconButton(
+          onPressed: () {
+            //打开菜单栏
+            Scaffold.of(context).openDrawer();
+          },
+          icon: Icon(Icons.menu, color: Colors.blue, size: 30),
+          alignment: Alignment.centerLeft,
+        ),
+        leadingWidth: 60,
+        title: Text(
+          '消息',
+          style: TextStyle(
+            color: context.watch<StoreViewModel>().theme == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+        actions: [
+          // 添加好友
+          IconButton(
+            onPressed: () {
+              //跳转添加好友页面
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => AddFriendPage()));
+            },
+            icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
+            alignment: Alignment.centerRight,
+          ),
+        ],
+      );
+    } else {
       return AppBar(
         //加上border
         shape: Border(
@@ -31,7 +65,7 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
         ),
         leadingWidth: 60,
         //如果是群组页面index为1，则显示搜索框
-        title: (MainPageState.currentPageIndex == 1) ? SearchBar() : null,
+        title: (pageType.name == 'group') ? SearchBar() : null,
         //听歌图标和邮件图标太靠右
         actions: [
           Padding(
@@ -61,37 +95,6 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
                 size: 30,
               ),
             ),
-          ),
-        ],
-      );
-    } else {
-      return AppBar(
-        leading: IconButton(
-          onPressed: () {
-            //打开菜单栏
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(Icons.menu, color: Colors.blue, size: 30),
-          alignment: Alignment.centerLeft,
-        ),
-        leadingWidth: 60,
-        title: Text(
-          '消息',
-          style: TextStyle(
-            color: context.watch<StoreViewModel>().theme == Brightness.dark ? Colors.white : Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w100,
-          ),
-        ),
-        actions: [
-          // 添加好友
-          IconButton(
-            onPressed: () {
-              //跳转添加好友页面
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => AddFriendPage()));
-            },
-            icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
-            alignment: Alignment.centerRight,
           ),
         ],
       );
