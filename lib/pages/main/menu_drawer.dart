@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/store/store_viewmodel.dart';
-import 'package:xingxing_forum_app/pages/main/menu_table_data.dart';
-
+import 'package:xingxing_forum_app/pages/main/menu_table_data.dart';  
+import 'package:xingxing_forum_app/pages/main/share_widget.dart';
 
 @immutable
 /// 菜单栏
@@ -74,7 +74,6 @@ class MenuDrawerState extends State<MenuDrawer> {
                 title: Text(data.title, style: TextStyle(fontWeight: FontWeight.w400)), // 设置字体为粗体
                 onTap: () {
                   // 处理菜单项点击
-                  Navigator.pop(context); // 关闭抽屉
                   // 导航逻辑
                   navigatorIndex(data.index,context);
                 },
@@ -156,29 +155,26 @@ class MenuDrawerState extends State<MenuDrawer> {
 void navigatorIndex(int index,BuildContext context){
   if (index == 0) {
     Navigator.pushNamed(context, '/favorite');
+    Navigator.pop(context);
   }else if(index == 1){
     Navigator.pushNamed(context, '/history');
+    Navigator.pop(context);
   }else if(index == 2){
     Navigator.pushNamed(context, '/settings');
+    Navigator.pop(context);
   }else if(index == 3){
     Navigator.pushNamed(context, '/drafts');
   }else if(index == 5){
-    //TODO分享逻辑先设个弹窗
-    showDialog(context: context, builder: (context) => AlertDialog(
-      title: Text('分享'),
-      content: Text('分享到微信'),
-      //确认和取消
-      actions: [
-        TextButton(onPressed: (){
-          Navigator.pop(context);
-        }, child: Text('取消')),
-        TextButton(onPressed: (){
-          Navigator.pop(context);
-        }, child: Text('确认')),
-      ],
-    ));
+  //设置底部弹窗
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ShareWidget();
+      },
+    );
   }else if(index == 6){
     Navigator.pushNamed(context, '/about');
+    Navigator.pop(context);
   }
 }
 

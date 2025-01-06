@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/utils/size_fit.dart';
 import 'init_item.dart';
 
 
@@ -13,6 +14,7 @@ class MainPageState extends State<MainPage> {
 static int currentPageIndex = 0;  
   @override
   Widget build(BuildContext context) {
+    SizeFit.initialize(context);
     return Scaffold(
       body: IndexedStack(
         index: currentPageIndex,

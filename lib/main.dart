@@ -33,8 +33,11 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
+        //appbar字体颜色
           titleTextStyle: TextStyle(
-            color: Colors.white,
+            color: context.watch<StoreViewModel>().theme == Brightness.light
+                ? Color.fromARGB(243, 74, 74, 74)
+                : Color(0xFFFFFFFF),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -44,9 +47,14 @@ class _MyAppState extends State<MyApp> {
         ),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
+        //组件颜色设置
         colorScheme: ColorScheme.light(
           primary: Colors.teal, // 主颜色，用于滑块
           surface: Colors.white, // 卡片颜色
+          //显示文本字体颜色
+          onSurface: context.watch<StoreViewModel>().theme == Brightness.light
+              ? Colors.black
+              : Color(0xFFF3F3F3),
         ),
         scaffoldBackgroundColor: Color(0xFFFFFFFF),
         inputDecorationTheme: InputDecorationTheme(

@@ -14,6 +14,8 @@ class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     if (pageType==PageType.message) {
       return MessageAppBar();
+    } else if (pageType==PageType.home) {
+      return HomeAppBar();
     } else {
       return CommonAppBar(pageType: pageType);
     }
@@ -84,13 +86,6 @@ class MessageAppBar extends StatelessWidget {
         ),
         title: Text(
           '消息',
-          style: TextStyle(
-            color: context.watch<StoreViewModel>().theme == Brightness.dark
-                ? Colors.white
-                : Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w100,
-          ),
         ),
         actions: [
           // 添加好友
@@ -135,6 +130,50 @@ class CommonAppBar extends StatelessWidget {
         ),
         //如果是群组页面index为1，则显示搜索框
         title: (pageType==PageType.group) ? SearchBar() : null,
+        //听歌图标和邮件图标太靠右
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/task');
+              },
+              icon: Icon(
+                Icons.calendar_month_outlined,
+                color: Colors.blue,
+                size: 29,
+              ),
+            ),
+          ),
+        ],
+      );
+  }
+}
+
+class HomeAppBar extends StatelessWidget {
+  const HomeAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  AppBar(
+        //加上border
+        shape: Border(
+          bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
+        ),
+        //点击推拉出菜单栏
+        leading: IconButton(
+          onPressed: () {
+            //打开菜单栏
+            Scaffold.of(context).openDrawer();
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.blue,
+            size: 34,
+          ),
+        ),
+        //如果是群组页面index为1，则显示搜索框
+        title: Text('首页'),
         //听歌图标和邮件图标太靠右
         actions: [
           Padding(

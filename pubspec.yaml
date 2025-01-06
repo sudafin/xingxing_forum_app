@@ -51,6 +51,9 @@ dependencies:
   permission_handler: ^10.2.0
   permission_handler_android: ^10.3.6
   package_info_plus: ^4.0.0  # 用于获取应用版本号
+  font_awesome_flutter: ^10.5.0  # 用于获取常见的图标
+  clipboard: ^0.1.3  # 用于复制粘贴链接
+  android_intent_plus: ^4.0.0 # 用于跳转目标程序
 
 dev_dependencies:
   flutter_test:
