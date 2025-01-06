@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/main/main.dart';
+import '../pages/main/main_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/message/message_page.dart';
 import '../pages/group/group_page.dart';
