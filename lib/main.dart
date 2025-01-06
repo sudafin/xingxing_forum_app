@@ -33,6 +33,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
+        color: context.watch<StoreViewModel>().theme == Brightness.light
+                ?  Color(0xFFFFFFFF):Color.fromARGB(243, 74, 74, 74),
         //appbar字体颜色
           titleTextStyle: TextStyle(
             color: context.watch<StoreViewModel>().theme == Brightness.light
@@ -40,6 +42,7 @@ class _MyAppState extends State<MyApp> {
                 : Color(0xFFFFFFFF),
             fontSize: 20,
             fontWeight: FontWeight.bold,
+          
           ),
           centerTitle: true,
           elevation: 0,

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../store/store_viewmodel.dart';
 import '../../../enum/page_type_enum.dart';
-
-class AppBarWidgetHome extends StatelessWidget implements PreferredSizeWidget {
+import '../../../model/event_model.dart';
+import 'package:event_bus/event_bus.dart';
+final eventBus = EventBus();
+class AppBarWidgetHome extends StatefulWidget implements PreferredSizeWidget {
   final PageType pageType;
   const AppBarWidgetHome({super.key, required this.pageType});
-
   @override
-  Size get preferredSize => Size.fromHeight(60);
+  Size get preferredSize => Size.fromHeight(pageType.height.toDouble());
+  @override
+  State<AppBarWidgetHome> createState() => AppBarWidgetHomeState();
+}
 
+class AppBarWidgetHomeState extends State<AppBarWidgetHome> {
   @override
   Widget build(BuildContext context) {
-    if (pageType==PageType.message) {
+    if (widget.pageType == PageType.message) {
       return MessageAppBar();
-    } else if (pageType==PageType.home) {
+    } else if (widget.pageType == PageType.home) {
       return HomeAppBar();
     } else {
-      return CommonAppBar(pageType: pageType);
+      return CommonAppBar(pageType: widget.pageType);
     }
   }
 }
@@ -69,41 +72,38 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-
 class MessageAppBar extends StatelessWidget {
   const MessageAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        leading: IconButton(
+      leading: IconButton(
+        onPressed: () {
+          //打开菜单栏
+          Scaffold.of(context).openDrawer();
+        },
+        icon: Icon(Icons.menu, color: Colors.blue, size: 34),
+        alignment: Alignment.centerLeft,
+      ),
+      title: Text(
+        '消息',
+      ),
+      actions: [
+        // 添加好友
+        IconButton(
+          padding: EdgeInsets.only(right: 6),
           onPressed: () {
-            //打开菜单栏
-            Scaffold.of(context).openDrawer();
+            //跳转添加好友页面
+            Navigator.pushNamed(context, '/add_friend');
           },
-          icon: Icon(Icons.menu, color: Colors.blue, size: 34),
-          alignment: Alignment.centerLeft,
+          icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
+          alignment: Alignment.centerRight,
         ),
-        title: Text(
-          '消息',
-        ),
-        actions: [
-          // 添加好友
-          IconButton(
-            padding: EdgeInsets.only(right: 8),
-            onPressed: () {
-              //跳转添加好友页面
-              Navigator.pushNamed(context, '/add_friend');
-            },
-            icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
-            alignment: Alignment.centerRight,
-          ),
-        ],
-      );
+      ],
+    );
   }
 }
-
-
 
 class CommonAppBar extends StatelessWidget {
   const CommonAppBar({super.key, required this.pageType});
@@ -111,85 +111,145 @@ class CommonAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  AppBar(
-        //加上border
-        shape: Border(
-          bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
+    return AppBar(
+       backgroundColor: Color(0xFFFFFFFF), // 设置固定的背景颜色
+      //加上border
+      shape: Border(
+        bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
+      ),
+      //点击推拉出菜单栏
+      leading: IconButton(
+        onPressed: () {
+          //打开菜单栏
+          Scaffold.of(context).openDrawer();
+        },
+        icon: Icon(
+          Icons.menu,
+          color: Colors.blue,
+          size: 34,
         ),
-        //点击推拉出菜单栏
-        leading: IconButton(
-          onPressed: () {
-            //打开菜单栏
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(
-            Icons.menu,
-            color: Colors.blue,
-            size: 34,
-          ),
-        ),
-        //如果是群组页面index为1，则显示搜索框
-        title: (pageType==PageType.group) ? SearchBar() : null,
-        //听歌图标和邮件图标太靠右
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 8),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/task');
-              },
-              icon: Icon(
-                Icons.calendar_month_outlined,
-                color: Colors.blue,
-                size: 29,
-              ),
+      ),
+      //如果是群组页面index为1，则显示搜索框
+      title: (pageType == PageType.group) ? SearchBar() : null,
+      //听歌图标和邮件图标太靠右
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 6),
+          child: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/task');
+            },
+            icon: Icon(
+              Icons.calendar_month_outlined,
+              color: Colors.blue,
+              size: 28,
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends StatefulWidget {
   const HomeAppBar({super.key});
 
   @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  final PageController _pageController = PageController();
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return  AppBar(
-        //加上border
-        shape: Border(
-          bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
-        ),
-        //点击推拉出菜单栏
-        leading: IconButton(
-          onPressed: () {
-            //打开菜单栏
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(
-            Icons.menu,
-            color: Colors.blue,
-            size: 34,
-          ),
-        ),
-        //如果是群组页面index为1，则显示搜索框
-        title: Text('首页'),
-        //听歌图标和邮件图标太靠右
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 8),
+    return Column(
+      children: [
+        AppBar(
+          shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
+          //滑动时阴影消失
+          scrolledUnderElevation: 0,
+          leading: Padding(
+            padding: EdgeInsets.only(bottom: 10),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/task');
+                // 打开菜单栏
+                Scaffold.of(context).openDrawer();
               },
               icon: Icon(
-                Icons.calendar_month_outlined,
+                Icons.menu,
                 color: Colors.blue,
-                size: 29,
+                size: 34,
               ),
             ),
           ),
-        ],
-      );
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 6, bottom: 10),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/task');
+                },
+                icon: Icon(
+                  Icons.calendar_month_outlined,
+                  color: Colors.blue,
+                  size: 28,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildTab('关注', 0),
+            _buildTab('推荐', 1),
+            _buildTab('热门', 2),
+          ],
+        ),
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                currentIndex = index;
+                eventBus.fire(HomePageChangeEvent(index));
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTab(String title, int index) {
+    return GestureDetector(
+      onTap: () {
+        _pageController.jumpToPage(index);
+        setState(() {
+          currentIndex = index;
+        });
+        eventBus.fire(HomePageChangeEvent(index));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: currentIndex == index ? Colors.blue : Colors.transparent,
+              width: 3,
+            ),
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: currentIndex == index ? Colors.blue : Colors.grey[600],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../home/home_page.dart';
-import '../group/group_page.dart';
-import '../message/message_page.dart';
-import '../profile/profile_page.dart';
+import '../../home/home_page.dart';
+import '../../group/group_page.dart';
+import '../../message/message_page.dart';
+import '../../profile/profile_page.dart';
 
 List<Widget> pages = [
   HomePage(),

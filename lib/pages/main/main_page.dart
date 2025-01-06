@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
-import 'init_item.dart';
+import 'init_data/init_item.dart';
 
 
 class MainPage extends StatefulWidget {
