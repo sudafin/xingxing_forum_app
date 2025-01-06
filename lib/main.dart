@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'store/store_viewmodel.dart';
 import 'router/router.dart';
+import 'pages/screen/splash_screen.dart';
+import 'pages/main/main.dart';
 
 void main(List<String> args) {
   runApp(
@@ -13,9 +15,16 @@ void main(List<String> args) {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // 设置启动页是否已经显示,不然热更新会进入,或者深色模式也会进入
+  bool hasShownSplash = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -117,10 +126,24 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('zh', 'CN'),
       routes: RouterConstant.routerConstantMap,
-      initialRoute: '/',
-      onGenerateRoute: (RouteSettings settings) { 
-        return MaterialPageRoute(builder: (context) => RouterConstant.routerConstantMap[settings.name]!(context));
-      },
-    );
+      //启动页5s然后跳转到main页
+      home: FutureBuilder(
+        future: Future.delayed(Duration(seconds: 5), () {
+          hasShownSplash = true; // 设置状态为已显示
+          return const MainPage();
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting && !hasShownSplash) {
+            return const SplashScreen();
+          } else {
+            return AnimatedOpacity(
+              opacity: 1,
+              duration: const Duration(milliseconds: 500),
+              child: snapshot.data as Widget,
+            );
+          }
+        },
+      ),
+    );     
   }
 }

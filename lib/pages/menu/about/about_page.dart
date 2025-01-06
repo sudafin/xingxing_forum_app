@@ -45,7 +45,7 @@ class _AboutPageState extends State<AboutPage> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  '星星论坛',
+                  '星行论坛',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'init_item.dart';
-import 'appbar_widget.dart';
-import 'menu_drawer.dart';
+
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

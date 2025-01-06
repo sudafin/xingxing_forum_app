@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/store/store_viewmodel.dart';
 import 'package:xingxing_forum_app/pages/main/menu_table_data.dart';
-import 'package:xingxing_forum_app/pages/profile/profile_page.dart';
+
 
 @immutable
 /// 菜单栏

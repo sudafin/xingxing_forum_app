@@ -12,10 +12,11 @@ import '../pages/menu/settings/settings_page.dart';
 import '../pages/menu/task/task_page.dart';
 import '../pages/search/search_page.dart';
 import '../pages/message/add_friend_page.dart';
-
+import '../pages/screen/splash_screen.dart';
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
-  '/':(context) => const MainPage(),
+  '/splash':(context) => const SplashScreen(),
+  '/main':(context) => const MainPage(),
   '/home':(context) => const HomePage(),
   '/message':(context) => const MessagePage(),
   '/group':(context) => const GroupPage(),

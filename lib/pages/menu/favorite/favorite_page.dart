@@ -7,6 +7,9 @@ class FavoritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('收藏')),
+      body: Center(
+        child: Text('收藏'),
+      ),
     );
   }
 }
