@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
+import 'package:provider/provider.dart';
+import '../../store/store_viewmodel.dart';
+
 
 class RecommendPage extends StatefulWidget {
   const RecommendPage({super.key});
@@ -93,8 +96,12 @@ class RecommendPageState extends State<RecommendPage> {
                               height: 3,
                               decoration: BoxDecoration(
                                 color: _currentIndex == index
-                                    ? Colors.blue
-                                    : Colors.grey,
+                                    ? (context.watch<StoreViewModel>().theme == Brightness.light 
+                                        ? Colors.blue 
+                                        : Colors.white)
+                                    : (context.watch<StoreViewModel>().theme == Brightness.light 
+                                        ? Colors.grey 
+                                        : Colors.grey[700]),
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
@@ -112,8 +119,20 @@ class RecommendPageState extends State<RecommendPage> {
           // 广告位
           Container(
             height: 100, // 设置广告位的高度
-            color: Colors.grey[300], // 广告位背景色
-            child: Center(child: Text('广告位', style: TextStyle(fontSize: 20))),
+            color: context.watch<StoreViewModel>().theme == Brightness.light 
+              ? Colors.grey[300]
+              : Colors.grey[800],
+            child: Center(
+              child: Text(
+                '广告位', 
+                style: TextStyle(
+                  fontSize: 20,
+                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+                    ? Colors.black
+                    : Colors.white,
+                )
+              ),
+            ),
           ),
           SizedBox(height: 8), // 间距
           // 帖子列表
@@ -156,6 +175,9 @@ class RecommendPageState extends State<RecommendPage> {
       },
       child: Card(
         elevation: 4,
+        color: context.watch<StoreViewModel>().theme == Brightness.light 
+          ? Colors.white
+          : Colors.grey[850],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -180,10 +202,12 @@ class RecommendPageState extends State<RecommendPage> {
                   left: 8,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 4),
-                    color: Colors.black54,
+                    color: context.watch<StoreViewModel>().theme == Brightness.light 
+                      ? Colors.black54
+                      : Colors.black87,
                     child: Text(
                       '分类 $index',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ),
@@ -193,7 +217,13 @@ class RecommendPageState extends State<RecommendPage> {
               padding: EdgeInsets.all(12),
               child: Text(
                 '帖子标题测试帖子标题测试帖子标题测试帖子标题测试帖子标题测试帖子标题测试帖子标题测试帖子标题测试帖子标题测试 $index',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+                    ? Colors.black
+                    : Colors.white,
+                ),
                 maxLines: 2,
               ),
             ),

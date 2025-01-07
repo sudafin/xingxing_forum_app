@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'image_preview_page.dart';
+import 'package:provider/provider.dart';
+import '../store/store_viewmodel.dart';
 
 class PostDetailPage extends StatefulWidget {
   final int? imageCount;
@@ -111,7 +113,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 Text(
                   '2小时前',
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: context.watch<StoreViewModel>().theme == Brightness.light 
+                      ? Colors.grey[600] 
+                      : Colors.grey[300],
                     fontSize: 14,
                   ),
                 ),
@@ -121,16 +125,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.blue.withAlpha(10),
+              color: context.watch<StoreViewModel>().theme == Brightness.light 
+                ? Colors.blue.withAlpha(10)
+                : Colors.blue.withAlpha(30),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.blue.withAlpha(10),
+                color: context.watch<StoreViewModel>().theme == Brightness.light 
+                  ? Colors.blue.withAlpha(10)
+                  : Colors.blue.withAlpha(30),
               ),
             ),
             child: Text(
               '关注',
-              style: const TextStyle(
-                color: Colors.blue,
+              style: TextStyle(
+                color: context.watch<StoreViewModel>().theme == Brightness.light 
+                  ? Colors.blue
+                  : Colors.white,
                 fontSize: 14,
               ),
             ),
@@ -273,7 +283,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
           Text(
             '2024-03-21 14:30',
             style: TextStyle(
-              color: Colors.grey[600],
+              color: context.watch<StoreViewModel>().theme == Brightness.light 
+                ? Colors.grey[600]
+                : Colors.grey[300],
               fontSize: 14,
             ),
           ),
@@ -316,15 +328,36 @@ class _PostDetailPageState extends State<PostDetailPage> {
     crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(width: 10,),
-        Text('全部评论${widget.interactions?['comments']}',style: TextStyle(fontSize: 14,),),
+        Text(
+          '全部评论${widget.interactions?['comments']}',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.watch<StoreViewModel>().theme == Brightness.light 
+              ? Colors.black
+              : Colors.white,
+          ),
+        ),
         const Spacer(),
         Container(
         padding: EdgeInsets.all(1),
           child: Row(
             children: [
-              Text(_isSortedAscending ? '正序' : '倒序',style: TextStyle(fontSize: 14,),),
+              Text(
+                _isSortedAscending ? '正序' : '倒序',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+                    ? Colors.black
+                    : Colors.white,
+                ),
+              ),
               IconButton(
-                icon: Icon(Icons.sort),
+                icon: Icon(
+                  Icons.sort,
+                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+                    ? Colors.black
+                    : Colors.white,
+                ),
                 onPressed: () {
                   setState(() {
                     _isSortedAscending = !_isSortedAscending;
@@ -372,11 +405,24 @@ class _PostDetailPageState extends State<PostDetailPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text('这是第 ${index + 1} 条评论，用来测试评论的显示效果。'),
+                child: Text(
+                  '这是第 ${index + 1} 条评论，用来测试评论的显示效果。',
+                  style: TextStyle(
+                    color: context.watch<StoreViewModel>().theme == Brightness.light 
+                      ? Colors.black
+                      : Colors.white,
+                  ),
+                ),
               ),
               Row(
                 children: [
-                  Icon(Icons.thumb_up_outlined, size: 14, color: Colors.grey[500]),
+                  Icon(
+                    Icons.thumb_up_outlined,
+                    size: 14,
+                    color: context.watch<StoreViewModel>().theme == Brightness.light 
+                      ? Colors.grey[500]
+                      : Colors.grey[300],
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${12 + index}',
@@ -410,7 +456,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
       margin: const EdgeInsets.only(left: 56, right: 16, bottom: 8),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: context.watch<StoreViewModel>().theme == Brightness.light 
+          ? Colors.grey[100]
+          : Colors.grey[800],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -426,7 +474,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
             child: Text(
               '查看更多回复 >',
               style: TextStyle(
-                color: Colors.grey[600],
+                color: context.watch<StoreViewModel>().theme == Brightness.light 
+                  ? Colors.grey[600]
+                  : Colors.grey[300],
                 fontSize: 12,
               ),
             ),
@@ -470,7 +520,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
         top: 8,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.watch<StoreViewModel>().theme == Brightness.light 
+          ? Colors.white
+          : Colors.grey[900],
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -486,17 +538,28 @@ class _PostDetailPageState extends State<PostDetailPage> {
               controller: _commentController,
               decoration: InputDecoration(
                 hintText: '发表评论...',
-                hintStyle: TextStyle(color: Colors.grey[400]),
+                hintStyle: TextStyle(
+                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+                    ? Colors.grey[400]
+                    : Colors.grey[600],
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: context.watch<StoreViewModel>().theme == Brightness.light 
+                  ? Colors.grey[100]
+                  : Colors.grey[800],
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
                 ),
+              ),
+              style: TextStyle(
+                color: context.watch<StoreViewModel>().theme == Brightness.light 
+                  ? Colors.black
+                  : Colors.white,
               ),
             ),
           ),

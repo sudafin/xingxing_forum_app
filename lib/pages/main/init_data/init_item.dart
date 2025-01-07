@@ -3,18 +3,35 @@ import '../../home/home_page.dart';
 import '../../group/group_page.dart';
 import '../../message/message_page.dart';
 import '../../profile/profile_page.dart';
+import '../../../widgets/edit_page.dart';
 
 List<Widget> pages = [
   HomePage(),
   GroupPage(),
+  EditPage(),
   MessagePage(),
   ProfilePage(),
 ];
 
-int unreadCount = 5; //未读消息数量
-List<BottomNavigationBarItem> bottomBarItems = [
-  BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-  BottomNavigationBarItem(icon: Icon(Icons.group), label: '社区'),
+
+class BottomBarItem {
+  static List<BottomNavigationBarItem> bottomBarItems =[];
+  static void initialize(BuildContext context){
+  int unreadCount = 5; //未读消息数量
+  bottomBarItems = [
+  BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页',),
+  BottomNavigationBarItem(icon: Icon(Icons.group), label: '社区',),
+  BottomNavigationBarItem(
+    icon: Container(
+      decoration: BoxDecoration(
+        color: Colors.blue ,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Icon(Icons.add,size: 50,color: Colors.white,),
+    ),
+    label: '',
+  ),
   BottomNavigationBarItem(
     icon: Stack(
       children: [
@@ -37,8 +54,9 @@ List<BottomNavigationBarItem> bottomBarItems = [
     label: '消息',
   ),
   BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
-];
-
+  ];
+}
+}
 
 
 List<String?> tabTitles = ['关注', '推荐', '热帖'];

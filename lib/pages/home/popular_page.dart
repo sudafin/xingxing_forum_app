@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../widgets/post_detail_page.dart';
 import '../../widgets/image_preview_page.dart';
+import 'package:provider/provider.dart';
+import '../../store/store_viewmodel.dart';
 
 class PopularPage extends StatefulWidget {
   const PopularPage({super.key});
@@ -31,8 +33,9 @@ class _PopularPageState extends State<PopularPage> {
   Widget _buildPostCard(int imageCount) {
     return Card(
       margin: const EdgeInsets.all(8.0),
-      color: Colors.white,
-      elevation: 0.5,
+      color: context.watch<StoreViewModel>().theme == Brightness.light 
+        ? Colors.white
+        : Colors.grey[850],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -70,17 +73,23 @@ class _PopularPageState extends State<PopularPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: context.watch<StoreViewModel>().theme == Brightness.light 
+                      ? Colors.blue.withAlpha(10)
+                      : Colors.blue.withAlpha(30),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: context.watch<StoreViewModel>().theme == Brightness.light 
+                        ? Colors.blue.withAlpha(10)
+                        : Colors.blue.withAlpha(30),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     categories[imageCount - 1],
-                    style: const TextStyle(
-                      color: Colors.blue,
+                    style: TextStyle(
+                      color: context.watch<StoreViewModel>().theme == Brightness.light 
+                        ? Colors.blue
+                        : Colors.white,
                       fontSize: 12,
                     ),
                   ),
