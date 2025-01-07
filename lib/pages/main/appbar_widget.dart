@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../enum/page_type_enum.dart';
 import '../../../model/event_model.dart';
 import 'package:event_bus/event_bus.dart';
+import '../../../utils/log.dart';
 final eventBus = EventBus();
 class AppBarWidgetHome extends StatefulWidget implements PreferredSizeWidget {
   final PageType pageType;
@@ -160,10 +161,22 @@ class HomeAppBar extends StatefulWidget {
 
 class _HomeAppBarState extends State<HomeAppBar> {
   final PageController _pageController = PageController();
-  int currentIndex = 0;
+  int homeIndex = 0;
+  int menuIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    //接收
+    eventBus.on<HomePageChangeEvent>().listen((event) {
+      setState(() {
+        menuIndex = event.menuIndex;      
+        _pageController.animateToPage(
+          menuIndex,
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.easeInOut,
+        );
+      });
+    });
     return Column(
       children: [
         AppBar(
@@ -211,12 +224,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
         Expanded(
           child: PageView(
             controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                currentIndex = index;
-                eventBus.fire(HomePageChangeEvent(index));
-              });
-            },
           ),
         ),
       ],
@@ -228,15 +235,16 @@ class _HomeAppBarState extends State<HomeAppBar> {
       onTap: () {
         _pageController.jumpToPage(index);
         setState(() {
-          currentIndex = index;
+          homeIndex = index;
+          menuIndex = index;
         });
-        eventBus.fire(HomePageChangeEvent(index));
+        eventBus.fire(HomePageChangeEvent(homeIndex: homeIndex, menuIndex: menuIndex));
       },
       child: Container(
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: currentIndex == index ? Colors.blue : Colors.transparent,
+              color: homeIndex == index ? Colors.blue : Colors.transparent,
               width: 3,
             ),
           ),
@@ -246,7 +254,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: currentIndex == index ? Colors.blue : Colors.grey[600],
+            color: homeIndex == index ? Colors.blue : Colors.grey[600],
           ),
         ),
       ),

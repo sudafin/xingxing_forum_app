@@ -1,4 +1,5 @@
 class HomePageChangeEvent {
-  final int index;
-  HomePageChangeEvent(this.index);
+  final int homeIndex;
+  final int menuIndex;
+  HomePageChangeEvent({required this.homeIndex, required this.menuIndex});
 }

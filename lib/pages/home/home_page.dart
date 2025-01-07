@@ -6,6 +6,7 @@ import 'package:xingxing_forum_app/model/event_model.dart';
 import 'package:xingxing_forum_app/pages/home/follow_page.dart';
 import 'package:xingxing_forum_app/pages/home/recommend_page.dart';
 import 'package:xingxing_forum_app/pages/home/popular_page.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -27,6 +28,7 @@ class HomePageBody extends StatefulWidget {
 }
 class HomePageBodyState extends State<HomePageBody> {  
   int currentIndex = 0;
+  final PageController _pageController = PageController();
   List<Widget> pages = [
     FollowPage(),
     RecommendPage(),
@@ -37,10 +39,23 @@ class HomePageBodyState extends State<HomePageBody> {
   //监听页面切换事件
     eventBus.on<HomePageChangeEvent>().listen((event) {
       setState(() {
-        currentIndex = event.index;      
+        currentIndex = event.homeIndex;      
+        _pageController.animateToPage(currentIndex, duration: Duration(milliseconds: 1000), curve: Curves.bounceInOut);
       });
     });
-    return pages[currentIndex];
+    return
+     PageView(
+      controller: _pageController,
+      children: pages,
+      onPageChanged: (index) {
+        setState(() {
+          currentIndex = index;
+          // 发送菜单页面切换事件
+          eventBus.fire(HomePageChangeEvent(homeIndex: index, menuIndex: currentIndex));
+          Log.info("homePage fire :currentIndex: $currentIndex");
+        });
+      },
+     );
   }
 }
 

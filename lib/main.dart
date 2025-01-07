@@ -139,7 +139,7 @@ class _MyAppState extends State<MyApp> {
       routes: RouterConstant.routerConstantMap,
       //启动页5s然后跳转到main页
       home: FutureBuilder(
-        future: Future.delayed(Duration(seconds: 5), () {
+        future: Future.delayed(Duration(seconds: 0), () {
           hasShownSplash = true; // 设置状态为已显示
           return const MainPage();
         }),

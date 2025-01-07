@@ -5,10 +5,10 @@ class RecommendPage extends StatefulWidget {
   const RecommendPage({super.key});
 
   @override
-  _RecommendPageState createState() => _RecommendPageState();
+  RecommendPageState createState() => RecommendPageState();
 }
 
-class _RecommendPageState extends State<RecommendPage> {
+class RecommendPageState extends State<RecommendPage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 

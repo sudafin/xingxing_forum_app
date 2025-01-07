@@ -89,7 +89,8 @@ class MenuDrawerState extends State<MenuDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w400)), // 设置字体为粗体
                       onTap: () {
-                        // 处理菜单项点击
+                        // 关闭抽屉
+                        Navigator.pop(context);
                         // 导航逻辑
                         navigatorIndex(data.index, context);
                       },
@@ -190,13 +191,10 @@ class MenuDrawerState extends State<MenuDrawer> {
 void navigatorIndex(int index, BuildContext context) {
   if (index == 0) {
     Navigator.pushNamed(context, '/favorite');
-    Navigator.pop(context);
   } else if (index == 1) {
     Navigator.pushNamed(context, '/history');
-    Navigator.pop(context);
   } else if (index == 2) {
     Navigator.pushNamed(context, '/settings');
-    Navigator.pop(context);
   } else if (index == 3) {
     Navigator.pushNamed(context, '/drafts');
   } else if (index == 5) {
@@ -209,6 +207,5 @@ void navigatorIndex(int index, BuildContext context) {
     );
   } else if (index == 6) {
     Navigator.pushNamed(context, '/about');
-    Navigator.pop(context);
   }
 }
