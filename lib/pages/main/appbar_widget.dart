@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../enum/page_type_enum.dart';
+import '../../../utils/log.dart';
 import '../../../model/event_model.dart';
 import 'package:event_bus/event_bus.dart';
-import '../../../utils/log.dart';
+import 'init_data/init_item.dart';
 final eventBus = EventBus();
 class AppBarWidgetHome extends StatefulWidget implements PreferredSizeWidget {
   final PageType pageType;
@@ -165,15 +166,22 @@ class _HomeAppBarState extends State<HomeAppBar> {
   int menuIndex = 0;
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    //接收
+    //监听页面滑动事件,如果滑动了,则切换到对应的appbar
     eventBus.on<HomePageChangeEvent>().listen((event) {
       setState(() {
-        menuIndex = event.menuIndex;      
+        menuIndex = event.menuIndex;
+        Log.info("appbar listen :menuIndex: $menuIndex");      
         _pageController.animateToPage(
           menuIndex,
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.easeInOut,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.linear,
         );
       });
     });
@@ -216,9 +224,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildTab('关注', 0),
-            _buildTab('推荐', 1),
-            _buildTab('热门', 2),
+            _buildTab(tabTitles[0]!, 0),
+            _buildTab(tabTitles[1]!, 1),
+            _buildTab(tabTitles[2]!, 2),
           ],
         ),
         Expanded(
@@ -233,18 +241,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget _buildTab(String title, int index) {
     return GestureDetector(
       onTap: () {
-        _pageController.jumpToPage(index);
         setState(() {
           homeIndex = index;
           menuIndex = index;
         });
+        //如果点击了appbar就发送事件
         eventBus.fire(HomePageChangeEvent(homeIndex: homeIndex, menuIndex: menuIndex));
       },
       child: Container(
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: homeIndex == index ? Colors.blue : Colors.transparent,
+              color: menuIndex == index ? Colors.blue : Colors.transparent,
               width: 3,
             ),
           ),
@@ -254,7 +262,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: homeIndex == index ? Colors.blue : Colors.grey[600],
+            color: menuIndex == index ? Colors.blue : Colors.grey[600],
           ),
         ),
       ),

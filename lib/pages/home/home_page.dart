@@ -6,7 +6,6 @@ import 'package:xingxing_forum_app/model/event_model.dart';
 import 'package:xingxing_forum_app/pages/home/follow_page.dart';
 import 'package:xingxing_forum_app/pages/home/recommend_page.dart';
 import 'package:xingxing_forum_app/pages/home/popular_page.dart';
-import 'package:xingxing_forum_app/utils/log.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -40,7 +39,7 @@ class HomePageBodyState extends State<HomePageBody> {
     eventBus.on<HomePageChangeEvent>().listen((event) {
       setState(() {
         currentIndex = event.homeIndex;      
-        _pageController.animateToPage(currentIndex, duration: Duration(milliseconds: 1000), curve: Curves.bounceInOut);
+        _pageController.animateToPage(currentIndex, duration: Duration(milliseconds: 100), curve: Curves.linear);
       });
     });
     return
@@ -52,7 +51,6 @@ class HomePageBodyState extends State<HomePageBody> {
           currentIndex = index;
           // 发送菜单页面切换事件
           eventBus.fire(HomePageChangeEvent(homeIndex: index, menuIndex: currentIndex));
-          Log.info("homePage fire :currentIndex: $currentIndex");
         });
       },
      );

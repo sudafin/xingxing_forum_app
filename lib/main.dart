@@ -33,6 +33,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
+        //滑动时颜色无需变化
+        scrolledUnderElevation: 0,
         color: context.watch<StoreViewModel>().theme == Brightness.light
                 ?  Color(0xFFFFFFFF):Color.fromARGB(243, 74, 74, 74),
         //appbar字体颜色
@@ -52,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         highlightColor: Colors.transparent,
         //组件颜色设置
         colorScheme: ColorScheme.light(
-          primary: Colors.teal, // 主颜色，用于滑块
+          primary: Colors.blue, // 主颜色，用于滑块
           surface: Colors.white, // 卡片颜色
           //显示文本字体颜色
           onSurface: context.watch<StoreViewModel>().theme == Brightness.light

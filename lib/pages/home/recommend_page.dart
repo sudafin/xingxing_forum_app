@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
+import 'package:xingxing_forum_app/utils/show_toast.dart';
 
 class RecommendPage extends StatefulWidget {
   const RecommendPage({super.key});
@@ -34,13 +35,29 @@ class RecommendPageState extends State<RecommendPage> {
       _startAutoScroll(); // 递归调用
     });
   }
-
+    Future<void> _refreshData() async {
+    // 在这里添加你的数据刷新逻辑
+    await Future.delayed(Duration(seconds: 0)); // 模拟网络请求
+    setState(() {
+      // TODO:更新状态
+      // 设置弹窗
+      ShowToast.showCustomDialog(context, '提示', '刷新成功', '取消', '确认', () {}, () {});
+    });
+  }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // 设置为最小高度
-        children: [
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // 设置为最小高度
+          children: [
           // 轮播图片组件
           Container(
             margin: EdgeInsets.all(10),
@@ -117,6 +134,7 @@ class RecommendPageState extends State<RecommendPage> {
           ),
         ],
       ),
+    ),
     );
   }
 

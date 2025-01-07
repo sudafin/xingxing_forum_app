@@ -41,3 +41,4 @@ List<BottomNavigationBarItem> bottomBarItems = [
 
 
 
+List<String?> tabTitles = ['关注', '推荐', '热帖'];
