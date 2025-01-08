@@ -10,7 +10,7 @@ import '../pages/menu/favorite/favorite_page.dart';
 import '../pages/menu/history/history_page.dart';
 import '../pages/menu/settings/settings_page.dart';
 import '../pages/menu/task/task_page.dart';
-import '../pages/search/search_page.dart';
+import '../widgets/search_page.dart';
 import '../pages/message/add_friend_page.dart';
 import '../pages/screen/splash_screen.dart';
 import '../widgets/edit_page.dart';
