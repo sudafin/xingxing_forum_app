@@ -96,7 +96,6 @@ flutter:
     - family: PingFangSC
       fonts:
         - asset: assets/fonts/PingFangSC-Regular.ttf
-        - asset: assets/fonts/PingFangSC-ExtraLight.ttf
         - asset: assets/fonts/PingFangSC-Bold.ttf
           weight: 700
     

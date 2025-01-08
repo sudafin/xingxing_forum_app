@@ -13,7 +13,7 @@ import '../pages/menu/task/task_page.dart';
 import '../widgets/search_page.dart';
 import '../pages/message/add_friend_page.dart';
 import '../pages/screen/splash_screen.dart';
-import '../widgets/edit_page.dart';
+import '../widgets/post_page.dart';
 
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
@@ -31,6 +31,6 @@ class RouterConstant{
   '/task':(context) => const TaskPage(),
   '/search':(context) => const SearchPage(),
   '/add_friend':(context) => const AddFriendPage(),
-  '/edit':(context) => const EditPage(),
+  '/post':(context) => const PostPage(),
   };
 }

@@ -3,12 +3,12 @@ import '../../home/home_page.dart';
 import '../../group/group_page.dart';
 import '../../message/message_page.dart';
 import '../../profile/profile_page.dart';
-import '../../../widgets/edit_page.dart';
+import '../../../widgets/post_page.dart';
 
 List<Widget> pages = [
   HomePage(),
   GroupPage(),
-  EditPage(),
+  PostPage(),
   MessagePage(),
   ProfilePage(),
 ];
@@ -28,7 +28,9 @@ class BottomBarItem {
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Icon(Icons.add,size: 50,color: Colors.white,),
+      child: IconButton(icon: Icon(Icons.add,size:40,color: Colors.white,),onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>PostPage()));
+      },),
     ),
     label: '',
   ),
