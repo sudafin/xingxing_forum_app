@@ -31,6 +31,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // 明亮模式
       theme: ThemeData(
+        fontFamily: 'PingFangSC-Regular',
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
         //滑动时颜色无需变化
