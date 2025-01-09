@@ -6,13 +6,17 @@ plugins {
 }
 
 android {
-    namespace = "com.example.electricity_bill_app"
+    namespace = "com.example.xingxing_forum_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+        disable 'Deprecation'
     }
 
     kotlinOptions {

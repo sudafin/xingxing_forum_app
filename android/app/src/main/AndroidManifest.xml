@@ -2,6 +2,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 读取外部存储 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/> <!-- Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>  <!-- Android 13+ -->
     <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 相机权限 -->
@@ -19,7 +22,9 @@
     <application
         android:label="星行论坛"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+        android:largeHeap="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
