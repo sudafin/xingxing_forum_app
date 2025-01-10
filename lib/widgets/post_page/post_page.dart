@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:extended_text/extended_text.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import '../../store/store_viewmodel.dart';
 import 'emoji_page.dart';
@@ -25,8 +24,8 @@ class PostPageState extends State<PostPage> {
   bool isEmoji = false;
   bool isAlbum = false;
   bool isVideo = false;
+  String selectedModule = '请选择发布版块';
   void _insertEmoji(String emoji) {
-
     //获取当前内容框中的的全部文本
     final text = _contentController.text;
     //获取当前光标所在位置,也就是我们要插入的位置,其中selection.start是开始位置,selection.end是结束位置
@@ -45,20 +44,6 @@ class PostPageState extends State<PostPage> {
     );
   }
 
-  // void _insertVideo(String videoPath) {
-  //   final text = _contentController.text;
-  //   final selection = _contentController.selection;
-  //   final videoTag = '[视频:$videoPath]';
-  //   final newText = text.replaceRange(selection.start, selection.end, videoTag);
-  //   _contentController.value = TextEditingValue(
-  //     text: newText,
-  //     selection: TextSelection.collapsed(
-  //       offset: selection.baseOffset + videoTag.length,
-  //     ),
-  //   );
-  // }
-
-
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<StoreViewModel>().theme;
@@ -67,6 +52,30 @@ class PostPageState extends State<PostPage> {
         theme == Brightness.light ? Colors.grey : Colors.grey[600];
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('提示'),
+                        content: Text('是否需要暂时存草稿箱里？'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/main');
+                              },
+                              child: Text('取消')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/main');
+                              },
+                              child: Text('确定')),
+                        ],
+                      );
+                    });
+              },
+              icon: Icon(Icons.arrow_back)),
           title: Text('发主题'),
           backgroundColor:
               theme == Brightness.light ? Colors.white : Colors.black,
@@ -75,7 +84,29 @@ class PostPageState extends State<PostPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // TODO: 实现发布主题的逻辑
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: theme == Brightness.light
+                            ? Colors.white
+                            : Colors.black,
+                        title: Text('发布主题'),
+                        content: Text('确定要发布主题吗？'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('取消')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('确定')),
+                        ],
+                      );
+                    });
               },
               child: Text(
                 '发布',
@@ -93,12 +124,36 @@ class PostPageState extends State<PostPage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      // TODO: 实现选择发布版块的逻辑
+                      //form表单
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('选择发布版块'),
+                              content: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.all(10),
+                                ),
+                                hint: Text('请选择发布版块'),
+                                value: selectedModule,
+                                items: ['请选择发布版块', '版块1', '版块2', '版块3']
+                                    .map((e) => DropdownMenuItem<String>(
+                                        value: e, child: Text(e)))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedModule = value!;
+                                  });
+                                },
+                              ),
+                            );
+                          });
                     },
                     child: Row(
                       children: [
                         Text(
-                          '选择发布模块',
+                          selectedModule,
                           style: TextStyle(fontSize: 20, color: hintTextColor),
                         ),
                         SizedBox(width: 5),
@@ -135,7 +190,6 @@ class PostPageState extends State<PostPage> {
                       style: TextStyle(fontSize: 20, color: textColor),
                     ),
                   ),
-                   
                 ],
               ),
             ),
@@ -225,7 +279,7 @@ class PostPageState extends State<PostPage> {
                       ],
                     ),
                     if (isShow)
-                     Container(
+                      Container(
                         height: SizeFit.screenHeight * 0.3,
                         child: PageView(
                           children: [
@@ -247,8 +301,3 @@ class PostPageState extends State<PostPage> {
         ));
   }
 }
-
-
-
-
-
