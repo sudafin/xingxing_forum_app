@@ -15,6 +15,7 @@ class MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     SizeFit.initialize(context);
     BottomBarItem.initialize(context);
+    
     return Scaffold(
       body: IndexedStack(
         index: currentPageIndex,

@@ -280,6 +280,7 @@ class PostPageState extends State<PostPage> {
                     ),
                     if (isShow)
                       Container(
+                        margin: EdgeInsets.all(5),
                         height: SizeFit.screenHeight * 0.3,
                         child: PageView(
                           children: [

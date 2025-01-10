@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../enum/page_type_enum.dart';
 import '../../../utils/log.dart';
 import '../../../model/event_model.dart';
@@ -96,7 +97,7 @@ class MessageAppBar extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.only(right: 6),
           onPressed: () {
-            //跳转添加好友页面
+            //跳转添加好友页面 
             Navigator.pushNamed(context, '/add_friend');
           },
           icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
@@ -114,7 +115,7 @@ class CommonAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-       backgroundColor: Color(0xFFFFFFFF), // 设置固定的背景颜色
+     
       //加上border
       shape: Border(
         bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
@@ -188,6 +189,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
     return Column(
       children: [
         AppBar(
+          title: Image.asset('assets/images/logo_name.png', scale: 1,),
+          centerTitle: true,
           shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
           //滑动时阴影消失
           scrolledUnderElevation: 0,

@@ -29,10 +29,6 @@ static double setPx(double size){
 } 
 
 //扩展方法语法,将double类型扩展两个方法rpx和px,用于设置尺寸,double类型数据可以直接使用.rpx和.px就能获取到适配后的尺寸
-/**
- *  20.rpx = 20 * SizeFit.setRpx(1)
- *  20.px = 20 * SizeFit.setPx(1)
- */
 extension DoubleFit on double{
   double get rpx => SizeFit.setRpx(this);
   double get px => SizeFit.setPx(this);
