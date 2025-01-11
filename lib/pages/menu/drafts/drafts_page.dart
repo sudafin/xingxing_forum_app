@@ -28,6 +28,21 @@ class _DraftsPageState extends State<DraftsPage> with SingleTickerProviderStateM
       'title': '待发布的文章',
       'content': '这是一篇正在编写的文章，需要进一步修改和完善...',
       'time': '2024-03-13 20:45',
+    },
+        {
+      'title': '待发布的文章',
+      'content': '这是一篇正在编写的文章，需要进一步修改和完善...',
+      'time': '2024-03-13 20:45',
+    },
+        {
+      'title': '待发布的文章',
+      'content': '这是一篇正在编写的文章，需要进一步修改和完善...',
+      'time': '2024-03-13 20:45',
+    },
+        {
+      'title': '待发布的文章',
+      'content': '这是一篇正在编写的文章，需要进一步修改和完善...',
+      'time': '2024-03-13 20:45',
     }
   ];
 

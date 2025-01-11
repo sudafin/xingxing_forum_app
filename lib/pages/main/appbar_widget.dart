@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../enum/page_type_enum.dart';
-import '../../../utils/log.dart';
 import '../../../model/event_model.dart';
 import 'package:event_bus/event_bus.dart';
 import 'init_data/init_item.dart';
@@ -81,12 +79,15 @@ class MessageAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+    shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
+          //滑动时阴影消失
+     scrolledUnderElevation: 0,
       leading: IconButton(
         onPressed: () {
           //打开菜单栏
           Scaffold.of(context).openDrawer();
         },
-        icon: Icon(Icons.menu, color: Colors.blue, size: 34),
+        icon: Icon(Icons.menu, color: Colors.blue),
         alignment: Alignment.centerLeft,
       ),
       title: Text(
@@ -100,7 +101,7 @@ class MessageAppBar extends StatelessWidget {
             //跳转添加好友页面 
             Navigator.pushNamed(context, '/add_friend');
           },
-          icon: Icon(Icons.person_add, color: Colors.blue, size: 30),
+          icon: Icon(Icons.person_add, color: Colors.blue),
           alignment: Alignment.centerRight,
         ),
       ],
@@ -115,11 +116,9 @@ class CommonAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-     
-      //加上border
-      shape: Border(
-        bottom: BorderSide(color: Color(0xFFF3F3F3), width: 1),
-      ),
+      shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
+          //滑动时阴影消失
+          scrolledUnderElevation: 0,
       //点击推拉出菜单栏
       leading: IconButton(
         onPressed: () {
@@ -129,7 +128,7 @@ class CommonAppBar extends StatelessWidget {
         icon: Icon(
           Icons.menu,
           color: Colors.blue,
-          size: 34,
+
         ),
       ),
       //如果是群组页面index为1，则显示搜索框
@@ -145,7 +144,6 @@ class CommonAppBar extends StatelessWidget {
             icon: Icon(
               Icons.calendar_month_outlined,
               color: Colors.blue,
-              size: 28,
             ),
           ),
         ),
@@ -178,7 +176,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
     eventBus.on<HomePageChangeEvent>().listen((event) {
       setState(() {
         menuIndex = event.menuIndex;
-        Log.info("appbar listen :menuIndex: $menuIndex");      
         _pageController.animateToPage(
           menuIndex,
           duration: Duration(milliseconds: 100),
@@ -187,8 +184,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
       });
     });
     return Column(
-      children: [
-        AppBar(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          AppBar(
           title: Image.asset('assets/images/logo_name.png', scale: 1,),
           centerTitle: true,
           shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
@@ -204,7 +202,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
               icon: Icon(
                 Icons.menu,
                 color: Colors.blue,
-                size: 34,
               ),
             ),
           ),
@@ -218,13 +215,13 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 icon: Icon(
                   Icons.calendar_month_outlined,
                   color: Colors.blue,
-                  size: 28,
                 ),
               ),
             ),
           ],
         ),
-        Row(
+
+          Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildTab(tabTitles[0]!, 0),
@@ -232,7 +229,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
             _buildTab(tabTitles[2]!, 2),
           ],
         ),
-        Expanded(
+          Expanded(
           child: PageView(
             controller: _pageController,
           ),
