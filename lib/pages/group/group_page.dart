@@ -5,7 +5,13 @@ import '../../store/store_viewmodel.dart';
 import '../main/appbar_widget.dart';
 import '../main/menu_drawer.dart';
 import 'init_data.dart';
-
+import '../error/error_page.dart';
+import 'group_menu/favorite_recommend.dart';
+import 'group_menu/online_game.dart';
+import 'group_menu/single_game.dart';
+import 'group_menu/iinternet_gossip.dart';
+import 'group_menu/community_services.dart';
+import 'group_menu/game_product.dart';
 class GroupPage extends StatelessWidget {
   const GroupPage({super.key});
 
@@ -38,9 +44,12 @@ class _GroupPageBodyState extends State<GroupPageBody> {
               ? Color.fromARGB(255, 238, 238, 238)
               : Color.fromARGB(243, 249, 222, 222),
     child: Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
          NavigationRail(
+         //控制导航栏的宽度
+           minWidth: 80,
+           //控制导航栏的高度
+           groupAlignment: -1.15,
             backgroundColor: context.watch<StoreViewModel>().theme == Brightness.light
                 ? Color(0xFFF3F3F3)
                 : Color.fromARGB(243, 74, 74, 74),
@@ -50,7 +59,8 @@ class _GroupPageBodyState extends State<GroupPageBody> {
                 _selectedIndex = index;
               });
             },
-            labelType: NavigationRailLabelType.selected,
+            //显示图标或者文字,或者两者都有,或者就显示图标
+            labelType: NavigationRailLabelType.none,
             selectedIconTheme: IconThemeData(color: Colors.black),
             unselectedIconTheme: IconThemeData(color: Colors.transparent),
             selectedLabelTextStyle: TextStyle(
@@ -64,11 +74,15 @@ class _GroupPageBodyState extends State<GroupPageBody> {
             indicatorColor: context.watch<StoreViewModel>().theme == Brightness.light
                 ? Colors.white
                 : Colors.black,
+            
         ),
+        // VerticalDivider(
+        //   color: Colors.red,
+        //   thickness: 100,
+        //   width: 10,
+        // ),
         Expanded(
-          child: SingleChildScrollView(
-            child: GroupPageContent(index: _selectedIndex),
-          ),
+          child: GroupPageContent(index: _selectedIndex)
         ),
       ],
     ),
@@ -83,12 +97,14 @@ class GroupPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch(index){
-      0 => Center(child: Text('推荐/精华')),
-      1 => Center(child: Text('网事杂谈')),
-      2 => Center(child: Text('网络游戏')),
-      3 => Center(child: Text('单机游戏')),
-      4 => Center(child: Text('社区事务')),
-      _ => Center(child: Text('其他')),
+      0 => const FavoriteRecommend(),
+      1 => const InternetGossip(),
+      2 => const OnlineGame(),
+      3 => const SingleGame(),
+      4 => const CommunityServices(),
+      5 => const GameProduct(),
+      //没有的页面是错误页面
+      _ => const ErrorPage(),
     };
       
   }

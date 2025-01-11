@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/error/error_page.dart';
 import '../pages/main/main_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/message/message_page.dart';
@@ -32,5 +33,6 @@ class RouterConstant{
   '/search':(context) => const SearchPage(),
   '/add_friend':(context) => const AddFriendPage(),
   '/post':(context) => const PostPage(),
+  '/error':(context) => const ErrorPage(),
   };
 }
