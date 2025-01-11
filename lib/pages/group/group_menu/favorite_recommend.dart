@@ -4,9 +4,15 @@ import 'package:xingxing_forum_app/utils/size_fit.dart';
 import '../../../store/store_viewmodel.dart';
 import '../../../widgets/module_widget.dart';
 
-class FavoriteRecommend extends StatelessWidget {
+class FavoriteRecommend extends StatefulWidget {
   const FavoriteRecommend({super.key});
-  
+
+  @override
+  State<FavoriteRecommend> createState() => _FavoriteRecommendState();
+}
+
+class _FavoriteRecommendState extends State<FavoriteRecommend> {
+  bool isHidden = false;
   @override
   Widget build(BuildContext context) {
   Color backgroundColor = context.watch<StoreViewModel>().theme == Brightness.light
@@ -107,14 +113,24 @@ class FavoriteRecommend extends StatelessWidget {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('推荐板块', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('推荐板块', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+            TextButton(onPressed: (){
+              setState(() {
+                 isHidden = !isHidden;
+              });
+            }, child: Text('隐藏', style: TextStyle(fontSize: 14, color: Colors.grey),),),
+          ],
+        ),
           SizedBox(height: 10,),
-          ListView.builder(
+          // 判断是否隐藏
+           isHidden ? SizedBox.shrink() : ListView.builder(
             shrinkWrap: true, 
             // 禁止ListView滚动
             physics: NeverScrollableScrollPhysics(), 
             itemCount: recommendList.length,
-
             itemBuilder: (context, index) {
               return recommendList[index];
             },
