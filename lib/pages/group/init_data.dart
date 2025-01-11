@@ -19,8 +19,8 @@ class GroupNav {
         label: SizedBox.shrink(),
       ),
       NavigationRailDestination(
-        icon: _navItem(Icons.mobile_friendly, '网络\n游戏', false),
-        selectedIcon: _navItem(Icons.mobile_friendly, '网络\n游戏', true),
+        icon: _navItem(Icons.online_prediction, '网络\n游戏', false),
+        selectedIcon: _navItem(Icons.online_prediction, '网络\n游戏', true),
         label: SizedBox.shrink(),
       ),
       NavigationRailDestination(
