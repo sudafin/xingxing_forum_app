@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
+import '../../store/store_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,35 +12,73 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  double _appBarOpacity = 1.0;
-  final double _maxScrollExtent = 200.0;
-  
-    @override
+  final ScrollController _scrollController = ScrollController();
+  bool _isTransparent = true;
+  double _opacity = 1.0;
+  @override
   Widget build(BuildContext context) {
     // 获取当前路由名称
     final routeName = ModalRoute.of(context)?.settings.name;
     // 如果是push过来的获取传递的参数
     final arguments = ModalRoute.of(context)?.settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('个人中心'),
-        toolbarHeight: 60,
-        backgroundColor:Colors.blueGrey.withOpacity(_appBarOpacity),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              backgroundColor: Colors.blueGrey.withOpacity(_opacity),
+              scrolledUnderElevation: 0,
+              iconTheme: IconThemeData(
+                color: _isTransparent ? context.watch<StoreViewModel>().theme == Brightness.light
+                ?Colors.white: Colors.black
+                : context.watch<StoreViewModel>().theme == Brightness.light
+                ? Colors.blue
+                : Colors.white
+              ),
+        ),
       ),
-      drawer: routeName != '/profile' && (_appBarOpacity == 0.0 || _appBarOpacity == 1.0) ? MenuDrawer() : null,
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          setState(() {
-              _appBarOpacity = 1.5 - (notification.metrics.pixels / _maxScrollExtent);
-              if (_appBarOpacity < 0) {
-                _appBarOpacity = 0;
-              } else if (_appBarOpacity > 1) {
-                _appBarOpacity = 1;
-              }
+      child: Scaffold(
+        appBar: AppBar(
+          title: !_isTransparent
+              ? TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 50, end: 0),
+                  duration: const Duration(milliseconds: 300),
+                  builder: (context, value, child) {
+                    return Transform.translate(
+                      offset: Offset(0, value),
+                      child: Image.asset('assets/images/logo.png',
+                          width: 100, height: 100),
+                    );
+                  },
+                )
+              : null,
+          toolbarHeight: 60,
+        ),
+        drawer: routeName != '/profile' && (_isTransparent || !_isTransparent) ? MenuDrawer() : null,
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (notification) { 
+            setState(() {
+              _opacity = 1 - _scrollController.offset / 348;
             });
-          return true;
-        },
-        child: ProfilePageBody(arguments: arguments, routeName: routeName),
+            if (notification is ScrollUpdateNotification) {
+              if (_scrollController.offset >= 348) {
+                if (_isTransparent) {
+                  setState(() {
+                    _isTransparent = false;
+                  });
+                }
+              } else if (_scrollController.offset < 348) {
+                setState(() {
+                    _isTransparent = true;
+                });
+              }
+            }
+            return true;
+          },
+          child: ProfilePageBody(
+            arguments: arguments, 
+            routeName: routeName,
+            scrollController: _scrollController,
+          ),
+        ),
       ),
     );
   }
@@ -46,7 +87,13 @@ class _ProfilePageState extends State<ProfilePage> {
 class ProfilePageBody extends StatefulWidget {
   final dynamic arguments;
   final String? routeName;
-  const ProfilePageBody({super.key, this.arguments, this.routeName});
+  final ScrollController scrollController;
+  const ProfilePageBody({
+    super.key,
+    this.arguments,
+    this.routeName,
+    required this.scrollController,
+  });
   @override
   State<ProfilePageBody> createState() => _ProfilePageBodyState();
 }
@@ -69,6 +116,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+      controller: widget.scrollController,
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           SliverAppBar(
@@ -98,6 +146,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
                   Tab(text: '收藏'),
                 ],
                 indicatorSize: TabBarIndicatorSize.label,
+                dividerHeight: 0,
               ),
             ),
           ),
@@ -139,20 +188,57 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildTopicList() {
     return Container(
-      height: 100,
-      child: Text('主题'),
+      margin: EdgeInsets.all(10),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.5,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Container(
+            color: Colors.blue,
+            child: Text('主题'),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildReplyList() {
     return Container(
-      color: Colors.blue,
+      margin: EdgeInsets.all(10),
+      child: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('回复'),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildFavoriteList() {
     return Container(
-      color: Colors.green,
+      margin: EdgeInsets.all(10),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.5,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Container(
+            color: Colors.green,
+            child: Text('收藏'),
+          );
+        },
+      ),
     );
   }
 }
