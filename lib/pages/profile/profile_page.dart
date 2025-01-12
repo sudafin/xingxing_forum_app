@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+    @override
   Widget build(BuildContext context) {
     // 获取当前路由名称
     final routeName = ModalRoute.of(context)?.settings.name;
     // 如果是push过来的获取传递的参数
     final arguments = ModalRoute.of(context)?.settings.arguments;
     return Scaffold(
-      drawer: MenuDrawer(),
+      appBar: AppBar(
+        title: Text('个人中心'),
+        toolbarHeight: 60,
+      ),
+      drawer: routeName != '/profile' ? MenuDrawer() : null,
       body: ProfilePageBody(arguments: arguments, routeName: routeName),
     );
   }
@@ -27,7 +36,7 @@ class ProfilePageBody extends StatefulWidget {
 
 class _ProfilePageBodyState extends State<ProfilePageBody>
     with TickerProviderStateMixin {
-  late final _tabController;
+  late final TabController _tabController;
   @override
   void initState() {
     super.initState();
@@ -46,32 +55,14 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           SliverAppBar(
-            pinned: true,
+            pinned: false,
             forceElevated: innerBoxIsScrolled,
             expandedHeight: 400,
-            leading: widget.routeName != '/profile'
-                ? Builder(
-                    builder: (BuildContext context) {
-                      return IconButton(
-                        icon: const Icon(Icons.menu, color: Colors.blue),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        tooltip: MaterialLocalizations.of(context)
-                            .openAppDrawerTooltip,
-                      );
-                    },
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
+            backgroundColor: Colors.blueGrey,
+            //把这里的appbar的leading去掉
+            leading: SizedBox.shrink(),
             flexibleSpace: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final top = constraints.biggest.height;
-                final opacity = (top - kToolbarHeight) / (400 - kToolbarHeight);
                 return FlexibleSpaceBar(
                   background: _buildHeader(),
                   collapseMode: CollapseMode.pin,
@@ -109,7 +100,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.fromLTRB(40, 80, 20, 60),
+      padding: EdgeInsets.fromLTRB(40, 80, 20, 60),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -160,7 +151,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Theme.of(context).canvasColor,
       child: _tabBar,

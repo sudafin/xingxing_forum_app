@@ -3,7 +3,9 @@ import '../../../enum/page_type_enum.dart';
 import '../../../model/event_model.dart';
 import 'package:event_bus/event_bus.dart';
 import 'init_data/init_item.dart';
+
 final eventBus = EventBus();
+
 class AppBarWidgetHome extends StatefulWidget implements PreferredSizeWidget {
   final PageType pageType;
   const AppBarWidgetHome({super.key, required this.pageType});
@@ -79,9 +81,9 @@ class MessageAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-    shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
-          //滑动时阴影消失
-     scrolledUnderElevation: 0,
+      shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
+      //滑动时阴影消失
+      scrolledUnderElevation: 0,
       leading: IconButton(
         onPressed: () {
           //打开菜单栏
@@ -98,7 +100,7 @@ class MessageAppBar extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.only(right: 6),
           onPressed: () {
-            //跳转添加好友页面 
+            //跳转添加好友页面
             Navigator.pushNamed(context, '/add_friend');
           },
           icon: Icon(Icons.person_add, color: Colors.blue),
@@ -117,8 +119,8 @@ class CommonAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
-          //滑动时阴影消失
-          scrolledUnderElevation: 0,
+      //滑动时阴影消失
+      scrolledUnderElevation: 0,
       //点击推拉出菜单栏
       leading: IconButton(
         onPressed: () {
@@ -127,8 +129,6 @@ class CommonAppBar extends StatelessWidget {
         },
         icon: Icon(
           Icons.menu,
-          color: Colors.blue,
-
         ),
       ),
       //如果是群组页面index为1，则显示搜索框
@@ -143,7 +143,6 @@ class CommonAppBar extends StatelessWidget {
             },
             icon: Icon(
               Icons.calendar_month_outlined,
-              color: Colors.blue,
             ),
           ),
         ),
@@ -184,10 +183,13 @@ class _HomeAppBarState extends State<HomeAppBar> {
       });
     });
     return Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          AppBar(
-          title: Image.asset('assets/images/logo_name.png', scale: 1,),
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        AppBar(
+          title: Image.asset(
+            'assets/images/logo_name.png',
+            scale: 1,
+          ),
           centerTitle: true,
           shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
           //滑动时阴影消失
@@ -201,7 +203,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
               },
               icon: Icon(
                 Icons.menu,
-                color: Colors.blue,
               ),
             ),
           ),
@@ -214,14 +215,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 },
                 icon: Icon(
                   Icons.calendar_month_outlined,
-                  color: Colors.blue,
                 ),
               ),
             ),
           ],
         ),
-
-          Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildTab(tabTitles[0]!, 0),
@@ -229,7 +228,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
             _buildTab(tabTitles[2]!, 2),
           ],
         ),
-          Expanded(
+        Expanded(
           child: PageView(
             controller: _pageController,
           ),
@@ -246,7 +245,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
           menuIndex = index;
         });
         //如果点击了appbar就发送事件
-        eventBus.fire(HomePageChangeEvent(homeIndex: homeIndex, menuIndex: menuIndex));
+        eventBus.fire(
+            HomePageChangeEvent(homeIndex: homeIndex, menuIndex: menuIndex));
       },
       child: Container(
         decoration: BoxDecoration(

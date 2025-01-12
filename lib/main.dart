@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'PingFangSC-Regular',
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.blue),
         //滑动时颜色无需变化
         scrolledUnderElevation: 0,
         color: context.watch<StoreViewModel>().theme == Brightness.light
@@ -45,11 +46,9 @@ class _MyAppState extends State<MyApp> {
                 : Color(0xFFFFFFFF),
             fontSize: 20,
             fontWeight: FontWeight.bold,
-          
           ),
           centerTitle: true,
           elevation: 0,
-          toolbarHeight: 60,
         ),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
