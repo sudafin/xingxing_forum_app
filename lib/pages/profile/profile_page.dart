@@ -9,6 +9,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  double _appBarOpacity = 1.0;
+  final double _maxScrollExtent = 200.0;
+  
     @override
   Widget build(BuildContext context) {
     // 获取当前路由名称
@@ -19,9 +22,23 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text('个人中心'),
         toolbarHeight: 60,
+        backgroundColor:Colors.blueGrey.withOpacity(_appBarOpacity),
       ),
-      drawer: routeName != '/profile' ? MenuDrawer() : null,
-      body: ProfilePageBody(arguments: arguments, routeName: routeName),
+      drawer: routeName != '/profile' && (_appBarOpacity == 0.0 || _appBarOpacity == 1.0) ? MenuDrawer() : null,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          setState(() {
+              _appBarOpacity = 1.5 - (notification.metrics.pixels / _maxScrollExtent);
+              if (_appBarOpacity < 0) {
+                _appBarOpacity = 0;
+              } else if (_appBarOpacity > 1) {
+                _appBarOpacity = 1;
+              }
+            });
+          return true;
+        },
+        child: ProfilePageBody(arguments: arguments, routeName: routeName),
+      ),
     );
   }
 }
@@ -57,7 +74,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
           SliverAppBar(
             pinned: false,
             forceElevated: innerBoxIsScrolled,
-            expandedHeight: 400,
+            expandedHeight:300,
             backgroundColor: Colors.blueGrey,
             //把这里的appbar的leading去掉
             leading: SizedBox.shrink(),
@@ -100,7 +117,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.fromLTRB(40, 80, 20, 60),
+      padding: EdgeInsets.fromLTRB(40, 20, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

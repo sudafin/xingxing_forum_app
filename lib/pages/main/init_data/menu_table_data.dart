@@ -25,5 +25,6 @@ const List<TabData> datas = <TabData>[
   TabData(index: 5, title: '分享', icon: Icons.share),
   TabData(index: 6, title: '关于', icon: Icons.info),
   TabData(index: 7, title: '退出', icon: Icons.exit_to_app),
+  TabData(index: 8, title: '测试', icon: Icons.text_snippet), 
 ];
 
