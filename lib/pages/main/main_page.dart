@@ -15,22 +15,23 @@ class MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     SizeFit.initialize(context);
     BottomBarItem.initialize(context);
-    
     return Scaffold(
       body: IndexedStack(
         index: currentPageIndex,
         children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        //不显示未选中的标签
+      
+       //不显示未选中的标签
         showUnselectedLabels: false,
         currentIndex: currentPageIndex,
         items: BottomBarItem.bottomBarItems,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        selectedFontSize: 12,
+        selectedFontSize: 14,
         unselectedFontSize: 12,
+        iconSize: 25,
         onTap: (index) { 
           setState(() {
             currentPageIndex = index;

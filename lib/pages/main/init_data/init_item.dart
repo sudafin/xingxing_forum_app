@@ -23,14 +23,16 @@ class BottomBarItem {
   BottomNavigationBarItem(icon: Icon(Icons.group), label: '社区',),
   BottomNavigationBarItem(
     icon: Container(
+      height: 40,
+      width: 60,
       decoration: BoxDecoration(
         color: Colors.blue ,
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
       ),
-      child: IconButton(icon: Icon(Icons.add,size:40,color: Colors.white,),onPressed: (){
+      child: Center(child: IconButton(icon: Icon(Icons.add,color: Colors.white,),onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>PostPage()));
-      },),
+      },),),
     ),
     label: '',
   ),

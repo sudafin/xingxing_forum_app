@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'PingFangSC-Regular',
         brightness: Brightness.light,
+        //设置appbar的主题
         appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(color: Colors.blue),
         //滑动时颜色无需变化

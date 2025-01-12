@@ -27,11 +27,13 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: Colors.blueGrey.withOpacity(_opacity),
               scrolledUnderElevation: 0,
               iconTheme: IconThemeData(
-                color: _isTransparent ? context.watch<StoreViewModel>().theme == Brightness.light
-                ?Colors.white: Colors.black
-                : context.watch<StoreViewModel>().theme == Brightness.light
-                ? Colors.blue
-                : Colors.white
+                color: _isTransparent 
+                    ? (context.watch<StoreViewModel>().theme == Brightness.light
+                        ? Colors.white
+                        : Colors.black)
+                    : (context.watch<StoreViewModel>().theme == Brightness.light
+                        ? Colors.blue
+                        : Colors.white),
               ),
         ),
       ),
@@ -52,29 +54,29 @@ class _ProfilePageState extends State<ProfilePage> {
               : null,
           toolbarHeight: 60,
         ),
-        drawer: routeName != '/profile' && (_isTransparent || !_isTransparent) ? MenuDrawer() : null,
+        drawer: routeName != '/profile'  ? MenuDrawer() : null,
         body: NotificationListener<ScrollNotification>(
-          onNotification: (notification) { 
-            setState(() {
-              _opacity = 1 - _scrollController.offset / 348;
-            });
+          onNotification: (notification) {
+          //设置透明度
+            final newOpacity = 1 - _scrollController.offset / 210;
+            if (newOpacity != _opacity) {
+              setState(() {
+                _opacity = newOpacity.clamp(0.0, 1.0);
+              });
+            }
             if (notification is ScrollUpdateNotification) {
-              if (_scrollController.offset >= 348) {
-                if (_isTransparent) {
-                  setState(() {
-                    _isTransparent = false;
-                  });
-                }
-              } else if (_scrollController.offset < 348) {
+            //调整tittle出现的时机
+              final newTransparent = _scrollController.offset < 100;
+              if (newTransparent != _isTransparent) {
                 setState(() {
-                    _isTransparent = true;
+                  _isTransparent = newTransparent;
                 });
               }
             }
             return true;
           },
           child: ProfilePageBody(
-            arguments: arguments, 
+            arguments: arguments,
             routeName: routeName,
             scrollController: _scrollController,
           ),
@@ -122,7 +124,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
           SliverAppBar(
             pinned: false,
             forceElevated: innerBoxIsScrolled,
-            expandedHeight:300,
+            expandedHeight:250,
             backgroundColor: Colors.blueGrey,
             //把这里的appbar的leading去掉
             leading: SizedBox.shrink(),
@@ -147,6 +149,11 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
                 ],
                 indicatorSize: TabBarIndicatorSize.label,
                 dividerHeight: 0,
+                labelPadding: EdgeInsets.only(top: 12),
+                indicatorWeight: 0.5,
+                labelStyle: TextStyle(fontSize: 16),
+                padding: EdgeInsets.only(left: 100, right: 100),
+                
               ),
             ),
           ),
@@ -166,7 +173,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.fromLTRB(40, 20, 20, 0),
+      padding: EdgeInsets.fromLTRB(40, 0, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -267,3 +274,4 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
+
