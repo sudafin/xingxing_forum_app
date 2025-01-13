@@ -25,69 +25,64 @@ class MenuDrawerState extends State<MenuDrawer> {
         backgroundColor:
             context.watch<StoreViewModel>().theme == Brightness.dark
                 ? Colors.black
-                : Color.fromARGB(255, 249, 249, 249),
+                : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2),
         ),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            //菜单头
-            DrawerHeader(
-              margin: EdgeInsets.zero,
-              padding: EdgeInsets.zero,
-              decoration: BoxDecoration(
-                color: context.watch<StoreViewModel>().theme == Brightness.dark
-                    ? Colors.black
-                    : Colors.lightBlue[400],
-              ),
-              child: InkWell(
-                onTap: () {
-                  // 头像点击跳转逻辑
-                  Navigator.pop(context); // 关闭抽屉
-                  // 导航逻辑
-                  Navigator.pushNamed(context, '/profile');
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 50),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '用户名',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal, // 设置字体为粗体
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
+            // //菜单头
+            // DrawerHeader(
+            //   margin: EdgeInsets.zero,
+            //   padding: EdgeInsets.zero,
+            //   decoration: BoxDecoration(
+            //     color: context.watch<StoreViewModel>().theme == Brightness.dark
+            //         ? Colors.black
+            //         : Colors.lightBlue[400],
+            //   ),
+            //   child: InkWell(
+            //     onTap: () {
+            //       // 头像点击跳转逻辑
+            //       Navigator.pop(context); // 关闭抽屉
+            //       // 导航逻辑
+            //       Navigator.pushNamed(context, '/profile');
+            //     },
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         CircleAvatar(
+            //           radius: 30,
+            //           backgroundColor: Colors.white,
+            //           child: Icon(Icons.person, size: 50),
+            //         ),
+            //         SizedBox(height: 10),
+            //         Text(
+            //           '用户名',
+            //           style: TextStyle(
+            //             color: Colors.white,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.normal, // 设置字体为粗体
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            SizedBox(height: 40),
             // 使用 menu_table_data.dart 中的数据构建菜单项
             ...datas.map((TabData data) {
               if (data.index != 4 && data.index != 7) {
                 return Container(
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    decoration: BoxDecoration(
-                      color: context.watch<StoreViewModel>().theme ==
-                              Brightness.dark
-                          ? const Color.fromARGB(93, 119, 119, 119)
-                          : Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey, width: 0.5),
-                      ),
-                    ),
-                    child: ListTile(
-                      leading: Icon(data.icon),
+                    
+                    child: 
+                    Column(
+                      children: [
+                        ListTile(
+                      leading: Icon(data.icon,size: 20,),
                       title: Text(data.title,
                           style: TextStyle(
+                              fontSize: 14,
                               fontWeight: FontWeight.w400)), // 设置字体为粗体
                       onTap: () {
                         // 关闭抽屉
@@ -96,30 +91,29 @@ class MenuDrawerState extends State<MenuDrawer> {
                         navigatorIndex(data.index, context);
                       },
                       trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                    ));
-                //如果index为4的深色模式尾部则需要显示切换按钮
-              } else if (data.index == 4) {
+                    ),
+                    // 如果index为3或5则显示分割线
+                    data.index == 3 || data.index == 5 ? Divider(
+                      color: Colors.grey[300],
+                      thickness: 0.5,
+                      indent: 10,
+                      endIndent: 10,
+                    ) : SizedBox.shrink(),
+                  ],
+                ));
+              }
+              //如果index为4的深色模式尾部则需要显示切换按钮
+              else if (data.index == 4) {
                 return Container(
                     margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    decoration: BoxDecoration(
-                      color: context.watch<StoreViewModel>().theme ==
-                              Brightness.dark
-                          ? const Color.fromARGB(93, 119, 119, 119)
-                          : Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey, width: 0.5),
-                      ),
-                    ),
                     child: ListTile(
-                      leading: Icon(data.icon),
+                      leading: Icon(data.icon,size: 20,),
                       title: Text(data.title,
                           style: TextStyle(
+                              fontSize: 14,
                               fontWeight: FontWeight.w400)), // 设置字体为粗体
                       //index为4时设置切换按钮
-                      trailing: Container(
-                        //调整位置
-                        constraints: BoxConstraints(maxWidth: 100),
-                        child: Switch(
+                      trailing:Switch(
                           activeTrackColor: Colors.blue,
                           activeColor: Colors.white,
                           inactiveThumbColor: Colors.white,
@@ -135,10 +129,10 @@ class MenuDrawerState extends State<MenuDrawer> {
                             });
                           },
                         ),
-                      ),
                     ));
-                //退出按钮需要设置按钮
-              } else if (data.index == 7) {
+              } 
+              //退出按钮需要设置按钮
+              else if (data.index == 7) {
                 // 退出按钮
                 return Container(
                     margin: EdgeInsets.fromLTRB(30, 100, 30, 0),
@@ -150,7 +144,7 @@ class MenuDrawerState extends State<MenuDrawer> {
                       borderRadius: BorderRadius.circular(10),
                       //设置border
                       border:
-                          Border.all(color: Colors.lightBlue[100]!, width: 1),
+                          Border.all(color: context.watch<StoreViewModel>().theme == Brightness.dark ? Colors.white24 : Colors.black12, width: 1),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -160,6 +154,14 @@ class MenuDrawerState extends State<MenuDrawer> {
                             // 退出登录
                             Navigator.pop(context);
                             //TODO退出登录
+                            showDialog(context: context, builder: (context) => AlertDialog(
+                              title: Text('退出登录'),
+                              content: Text('确定要退出登录吗？'),
+                              actions: [
+                                TextButton(onPressed: () {Navigator.pop(context);}, child: Text('取消')),
+                                TextButton(onPressed: () {Navigator.pop(context);}, child: Text('确定')),
+                              ],
+                            ));
                           },
                           icon: Icon(
                             Icons.exit_to_app,

@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'store/store_viewmodel.dart';
 import 'router/router.dart';
-import 'pages/screen/splash_screen.dart';
+import 'pages/screen/splash_screen.dart';   
 import 'pages/main/main_page.dart';
 
 void main(List<String> args) {
