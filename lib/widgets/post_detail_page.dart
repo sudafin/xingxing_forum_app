@@ -26,6 +26,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _commentController = TextEditingController();
   bool _isLiked = false;
+  int _likeCount = 123;
+  int _commentCount = 123;
+  bool _isCollected = false;
+  bool isShow = true;
 
   @override
   void dispose() {
@@ -113,9 +117,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 Text(
                   '2小时前',
                   style: TextStyle(
-                    color: context.watch<StoreViewModel>().theme == Brightness.light 
-                      ? Colors.grey[600] 
-                      : Colors.grey[300],
+                    color: context.watch<StoreViewModel>().theme ==
+                            Brightness.light
+                        ? Colors.grey[600]
+                        : Colors.grey[300],
                     fontSize: 14,
                   ),
                 ),
@@ -125,22 +130,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: context.watch<StoreViewModel>().theme == Brightness.light 
-                ? Colors.blue.withAlpha(10)
-                : Colors.blue.withAlpha(30),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: context.watch<StoreViewModel>().theme == Brightness.light 
+              color: context.watch<StoreViewModel>().theme == Brightness.light
                   ? Colors.blue.withAlpha(10)
                   : Colors.blue.withAlpha(30),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.watch<StoreViewModel>().theme == Brightness.light
+                    ? Colors.blue.withAlpha(10)
+                    : Colors.blue.withAlpha(30),
               ),
             ),
             child: Text(
               '关注',
               style: TextStyle(
-                color: context.watch<StoreViewModel>().theme == Brightness.light 
-                  ? Colors.blue
-                  : Colors.white,
+                color: context.watch<StoreViewModel>().theme == Brightness.light
+                    ? Colors.blue
+                    : Colors.white,
                 fontSize: 14,
               ),
             ),
@@ -210,11 +215,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
     int crossAxisCount = 3;
     double spacing = 4.0;
 
-    double itemWidth = (containerWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
+    double itemWidth =
+        (containerWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
     double itemHeight = itemWidth / aspectRatio;
 
     int rowCount = (widget.imageCount! > 3) ? 2 : 1;
-    double containerHeight = (rowCount * itemHeight) + ((rowCount - 1) * spacing);
+    double containerHeight =
+        (rowCount * itemHeight) + ((rowCount - 1) * spacing);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -232,9 +239,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
           ),
           itemCount: widget.imageCount! > 6 ? 6 : widget.imageCount!,
           itemBuilder: (context, index) {
-            String imageUrl = 'https://picsum.photos/200/300?random=${index + 1}';
+            String imageUrl =
+                'https://picsum.photos/200/300?random=${index + 1}';
             String heroTag = 'post_image_${widget.imageCount}_$index';
-            
+
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -268,107 +276,102 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   Widget _buildInteractionBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-       children: [
-        _buildInteractionButton()
-       ],
-      )
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [_buildInteractionButton()],
+        ));
   }
 
   Widget _buildInteractionButton() {
     return Row(
-        children: [
-          Text(
-            '2024-03-21 14:30',
-            style: TextStyle(
-              color: context.watch<StoreViewModel>().theme == Brightness.light 
+      children: [
+        Text(
+          '2024-03-21 14:30',
+          style: TextStyle(
+            color: context.watch<StoreViewModel>().theme == Brightness.light
                 ? Colors.grey[600]
                 : Colors.grey[300],
-              fontSize: 14,
+            fontSize: 14,
+          ),
+        ),
+        const Spacer(),
+        Row(
+          children: [
+            _buildActionButton(
+              icon: Icons.thumb_up,
+              count: widget.interactions?['likes'],
+              isLiked: _isLiked,
+              onTap: () {
+                setState(() {
+                  _isLiked = !_isLiked;
+                });
+              },
             ),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              _buildActionButton(
-                icon: Icons.thumb_up,
-                count: widget.interactions?['likes'],
-                isLiked: _isLiked,
-                onTap: () {
-                  setState(() {
-                    _isLiked = !_isLiked;
-                  });
-                },
-              ),
-              const SizedBox(width: 24),
-              _buildActionButton(
-                icon: Icons.thumb_down,
-                onTap: () {
-                  Fluttertoast.showToast(msg: '踩一下');
-                },
-              ),
-              const SizedBox(width: 24),
-              _buildActionButton(
-                icon: Icons.share,
-                onTap: () {
-                  Fluttertoast.showToast(msg: '分享');
-                },
-              ),
-            ],
-          ),
-        ],
-      );
+            const SizedBox(width: 24),
+            _buildActionButton(
+              icon: Icons.thumb_down,
+              onTap: () {
+                Fluttertoast.showToast(msg: '踩一下');
+              },
+            ),
+            const SizedBox(width: 24),
+            _buildActionButton(
+              icon: Icons.share,
+              onTap: () {
+                Fluttertoast.showToast(msg: '分享');
+              },
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   bool _isSortedAscending = true;
   Widget _buildCommentAppBar() {
     return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         Text(
-          '全部评论${widget.interactions?['comments']}',
+          '全部评论',
           style: TextStyle(
             fontSize: 14,
-            color: context.watch<StoreViewModel>().theme == Brightness.light 
-              ? Colors.black
-              : Colors.white,
+            color: context.watch<StoreViewModel>().theme == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
         const Spacer(),
         Container(
-        padding: EdgeInsets.all(1),
-          child: Row(
-            children: [
-              Text(
-                _isSortedAscending ? '正序' : '倒序',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+          padding: EdgeInsets.all(1),
+          child: Row(children: [
+            Text(
+              _isSortedAscending ? '正序' : '倒序',
+              style: TextStyle(
+                fontSize: 14,
+                color: context.watch<StoreViewModel>().theme == Brightness.light
                     ? Colors.black
                     : Colors.white,
-                ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.sort,
-                  color: context.watch<StoreViewModel>().theme == Brightness.light 
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.sort,
+                color: context.watch<StoreViewModel>().theme == Brightness.light
                     ? Colors.black
                     : Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isSortedAscending = !_isSortedAscending;
-                  });
-                },
               ),
-            ]
-          ),
+              onPressed: () {
+                setState(() {
+                  _isSortedAscending = !_isSortedAscending;
+                });
+              },
+            ),
+          ]),
         ),
-        
-        
       ],
     );
   }
@@ -408,9 +411,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 child: Text(
                   '这是第 ${index + 1} 条评论，用来测试评论的显示效果。',
                   style: TextStyle(
-                    color: context.watch<StoreViewModel>().theme == Brightness.light 
-                      ? Colors.black
-                      : Colors.white,
+                    color: context.watch<StoreViewModel>().theme ==
+                            Brightness.light
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
               ),
@@ -419,9 +423,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   Icon(
                     Icons.thumb_up_outlined,
                     size: 14,
-                    color: context.watch<StoreViewModel>().theme == Brightness.light 
-                      ? Colors.grey[500]
-                      : Colors.grey[300],
+                    color: context.watch<StoreViewModel>().theme ==
+                            Brightness.light
+                        ? Colors.grey[500]
+                        : Colors.grey[300],
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -456,9 +461,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
       margin: const EdgeInsets.only(left: 56, right: 16, bottom: 8),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: context.watch<StoreViewModel>().theme == Brightness.light 
-          ? Colors.grey[100]
-          : Colors.grey[800],
+        color: context.watch<StoreViewModel>().theme == Brightness.light
+            ? Colors.grey[100]
+            : Colors.grey[800],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -474,9 +479,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
             child: Text(
               '查看更多回复 >',
               style: TextStyle(
-                color: context.watch<StoreViewModel>().theme == Brightness.light 
-                  ? Colors.grey[600]
-                  : Colors.grey[300],
+                color: context.watch<StoreViewModel>().theme == Brightness.light
+                    ? Colors.grey[600]
+                    : Colors.grey[300],
                 fontSize: 12,
               ),
             ),
@@ -520,64 +525,154 @@ class _PostDetailPageState extends State<PostDetailPage> {
         top: 8,
       ),
       decoration: BoxDecoration(
-        color: context.watch<StoreViewModel>().theme == Brightness.light 
-          ? Colors.white
-          : Colors.grey[900],
+        color: context.watch<StoreViewModel>().theme == Brightness.light
+            ? Colors.white
+            : Colors.grey[900],
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(5),
+            color: context.watch<StoreViewModel>().theme == Brightness.light
+                ? Colors.black.withAlpha(5)
+                : Colors.white.withAlpha(5),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
+            flex: isShow ? 1 : 2,
             child: TextField(
               controller: _commentController,
+              maxLines: isShow ? 1 : null,
+              minLines: isShow ? 1 : 3,
+              textInputAction: TextInputAction.newline,
+              keyboardType: TextInputType.multiline,
+              onTap: () {
+                setState(() {
+                  isShow = false;
+                });
+              },
               decoration: InputDecoration(
                 hintText: '发表评论...',
                 hintStyle: TextStyle(
-                  color: context.watch<StoreViewModel>().theme == Brightness.light 
-                    ? Colors.grey[400]
-                    : Colors.grey[600],
+                  color:
+                      context.watch<StoreViewModel>().theme == Brightness.light
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: context.watch<StoreViewModel>().theme == Brightness.light 
-                  ? Colors.grey[100]
-                  : Colors.grey[800],
-                contentPadding: const EdgeInsets.symmetric(
+                fillColor:
+                    context.watch<StoreViewModel>().theme == Brightness.light
+                        ? Colors.grey[100]
+                        : Colors.grey[800],
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 8,
+                  vertical: isShow ? 8 : 12,
                 ),
               ),
               style: TextStyle(
-                color: context.watch<StoreViewModel>().theme == Brightness.light 
-                  ? Colors.black
-                  : Colors.white,
+                color: context.watch<StoreViewModel>().theme == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.send, color: Colors.white),
-              onPressed: () {
-                if (_commentController.text.trim().isNotEmpty) {
-                  Fluttertoast.showToast(msg: '发送评论：${_commentController.text}');
-                  _commentController.clear();
-                }
-              },
-            ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: isShow ? 1 : 0,
+            child: isShow 
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _likeCount++;
+                            _isLiked = !_isLiked;
+                          });
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Row(
+                            children: [
+                              Icon(
+                                _isLiked ? Icons.favorite : Icons.favorite_border,
+                                color: _isLiked ? Colors.red : Colors.grey[500],
+                                size: 26,
+                              ),
+                              const SizedBox(width: 4),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 3),
+                                child: Text('$_likeCount',
+                                    style:
+                                        TextStyle(color: Colors.black, fontSize: 16)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.chat_outlined,
+                                color: Colors.grey[500],
+                                size: 26,
+                              ),
+                              const SizedBox(width: 4),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 3),
+                                child: Text('$_commentCount',
+                                    style:
+                                        TextStyle(color: Colors.black, fontSize: 16)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isCollected = !_isCollected;
+                          });
+                        },
+                        child: Icon(
+                          _isCollected ? Icons.star : Icons.star_border,
+                          color: _isCollected ? Colors.orange : Colors.grey[600],
+                          size: 26,
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(
+                    width: 48,
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        setState(() {
+                          isShow = true;
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('发表评论'),
+                              content: Text('请输入评论内容'),
+                            ),
+                          );
+                        });
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -592,4 +687,4 @@ class _PostDetailPageState extends State<PostDetailPage> {
     }
     return number.toString();
   }
-} 
+}

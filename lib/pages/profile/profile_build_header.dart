@@ -185,6 +185,8 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
                 //TODO:私信跳转
               },
               icon: Icon(Icons.settings_outlined,color: Colors.white,size: 20,),
+              padding: EdgeInsets.zero,
+              
             ),
           ),
         ),
