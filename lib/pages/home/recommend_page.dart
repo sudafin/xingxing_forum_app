@@ -3,7 +3,7 @@ import 'package:xingxing_forum_app/utils/size_fit.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import 'package:provider/provider.dart';
 import '../../store/store_viewmodel.dart';
-
+import '../../widgets/post_detail_page.dart';
 
 class RecommendPage extends StatefulWidget {
   const RecommendPage({super.key});
@@ -142,7 +142,7 @@ class RecommendPageState extends State<RecommendPage> {
               crossAxisCount: 2, // 每行显示两个项目
               crossAxisSpacing: 8, // 水平间距
               mainAxisSpacing: 8, // 垂直间距
-              childAspectRatio: 0.93, // 宽高比
+              childAspectRatio: 1.0, // 宽高比
             ),
             itemCount: 10, // 假设有10个帖子
             shrinkWrap: true, // 使 GridView 的高度适应内容
@@ -171,7 +171,17 @@ class RecommendPageState extends State<RecommendPage> {
   Widget _buildPostItem(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        // 点击帖子项的逻辑
+        Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDetailPage(
+                      imageCount: 1,
+                      category: '1',
+                      interactions: {'1': 1},
+                      postId: '123',
+                    ),
+                  ),
+                );
       },
       child: Card(
         elevation: 4,
@@ -184,7 +194,7 @@ class RecommendPageState extends State<RecommendPage> {
             Stack(
               children: [
                 Container(
-                  height: SizeFit.screenHeight * 0.2, // 设置帖子图片的高度
+                  height: 150, // 设置帖子图片的高度
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),

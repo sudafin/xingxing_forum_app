@@ -154,7 +154,7 @@ class PostPageState extends State<PostPage> {
                       children: [
                         Text(
                           selectedModule,
-                          style: TextStyle(fontSize: 20, color: hintTextColor),
+                          style: TextStyle(fontSize: 16, color: hintTextColor),
                         ),
                         SizedBox(width: 5),
                         Icon(
@@ -171,9 +171,9 @@ class PostPageState extends State<PostPage> {
                     decoration: InputDecoration(
                       hintText: '标题(必填)',
                       border: InputBorder.none,
-                      hintStyle: TextStyle(fontSize: 20, color: hintTextColor),
+                      hintStyle: TextStyle(fontSize: 16, color: hintTextColor),
                     ),
-                    style: TextStyle(fontSize: 20, color: textColor),
+                    style: TextStyle(fontSize: 16, color: textColor),
                   ),
                   Divider(height: 10, color: Colors.grey[200]),
                   Expanded(
@@ -185,9 +185,9 @@ class PostPageState extends State<PostPage> {
                         hintText: '请输入内容',
                         border: InputBorder.none,
                         hintStyle:
-                            TextStyle(fontSize: 20, color: hintTextColor),
+                            TextStyle(fontSize: 16, color: hintTextColor),
                       ),
-                      style: TextStyle(fontSize: 20, color: textColor),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                   ),
                 ],

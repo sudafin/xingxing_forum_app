@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
 import '../../store/store_viewmodel.dart';
 import 'package:provider/provider.dart';
-
+import 'profile_build_header.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,6 +15,11 @@ class _ProfilePageState extends State<ProfilePage> {
   final ScrollController _scrollController = ScrollController();
   bool _isTransparent = true;
   double _opacity = 1.0;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     // 获取当前路由名称
@@ -57,6 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
         drawer: routeName != '/profile'  ? MenuDrawer() : null,
         body: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
+          print('_scrollController.offset:${_scrollController.offset}');
           //设置透明度
             final newOpacity = 1 - _scrollController.offset / 210;
             if (newOpacity != _opacity) {
@@ -171,27 +177,14 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     );
   }
 
+//设置个人资料
   Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(40, 0, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 50,
-          ),
-          SizedBox(height: 16),
-          Text(
-            '用户名',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8),
-          Text('个人简介'),
-        ],
-      ),
-    );
+    return ProfileBuildHeader();
   }
+
+
+
+
 
   Widget _buildTopicList() {
     return Container(
@@ -249,6 +242,10 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     );
   }
 }
+
+
+
+
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);
