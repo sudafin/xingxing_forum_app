@@ -142,7 +142,7 @@ class RecommendPageState extends State<RecommendPage> {
               crossAxisCount: 2, // 每行显示两个项目
               crossAxisSpacing: 8, // 水平间距
               mainAxisSpacing: 8, // 垂直间距
-              childAspectRatio: 1.0, // 宽高比
+              childAspectRatio: 0.82, // 宽高比
             ),
             itemCount: 10, // 假设有10个帖子
             shrinkWrap: true, // 使 GridView 的高度适应内容

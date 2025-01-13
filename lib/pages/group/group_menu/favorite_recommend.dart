@@ -81,7 +81,7 @@ class _FavoriteRecommendState extends State<FavoriteRecommend> {
               // 设置交叉轴间距
               crossAxisSpacing: 9,
               // 设置子控件的宽高比
-              childAspectRatio: 1.2,
+              childAspectRatio: 0.8,
             ),
             // 设置item数量
             itemCount: favoriteList.length,

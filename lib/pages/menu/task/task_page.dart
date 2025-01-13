@@ -57,7 +57,7 @@ class _TaskPageState extends State<TaskPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('看视频免广告(限时)...'),
-                      Text('看视频免除显示联盟广告,持续24小时'),
+                      Text('看视频免除显示联盟广告,持续24小时',style: TextStyle(fontSize: 10),),
                     ],
                   ),
                   Spacer(),

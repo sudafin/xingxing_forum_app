@@ -3,7 +3,7 @@ import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
 import '../../store/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'profile_build_header.dart';
-
+import 'package:flutter/scheduler.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -60,24 +60,25 @@ class _ProfilePageState extends State<ProfilePage> {
           toolbarHeight: 60,
         ),
         drawer: routeName != '/profile'  ? MenuDrawer() : null,
-        body: NotificationListener<ScrollNotification>(
+          body: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
-          print('_scrollController.offset:${_scrollController.offset}');
-          //设置透明度
-            final newOpacity = 1 - _scrollController.offset / 210;
-            if (newOpacity != _opacity) {
-              setState(() {
-                _opacity = newOpacity.clamp(0.0, 1.0);
-              });
-            }
             if (notification is ScrollUpdateNotification) {
-            //调整tittle出现的时机
-              final newTransparent = _scrollController.offset < 100;
-              if (newTransparent != _isTransparent) {
-                setState(() {
-                  _isTransparent = newTransparent;
-                });
-              }
+              // 因为我们需要使用回调函数,并且在函数中使用setSate,那么如果页面渲染过快可能导致setSate失败,所以需要使用 SchedulerBinding 在帧结束后更新状态,也就是渲染结束后setState修改状态
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                final newOpacity = 1 - _scrollController.offset / 210;
+                if (newOpacity != _opacity) {
+                  setState(() {
+                    _opacity = newOpacity.clamp(0.0, 1.0);
+                  });
+                }
+                
+                final newTransparent = _scrollController.offset < 100;
+                if (newTransparent != _isTransparent) {
+                  setState(() {
+                    _isTransparent = newTransparent;
+                  });
+                }
+              });
             }
             return true;
           },
@@ -196,7 +197,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
-        itemCount: 10,
+        itemCount: 100,
         itemBuilder: (context, index) {
           return Container(
             color: Colors.blue,
@@ -212,6 +213,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
       margin: EdgeInsets.all(10),
       child: ListView.builder(
         itemCount: 10,
+        shrinkWrap: true,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('回复'),
