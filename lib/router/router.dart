@@ -34,5 +34,6 @@ class RouterConstant{
   '/add_friend':(context) => const AddFriendPage(),
   '/post':(context) => const PostPage(),
   '/error':(context) => const ErrorPage(),
+  
   };
 }

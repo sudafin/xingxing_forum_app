@@ -8,6 +8,7 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   double _appBarOpacity = 1.0;
   final double _maxScrollExtent = 200.0;
+  int _count = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,8 @@ class _TestPageState extends State<TestPage> {
           if (notification is ScrollNotification) {
             setState(() {
               _appBarOpacity = 1 - (notification.metrics.pixels / _maxScrollExtent);
-              if (_appBarOpacity < 0) {
                 _appBarOpacity = 0;
+              if (_appBarOpacity < 0) {
               } else if (_appBarOpacity > 1) {
                 _appBarOpacity = 1;
               }
@@ -31,11 +32,19 @@ class _TestPageState extends State<TestPage> {
           return true;
         },
         child: ListView.builder(
-          itemCount: 100,
+          itemCount: _count,
           itemBuilder: (context, index) {
             return ListTile(title: Text('Item $index'));
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _count++;
+          });
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
