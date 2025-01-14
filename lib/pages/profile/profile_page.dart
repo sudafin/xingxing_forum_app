@@ -44,6 +44,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: Scaffold(
         appBar: AppBar(
+        leading: arguments == '/profile' ? IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ) : null,
           title: !_isTransparent
               ? TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 50, end: 0),

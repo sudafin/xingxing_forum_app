@@ -133,7 +133,6 @@ class CommonAppBar extends StatelessWidget {
       ),
       //如果是群组页面index为1，则显示搜索框
       title: (pageType == PageType.group) ? SearchBar() : null,
-      //听歌图标和邮件图标太靠右
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 6),
@@ -183,19 +182,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
       });
     });
     return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
+       children: [
         AppBar(
+          toolbarHeight: 50,
           title: Image.asset(
             'assets/images/logo_name.png',
             scale: 1,
           ),
-          centerTitle: true,
           shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
           //滑动时阴影消失
           scrolledUnderElevation: 0,
           leading: Padding(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(bottom: 0),
             child: IconButton(
               onPressed: () {
                 // 打开菜单栏
@@ -208,7 +206,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 6, bottom: 10),
+              padding: EdgeInsets.only(right: 6),
               child: IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/task');
