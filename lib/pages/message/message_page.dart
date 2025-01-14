@@ -162,7 +162,6 @@ class _MessagePageBodyState extends State<MessagePageBody> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
             Expanded(
               child: ListTile(
                 title: Text(

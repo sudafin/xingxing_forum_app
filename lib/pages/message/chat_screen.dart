@@ -137,7 +137,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
                 textInputAction: TextInputAction.newline,
                 keyboardType: TextInputType.multiline,
-                maxLines: isShow ? 1 : null,
+                //maxLines为null表示显示无限行, 1表示显示1行,如果大于1行就滚动显示
+                maxLines: isShow ? 1 : 5,
                 minLines: 1,
                 controller: _textController,
                 decoration: InputDecoration(
