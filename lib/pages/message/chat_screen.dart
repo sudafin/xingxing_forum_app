@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class ChatScreen extends StatefulWidget {
   final int id;
   const ChatScreen({super.key, required this.id});
@@ -28,7 +27,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void _handleSubmitted(String text) {
     _textController.clear();
     setState(() {
-      _messages.insert(_messages.length, ChatMessage(text: text, isMe: true, time: DateTime.now().toLocal()));
+      _messages.insert(_messages.length,
+          ChatMessage(text: text, isMe: true, time: DateTime.now().toLocal()));
     });
     //拉动到最新消息
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -36,7 +36,8 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
-        _messages.insert(_messages.length, ChatMessage(text: '这是一条固定的回复消息', isMe: false));
+        _messages.insert(
+            _messages.length, ChatMessage(text: '这是一条固定的回复消息', isMe: false));
       });
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToBottom();
@@ -113,6 +114,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Container(
+            padding: EdgeInsets.all(10),
             color: Color(0xFFFAFAFA),
             child: _buildTextComposer(),
           ),
@@ -130,35 +132,40 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: isShow ? 1 : 2,
-              child: TextField(
-                onTapOutside: (event) {
-                  FocusScope.of(context).unfocus();
-                },
-                textInputAction: TextInputAction.newline,
-                keyboardType: TextInputType.multiline,
-                //maxLines为null表示显示无限行, 1表示显示1行,如果大于1行就滚动显示
-                maxLines: isShow ? 1 : 5,
-                minLines: 1,
-                controller: _textController,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: '发送消息',
-                  hintStyle: TextStyle(fontSize: 16, color: Colors.grey[400]),
-                  filled: true,
-                  fillColor: Color(0xFFFFFFFF),
-                  isDense: true,
+              flex: 1,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: isShow ? 50 : 200,
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    isShow = !value.isNotEmpty;
-                  });
-                },
+                child: TextField(
+                  onTapOutside: (event) {
+                    FocusScope.of(context).unfocus();
+                  },
+                  textInputAction: TextInputAction.newline,
+                  keyboardType: TextInputType.multiline,
+                  //maxLines为null表示显示无限行, 1表示显示1行,如果大于1行就滚动显示
+                  maxLines: isShow ? 1 : 5,
+                  minLines: 1,
+                  controller: _textController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: '发送消息',
+                    hintStyle: TextStyle(fontSize: 16, color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: Color(0xFFFFFFFF),
+                    isDense: true,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      isShow = !value.isNotEmpty;
+                    });
+                  },
+                ),
               ),
             ),
             Row(
@@ -211,7 +218,8 @@ class ChatMessage extends StatelessWidget {
   final bool isMe;
   final DateTime? time;
 
-  const ChatMessage({super.key, required this.text, required this.isMe, this.time});
+  const ChatMessage(
+      {super.key, required this.text, required this.isMe, this.time});
 
   @override
   Widget build(BuildContext context) {
