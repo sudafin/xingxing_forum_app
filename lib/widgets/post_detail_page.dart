@@ -549,6 +549,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
               minLines: isShow ? 1 : 3,
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
+              onChanged: (text) {
+                // 当文本变化时触发重建
+                setState(() {});
+              },
               onTap: () {
                 setState(() {
                   isShow = false;
@@ -658,19 +662,18 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     width: 48,
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        setState(() {
-                          isShow = true;
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('发表评论'),
-                              content: Text('请输入评论内容'),
-                            ),
-                          );
-                        });
-                      },
+                      icon: _commentController.text.isEmpty
+                          ? Icon(Icons.send, color: Colors.grey[500])
+                          : Icon(Icons.send, color: Colors.blue),
+                      onPressed: _commentController.text.isEmpty 
+                          ? null  // 当文本为空时禁用按钮
+                          : () {
+                              setState(() {
+                                isShow = true;
+                                Fluttertoast.showToast(msg: '发表评论');
+                                _commentController.clear();
+                              });
+                            },
                     ),
                   ),
           ),
