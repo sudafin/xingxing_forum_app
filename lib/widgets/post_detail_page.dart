@@ -549,6 +549,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               minLines: isShow ? 1 : 3,
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
+              //监听输入框的内容,如果要使用_commentController.text.isEmpty,需要使用onChanged,不然没有变化
               onChanged: (text) {
                 // 当文本变化时触发重建
                 setState(() {});
