@@ -48,17 +48,18 @@ class _MessagePageBodyState extends State<MessagePageBody> {
 
   Widget _buildHeader() {
     return Container(
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
         _buildActionButton('赞或收藏', 'assets/images/collection.png', () {
-          print('赞或收藏');
+          Navigator.pushNamed(context, '/favorite_notified');
         }, 0),
         _buildActionButton('新增关注', 'assets/images/person.png', () {
-          print('新增关注');
+          Navigator.pushNamed(context, '/follow_notified');
         }, 1),
         _buildActionButton('评论或@', 'assets/images/notification.png', () {
-          print('评论或@');
+          Navigator.pushNamed(context, '/comment_notified');
         }, 2),
       ],
     ));
@@ -66,7 +67,11 @@ class _MessagePageBodyState extends State<MessagePageBody> {
 
   Widget _buildActionButton(
       String title, String iconPath, Function onTap, int index) {
-    return Column(
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Column(
       children: [
         Stack(
           alignment: Alignment.center,
@@ -86,12 +91,7 @@ class _MessagePageBodyState extends State<MessagePageBody> {
               ),
             ),
             // 图片层
-            InkWell(
-              onTap: () {
-                onTap();
-              },
-              child: Image.asset(iconPath, width: 36, height: 36),
-            ),
+            Image.asset(iconPath, width: 36, height: 36),
             // 右上角显示数字
             Positioned(
               right: 0,
@@ -119,6 +119,7 @@ class _MessagePageBodyState extends State<MessagePageBody> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ],
+      )
     );
   }
 

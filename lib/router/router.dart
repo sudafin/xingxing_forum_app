@@ -12,9 +12,12 @@ import '../pages/menu/history/history_page.dart';
 import '../pages/menu/settings/settings_page.dart';
 import '../pages/menu/task/task_page.dart';
 import '../widgets/search_page.dart';
-import '../pages/message/add_friend_page.dart';
+import '../pages/message/follow_notified.dart';
+import '../pages/message/favorite_notified.dart';
+import '../pages/message/comment_notified.dart';
 import '../pages/screen/splash_screen.dart';
 import '../widgets/post_page/post_page.dart';
+import '../widgets/post_detail_page.dart';
 
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
@@ -31,9 +34,12 @@ class RouterConstant{
   '/settings':(context) => const SettingsPage(),
   '/task':(context) => const TaskPage(),
   '/search':(context) => const SearchPage(),
-  '/add_friend':(context) => const AddFriendPage(),
   '/post':(context) => const PostPage(),
+  '/post_detail':(context) => const PostDetailPage(postId: ''),
   '/error':(context) => const ErrorPage(),
-  
+  '/follow_notified':(context) => const FollowNotifiedPage(),
+  '/favorite_notified':(context) => const FavoriteNotifiedPage(),
+  '/comment_notified':(context) => const CommentNotifiedPage(),
+
   };
 }

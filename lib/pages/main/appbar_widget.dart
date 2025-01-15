@@ -101,9 +101,9 @@ class MessageAppBar extends StatelessWidget {
           padding: EdgeInsets.only(right: 6),
           onPressed: () {
             //跳转添加好友页面
-            Navigator.pushNamed(context, '/add_friend');
+            Navigator.pushNamed(context, '/search');
           },
-          icon: Icon(Icons.person_add, color: Colors.blue),
+          icon: Icon(Icons.search, color: Colors.blue),
           alignment: Alignment.centerRight,
         ),
       ],
