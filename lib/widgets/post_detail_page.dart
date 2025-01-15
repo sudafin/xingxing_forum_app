@@ -27,7 +27,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
   final TextEditingController _commentController = TextEditingController();
   bool _isLiked = false;
   int _likeCount = 123;
-  int _commentCount = 123;
+  final int _commentCount = 123;
   bool _isCollected = false;
   bool isShow = true;
 
@@ -518,12 +518,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   Widget _buildCommentInput() {
     return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 16,
-        right: 16,
-        top: 8,
-      ),
+       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: context.watch<StoreViewModel>().theme == Brightness.light
             ? Colors.white
@@ -545,8 +540,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
             flex: isShow ? 1 : 2,
             child: TextField(
               controller: _commentController,
-              maxLines: isShow ? 1 : null,
-              minLines: isShow ? 1 : 3,
+              maxLines: isShow ? 1 : 5,
+              minLines: 1,
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
               //监听输入框的内容,如果要使用_commentController.text.isEmpty,需要使用onChanged,不然没有变化
@@ -660,12 +655,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     ],
                   )
                 : Container(
-                    width: 48,
+                    width: 55,
                     alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: _commentController.text.isEmpty
-                          ? Icon(Icons.send, color: Colors.grey[500])
-                          : Icon(Icons.send, color: Colors.blue),
+                    child: TextButton(
                       onPressed: _commentController.text.isEmpty 
                           ? null  // 当文本为空时禁用按钮
                           : () {
@@ -675,6 +667,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 _commentController.clear();
                               });
                             },
+                            child: _commentController.text.isEmpty
+                          ? Text('发送',style: TextStyle(color: Colors.grey[500]),)
+                          : Text('发送',style: TextStyle(color: Colors.blue),),
                     ),
                   ),
           ),
