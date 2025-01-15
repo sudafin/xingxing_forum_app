@@ -15,61 +15,58 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
   bool isLiked = false;
   bool isShow = true;
   bool showEmoji = false;
+  final FocusNode focusNode = FocusNode();
   final TextEditingController _textController = TextEditingController();
+  final ScrollController _emojiScrollController = ScrollController();
   XFile? selectedImage;
 
-  @override
-  void initState() {
-    super.initState();
-    _textController.addListener(_onTextChanged);
-  }
-
-  void _onTextChanged() {
-    if (mounted) {
-      setState(() {
-        isShow = _textController.text.isEmpty;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _textController.removeListener(_onTextChanged);
-    _textController.dispose();
-    super.dispose();
-  }
-
+  
   Widget _buildEmojiPicker() {
     return SizedBox(
       height: 250,
       child: EmojiPicker(
+        textEditingController: _textController,
+        scrollController: _emojiScrollController,
         onEmojiSelected: (Category? category, Emoji emoji) {
-          _textController.text = _textController.text + emoji.emoji;
+        //这里得用setState,但是会点击输入框才会出现发送按钮,因为这里是底部弹窗得用setModalState才会及时
+          setState(() {
+            isShow = false;
+          });  
         },
         config: Config(
           height: 256,
           checkPlatformCompatibility: true,
+        //表情区域
           emojiViewConfig: EmojiViewConfig(
-            emojiSizeMax: 32,
+            backgroundColor: Colors.white,
+            emojiSizeMax: 24,
             columns: 7,
           ),
+          //种类区域
           categoryViewConfig: CategoryViewConfig(
+            backgroundColor: Colors.white,
             indicatorColor: Colors.blue,
             iconColor: Colors.grey,
             iconColorSelected: Colors.blue,
             backspaceColor: Colors.blue,
             tabIndicatorAnimDuration: kTabScrollDuration,
           ),
+
           skinToneConfig: SkinToneConfig(
             dialogBackgroundColor: Colors.white,
             indicatorColor: Colors.grey,
           ),
+          //搜索区域
           searchViewConfig: SearchViewConfig(
+            backgroundColor: Colors.white,
             buttonIconColor: Colors.blue,
+            hintText: '搜索',
+            hintTextStyle: TextStyle(color: Colors.grey),
           ),
           bottomActionBarConfig: BottomActionBarConfig(
-            backgroundColor: const Color(0xFFF2F2F2),
-            buttonIconColor: Colors.blue,
+            backgroundColor: Colors.white,
+            buttonIconColor: Colors.grey,
+            buttonColor: Colors.white,
           ),
           viewOrderConfig: ViewOrderConfig(),
           locale: const Locale('zh', 'CN'),
@@ -165,8 +162,15 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
                                 maxHeight: 120,
                               ),
                               child: TextField(
+                                focusNode: focusNode,
                                 onTapOutside: (event) {
                                   FocusScope.of(context).unfocus();
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    showEmoji = false;
+                                    focusNode.requestFocus();
+                                  });
                                 },
                                 textInputAction: TextInputAction.newline,
                                 keyboardType: TextInputType.multiline,
@@ -201,6 +205,7 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
                           ),
                           IconButton(
                             onPressed: () {
+                            //setModalState适用于在showModalBottomSheet中使用
                               setModalState(() {
                                 showEmoji = !showEmoji;
                                 if (showEmoji) {
@@ -392,6 +397,7 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
                     SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
+                        focusNode.requestFocus();
                         _showCommentInput(context);
                       },
                       child: Container(
@@ -412,7 +418,7 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
                             ),
                             SizedBox(width: 5),
                             Text(
-                              '评论',
+                              '回复',
                               style:
                                   TextStyle(fontSize: 12, color: Colors.black),
                             ),

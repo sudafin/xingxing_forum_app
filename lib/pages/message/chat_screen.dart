@@ -1,4 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_compress/video_compress.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final int id;
@@ -11,26 +16,39 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = [];
-  bool isShow = true;
   bool isEmoji = false;
   bool isAdd = false;
+  bool isShow = true;
   //listview的滚动控制器,用来拉动到最新消息
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _emojiScrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
+  bool showEmoji = false;
+  final ImagePicker _picker = ImagePicker();
+  bool showAddPanel = false;
+  
+
   @override
   void initState() {
     super.initState();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
     });
   }
 
-  void _handleSubmitted(String text) {
+  void _handleSubmitted(String text, {bool isMedia = false}) {
     _textController.clear();
     setState(() {
       _messages.insert(_messages.length,
-          ChatMessage(text: text, isMe: true, time: DateTime.now().toLocal()));
+          ChatMessage(
+            text: text,
+            isMe: true,
+            time: DateTime.now().toLocal(),
+            isMedia: isMedia,
+          ));
     });
-    //拉动到最新消息
+    // 添加滚动到最新消息
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
     });
@@ -52,6 +70,73 @@ class _ChatScreenState extends State<ChatScreen> {
       duration: Duration(milliseconds: 300),
       curve: Curves.linear,
     );
+  }
+
+  Widget _buildEmojiPicker() {
+    return Container(
+      height: 250,
+      child: EmojiPicker(
+        textEditingController: _textController,
+        scrollController: _emojiScrollController,
+        onEmojiSelected: (Category? category, Emoji emoji) {
+          setState(() {
+            isShow = false;
+          });
+        },
+        config: Config(
+          height: 256,
+          checkPlatformCompatibility: true,
+        //表情区域
+          emojiViewConfig: EmojiViewConfig(
+            backgroundColor: Colors.white,
+            emojiSizeMax: 24,
+            columns: 7,
+          ),
+          //种类区域
+          categoryViewConfig: CategoryViewConfig(
+            backgroundColor: Colors.white,
+            indicatorColor: Colors.blue,
+            iconColor: Colors.grey,
+            iconColorSelected: Colors.blue,
+            backspaceColor: Colors.blue,
+            tabIndicatorAnimDuration: kTabScrollDuration,
+          ),
+
+          skinToneConfig: SkinToneConfig(
+            dialogBackgroundColor: Colors.white,
+            indicatorColor: Colors.grey,
+          ),
+          //搜索区域
+          searchViewConfig: SearchViewConfig(
+            backgroundColor: Colors.white,
+            buttonIconColor: Colors.blue,
+            hintText: '搜索',
+            hintTextStyle: TextStyle(color: Colors.grey),
+          ),
+          bottomActionBarConfig: BottomActionBarConfig(
+            backgroundColor: Colors.white,
+            buttonIconColor: Colors.grey,
+            buttonColor: Colors.white,
+          ),
+          viewOrderConfig: ViewOrderConfig(),
+          locale: const Locale('zh', 'CN'),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      _handleSubmitted(image.path, isMedia: true);
+    }
+  }
+
+  Future<void> _pickVideo() async {
+    final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+    if (video != null) {
+      _handleSubmitted(video.path, isMedia: true);
+    }
   }
 
   @override
@@ -114,7 +199,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(5),
             color: Color(0xFFFAFAFA),
             child: _buildTextComposer(),
           ),
@@ -128,86 +213,135 @@ class _ChatScreenState extends State<ChatScreen> {
       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: isShow ? 50 : 200,
-                ),
-                child: TextField(
-                  onTapOutside: (event) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  textInputAction: TextInputAction.newline,
-                  keyboardType: TextInputType.multiline,
-                  //maxLines为null表示显示无限行, 1表示显示1行,如果大于1行就滚动显示
-                  maxLines: isShow ? 1 : 5,
-                  minLines: 1,
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintText: '发送消息',
-                    hintStyle: TextStyle(fontSize: 16, color: Colors.grey[400]),
-                    filled: true,
-                    fillColor: Color(0xFFFFFFFF),
-                    isDense: true,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      isShow = !value.isNotEmpty;
-                    });
-                  },
-                ),
-              ),
-            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.emoji_emotions_outlined,
-                      size: 30,
-                      color: Colors.grey[500],
-                    )),
-                isShow
-                    ? IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.add_circle_outline,
-                          size: 30,
-                          color: Colors.grey[500],
-                        ))
-                    : TextButton(
-                        onPressed: _textController.text.isEmpty
-                            ? null
-                            : () {
-                                setState(() {
-                                  isShow = true;
-                                  _handleSubmitted(_textController.text);
-                                  _textController.clear();
-                                });
-                              },
-                        child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text('发送',
-                                style: TextStyle(color: Colors.white)))),
+                Expanded(
+                  child: TextField(
+                   cursorHeight: 15,
+                    focusNode: _focusNode,
+                    onChanged: (text) {
+                      setState(() {
+                        isShow = !text.isNotEmpty;
+                      });
+                    },
+                    onTap: () {
+                        setState(() {
+                          showEmoji = false;
+                        });
+                        _focusNode.requestFocus();
+                    },
+                    onTapOutside: (event) {
+                      setState(() {
+                        showEmoji = false;
+                      });
+                      FocusScope.of(context).unfocus();
+                    },
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    maxLines:null,
+                    minLines: 1,
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: '发送消息',
+                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                      filled: true,
+                      fillColor: Color(0xFFFFFFFF),
+                      isDense: true,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showEmoji = !showEmoji;
+                          showAddPanel = false;
+                        });
+                      },
+                      icon: Icon(
+                        showEmoji ? Icons.keyboard : Icons.emoji_emotions_outlined,
+                        size: 30,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    isShow
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                showAddPanel = !showAddPanel;
+                                showEmoji = false;
+                              });
+                            },
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                              size: 30,
+                              color: Colors.grey[500],
+                            ))
+                        : TextButton(
+                            onPressed: () {
+                              _handleSubmitted(_textController.text);
+                              _textController.clear();
+                            },
+                            child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text('发送',
+                                    style: TextStyle(color: Colors.white)))),
+                  ],
+                ),
               ],
-            )
+            ),
+            if (showEmoji) _buildEmojiPicker(),
+            if (showAddPanel) _buildAddPanel(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAddPanel() {
+    return Container(
+      height: 100,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            icon: Icon(Icons.image, size: 40,color: Colors.blue),
+            onPressed: () {
+              setState(() {
+                showAddPanel = false;
+              });
+              _pickImage();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.video_library, size: 40,color: Colors.blue),
+            onPressed: () {
+              setState(() {
+                showAddPanel = false;
+              });
+              _pickVideo();
+            },
+          ),
+        ],
       ),
     );
   }
@@ -217,9 +351,15 @@ class ChatMessage extends StatelessWidget {
   final String text;
   final bool isMe;
   final DateTime? time;
+  final bool isMedia;
 
-  const ChatMessage(
-      {super.key, required this.text, required this.isMe, this.time});
+  const ChatMessage({
+    super.key,
+    required this.text,
+    required this.isMe,
+    this.time,
+    this.isMedia = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -258,9 +398,61 @@ class ChatMessage extends StatelessWidget {
                         color: isMe ? Colors.blue : Colors.white,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Text(text,
-                          style: TextStyle(
-                              color: isMe ? Colors.white : Colors.black)),
+                      child: isMedia
+                          ? text.endsWith('.mp4') || text.endsWith('.mov')
+                              ? FutureBuilder<File?>(
+                                  future: VideoCompress.getFileThumbnail(
+                                    text,
+                                    quality: 50,
+                                    position: -1,
+                                  ),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    }
+                                    if (snapshot.hasData) {
+                                      return Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Image.file(snapshot.data!, 
+                                            width: 200, 
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          Positioned(
+                                            bottom: 8,
+                                            right: 8,
+                                            child: Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.black54,
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              child: FutureBuilder<MediaInfo?>(
+                                                future: VideoCompress.getMediaInfo(text),
+                                                builder: (context, infoSnapshot) {
+                                                  if (infoSnapshot.hasData) {
+                                                    final duration = Duration(seconds: infoSnapshot.data!.duration?.toInt() ?? 0);
+                                                    return Text(
+                                                      '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                                                      style: TextStyle(color: Colors.white),
+                                                    );
+                                                  }
+                                                  return SizedBox.shrink();
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return Text('无法加载视频缩略图');
+                                  },
+                                )
+                              : Image.file(File(text), width: 200, height: 200)
+                          : Text(text,
+                              style: TextStyle(
+                                  color: isMe ? Colors.white : Colors.black)),
                     ),
                   ],
                 ),

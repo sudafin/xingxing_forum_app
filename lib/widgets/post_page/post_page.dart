@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import '../../store/store_viewmodel.dart';
-import 'emoji_page.dart';
 import 'image_page.dart';
 import 'video_page.dart';
 import 'additional_page.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -17,6 +17,8 @@ class PostPage extends StatefulWidget {
 class PostPageState extends State<PostPage> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  final _emojiScrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
   final List<String> selectedImages = [];
   final List<Map<String, String>> selectedVideos = [];
   bool isShow = false;
@@ -25,24 +27,7 @@ class PostPageState extends State<PostPage> {
   bool isAlbum = false;
   bool isVideo = false;
   String selectedModule = '请选择发布版块';
-  void _insertEmoji(String emoji) {
-    //获取当前内容框中的的全部文本
-    final text = _contentController.text;
-    //获取当前光标所在位置,也就是我们要插入的位置,其中selection.start是开始位置,selection.end是结束位置
-    final selection = _contentController.selection;
-    //然后在光标当前位置上插入想要的数据,比如emoji,原本的text是'123' 如果在1和2的中间插入那么newText就是'1emoji23'
-    final newText = text.replaceRange(selection.start, selection.end, emoji);
-    //然后把文本替换为新的文本和然后设置替换后的光标位置
-    _contentController.value = TextEditingValue(
-      //设置新的文本
-      text: newText,
-      //插入emoji后光标位置,collapsed用于插入数据后光标显示的位置
-      selection: TextSelection.collapsed(
-        //baseOffset是光标位置加上emoji的长度
-        offset: selection.baseOffset + emoji.length,
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +163,15 @@ class PostPageState extends State<PostPage> {
                   Divider(height: 10, color: Colors.grey[200]),
                   Expanded(
                     child: TextField(
+                      onTap: () {
+                        setState(() {
+                          isEmoji = false;
+                          isAlbum = false;
+                          isVideo = false;
+                          isAdd = false;
+                        });
+                      },
+                      focusNode: _focusNode,
                       controller: _contentController,
                       maxLines: null,
                       expands: true,
@@ -197,95 +191,91 @@ class PostPageState extends State<PostPage> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 2000),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.white
-                      : Colors.black,
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300]!),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _focusNode.unfocus();
+                              isEmoji = !isEmoji;
+                              isShow = isEmoji;
+                              isAlbum = false;
+                              isVideo = false;
+                              isAdd = false;
+                            });
+                          },
+                          icon: Image.asset(
+                            'assets/images/emoji.png',
+                            color: isEmoji ? Colors.blue : hintTextColor,
+                            width: 40,
+                            height: 35,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isAlbum = !isAlbum;
+                              isShow = isAlbum;
+                              isEmoji = false;
+                              isVideo = false;
+                              isAdd = false;
+                            });
+                          },
+                          icon: Image.asset(
+                            'assets/images/album.png',
+                            color: isAlbum ? Colors.blue : hintTextColor,
+                            width: 40,
+                            height: 30,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _focusNode.unfocus();
+                              isVideo = !isVideo;
+                              isShow = isVideo;
+                              isEmoji = false;
+                              isAlbum = false;
+                              isAdd = false;
+                            });
+                          },
+                          icon: Image.asset(
+                            'assets/images/video.png',
+                            color: isVideo ? Colors.blue : hintTextColor,
+                            width: 40,
+                            height: 40,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isAdd = !isAdd;
+                              isShow = isAdd;
+                              isEmoji = false;
+                              isAlbum = false;
+                              isVideo = false;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            size: 30,
+                            color: isAdd ? Colors.blue : hintTextColor,
+                          )),
+                    ],
                   ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isEmoji = !isEmoji;
-                                isShow = isEmoji;
-                                isAlbum = false;
-                                isVideo = false;
-                                isAdd = false;
-                              });
-                            },
-                            icon: Image.asset(
-                              'assets/images/emoji.png',
-                              color: isEmoji ? Colors.blue : hintTextColor,
-                              width: 40,
-                              height: 35,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isAlbum = !isAlbum;
-                                isShow = isAlbum;
-                                isEmoji = false;
-                                isVideo = false;
-                                isAdd = false;
-                              });
-                            },
-                            icon: Image.asset(
-                              'assets/images/album.png',
-                              color: isAlbum ? Colors.blue : hintTextColor,
-                              width: 40,
-                              height: 30,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isVideo = !isVideo;
-                                isShow = isVideo;
-                                isEmoji = false;
-                                isAlbum = false;
-                                isAdd = false;
-                              });
-                            },
-                            icon: Image.asset(
-                              'assets/images/video.png',
-                              color: isVideo ? Colors.blue : hintTextColor,
-                              width: 40,
-                              height: 40,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isAdd = !isAdd;
-                                isShow = isAdd;
-                                isEmoji = false;
-                                isAlbum = false;
-                                isVideo = false;
-                              });
-                            },
-                            icon: Icon(
-                              Icons.add_circle_outline,
-                              size: 30,
-                              color: isAdd ? Colors.blue : hintTextColor,
-                            )),
-                      ],
-                    ),
-                    if (isShow)
-                      Container(
+                  if (isShow)
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      height: isEmoji || isAlbum || isVideo || isAdd 
+                          ? SizeFit.screenHeight * 0.3 
+                          : 0,
+                      child: Container(
                         margin: EdgeInsets.all(5),
-                        height: SizeFit.screenHeight * 0.3,
                         child: PageView(
                           children: [
                             if (isEmoji)
-                              EmojiPage(onEmojiSelected: _insertEmoji),
+                              _buildEmojiPicker(),
                             if (isAlbum)
                               AlbumPage(selectedImages: selectedImages),
                             if (isVideo)
@@ -294,11 +284,58 @@ class PostPageState extends State<PostPage> {
                           ],
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ],
         ));
+  }
+    Widget _buildEmojiPicker() {
+    return isEmoji ? SizedBox(
+      height: 250,
+      child: EmojiPicker(
+        textEditingController: _contentController,
+        scrollController: _emojiScrollController,
+        config: Config(
+          height: 256,
+          checkPlatformCompatibility: true,
+        //表情区域
+          emojiViewConfig: EmojiViewConfig(
+            backgroundColor: Colors.white,
+            emojiSizeMax: 24,
+            columns: 7,
+          ),
+          //种类区域
+          categoryViewConfig: CategoryViewConfig(
+            backgroundColor: Colors.white,
+            indicatorColor: Colors.blue,
+            iconColor: Colors.grey,
+            iconColorSelected: Colors.blue,
+            backspaceColor: Colors.blue,
+            tabIndicatorAnimDuration: kTabScrollDuration,
+          ),
+
+          skinToneConfig: SkinToneConfig(
+            dialogBackgroundColor: Colors.white,
+            indicatorColor: Colors.grey,
+          ),
+          //搜索区域
+          searchViewConfig: SearchViewConfig(
+            backgroundColor: Colors.white,
+            buttonIconColor: Colors.blue,
+            hintText: '搜索',
+            hintTextStyle: TextStyle(color: Colors.grey),
+          ),
+          bottomActionBarConfig: BottomActionBarConfig(
+            backgroundColor: Colors.white,
+            buttonIconColor: Colors.grey,
+            buttonColor: Colors.white,
+          ),
+          viewOrderConfig: ViewOrderConfig(),
+          locale: const Locale('zh', 'CN'),
+        ),
+      ),
+    ) : SizedBox.shrink();
   }
 }
