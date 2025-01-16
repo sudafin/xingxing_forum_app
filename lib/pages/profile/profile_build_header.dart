@@ -165,7 +165,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
         ),
         child: TextButton(
           onPressed: () {
-            //TODO:编辑资料跳转
+            Navigator.pushNamed(context, '/profile_edit');
           },
           child: Text('编辑资料',style: TextStyle(fontSize: 14,color: Colors.white),),
         ),
@@ -182,7 +182,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
           child: Center(
             child: IconButton(
               onPressed: () {
-                //TODO:私信跳转
+                Navigator.pushNamed(context, '/settings');
               },
               icon: Icon(Icons.settings_outlined,color: Colors.white,size: 20,),
               padding: EdgeInsets.zero,

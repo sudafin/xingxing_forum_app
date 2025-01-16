@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
             color: context.watch<StoreViewModel>().theme == Brightness.light
                 ? Color.fromARGB(243, 74, 74, 74)
                 : Color(0xFFFFFFFF),
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
