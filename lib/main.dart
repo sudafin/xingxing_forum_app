@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'stores/store_viewmodel.dart';
+import 'stores/store_drawer.dart';
 import 'router/router.dart';
 import 'pages/screen/splash_screen.dart';   
 import 'pages/main/main_page.dart';
 
 void main(List<String> args) {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => StoreViewModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => StoreViewModel()),
+        ChangeNotifierProvider(create: (context) => StoreDrawer()),
+      ],
       child: MyApp(),
     ),
   );

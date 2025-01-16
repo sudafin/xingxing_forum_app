@@ -3,6 +3,8 @@ import 'package:xingxing_forum_app/enum/page_type_enum.dart';
 import 'package:xingxing_forum_app/pages/main/appbar_widget.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
 import 'package:xingxing_forum_app/pages/message/chat_screen.dart';
+import 'package:xingxing_forum_app/stores/store_drawer.dart';
+import 'package:provider/provider.dart';
 
 class MessagePage extends StatelessWidget {
   const MessagePage({super.key});
@@ -13,6 +15,10 @@ class MessagePage extends StatelessWidget {
       appBar: AppBarWidgetHome(pageType: PageType.message),
       drawer: MenuDrawer(),
       body: MessagePageBody(),
+      onDrawerChanged: (isOpened) {
+      final store = Provider.of<StoreDrawer>(context, listen: false);
+      store.setIsOpened(isOpened);
+    },
     );
   }
 }

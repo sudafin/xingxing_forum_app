@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 class StoreViewModel extends ChangeNotifier{
    Brightness theme = Brightness.light;
-   Brightness changeTheme(){
-    theme = theme == Brightness.light ? Brightness.dark : Brightness.light;
+   Future<void> changeTheme() async {
+    theme = theme == Brightness.dark ? Brightness.light : Brightness.dark;
     notifyListeners();
-    return theme;
    }
  
 }

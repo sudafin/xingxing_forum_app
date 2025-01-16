@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:xingxing_forum_app/utils/size_fit.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import 'package:provider/provider.dart';
 import '../../stores/store_viewmodel.dart';

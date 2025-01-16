@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import 'init_data/init_item.dart';
+import 'package:provider/provider.dart';
+import 'package:xingxing_forum_app/stores/store_drawer.dart';
+
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -20,23 +23,40 @@ class MainPageState extends State<MainPage> {
         index: currentPageIndex,
         children: pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-      
-       //不显示未选中的标签
-        showUnselectedLabels: false,
-        currentIndex: currentPageIndex,
-        items: BottomBarItem.bottomBarItems,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        selectedFontSize: 14,
-        unselectedFontSize: 12,
-        iconSize: 25,
-        onTap: (index) { 
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
+      bottomNavigationBar: AnimatedCrossFade(
+        duration: context.watch<StoreDrawer>().isOpened
+            ? Duration(milliseconds: 0)
+            : Duration(milliseconds: 300),
+        crossFadeState: context.watch<StoreDrawer>().isOpened
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+        firstChild: SizedBox.shrink(),  // 隐藏状态
+        secondChild: Container(
+          height: 70,
+          child: ClipRect(
+            clipBehavior: Clip.hardEdge,
+            child: OverflowBox(
+              maxHeight: 70,
+              alignment: Alignment.bottomCenter,
+              child: BottomNavigationBar(
+                showUnselectedLabels: false,
+                currentIndex: currentPageIndex,
+                items: BottomBarItem.bottomBarItems,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: Colors.blue,
+                unselectedItemColor: Colors.grey,
+                selectedFontSize: 12,
+                unselectedFontSize: 10,
+                iconSize: 22,
+                onTap: (index) {
+                  setState(() {
+                    currentPageIndex = index;
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

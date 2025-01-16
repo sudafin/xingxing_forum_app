@@ -23,57 +23,18 @@ class MenuDrawerState extends State<MenuDrawer> {
           .copyWith(dividerTheme: DividerThemeData(color: Colors.transparent)),
       child: Drawer(
         backgroundColor:
-            context.watch<StoreViewModel>().theme == Brightness.dark
+            context.read<StoreViewModel>().theme == Brightness.dark
                 ? Colors.black
                 : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2),
         ),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // //菜单头
-            // DrawerHeader(
-            //   margin: EdgeInsets.zero,
-            //   padding: EdgeInsets.zero,
-            //   decoration: BoxDecoration(
-            //     color: context.watch<StoreViewModel>().theme == Brightness.dark
-            //         ? Colors.black
-            //         : Colors.lightBlue[400],
-            //   ),
-            //   child: InkWell(
-            //     onTap: () {
-            //       // 头像点击跳转逻辑
-            //       Navigator.pop(context); // 关闭抽屉
-            //       // 导航逻辑
-            //       Navigator.pushNamed(context, '/profile');
-            //     },
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         CircleAvatar(
-            //           radius: 30,
-            //           backgroundColor: Colors.white,
-            //           child: Icon(Icons.person, size: 50),
-            //         ),
-            //         SizedBox(height: 10),
-            //         Text(
-            //           '用户名',
-            //           style: TextStyle(
-            //             color: Colors.white,
-            //             fontSize: 16,
-            //             fontWeight: FontWeight.normal, // 设置字体为粗体
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: 40),
-            // 使用 menu_table_data.dart 中的数据构建菜单项
-            ...datas.map((TabData data) {
-              if (data.index != 4 && data.index != 7) {
-                return Container(
+        child: ListView.builder(
+          itemCount: datas.length,
+          itemBuilder: (context, index) {
+            final data = datas[index];
+            if (data.index != 4 && data.index != 7) {
+              return Container(
                     
                     child: 
                     Column(
@@ -101,10 +62,10 @@ class MenuDrawerState extends State<MenuDrawer> {
                     ) : SizedBox.shrink(),
                   ],
                 ));
-              }
-              //如果index为4的深色模式尾部则需要显示切换按钮
-              else if (data.index == 4) {
-                return Container(
+            }
+            //如果index为4的深色模式尾部则需要显示切换按钮
+            else if (data.index == 4) {
+              return Container(
                     margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: ListTile(
                       leading: Icon(data.icon,size: 20,),
@@ -123,18 +84,15 @@ class MenuDrawerState extends State<MenuDrawer> {
                           value: context.watch<StoreViewModel>().theme ==
                               Brightness.dark,
                           onChanged: (bool value) {
-                            setState(() {
-                              // 切换主题
-                              context.read<StoreViewModel>().changeTheme();
-                            });
+                            context.read<StoreViewModel>().changeTheme();
                           },
                         ),
                     ));
-              } 
-              //退出按钮需要设置按钮
-              else if (data.index == 7) {
-                // 退出按钮
-                return Container(
+            } 
+            //退出按钮需要设置按钮
+            else if (data.index == 7) {
+              // 退出按钮
+              return Container(
                     margin: EdgeInsets.fromLTRB(30, 100, 30, 0),
                     decoration: BoxDecoration(
                       color: context.watch<StoreViewModel>().theme ==
@@ -178,12 +136,11 @@ class MenuDrawerState extends State<MenuDrawer> {
                         ), // 设置字体为粗体
                       ],
                     ));
-              } else {
-                // 不用设置
-                return SizedBox.shrink();
-              }
-            }),
-          ],
+            } else {
+              // 不用设置
+              return SizedBox.shrink();
+            }
+          },
         ),
       ),
     );

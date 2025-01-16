@@ -12,6 +12,8 @@ import 'group_menu/single_game.dart';
 import 'group_menu/iinternet_gossip.dart';
 import 'group_menu/community_services.dart';
 import 'group_menu/game_product.dart';
+import 'package:xingxing_forum_app/stores/store_drawer.dart';
+
 class GroupPage extends StatelessWidget {
   const GroupPage({super.key});
 
@@ -23,6 +25,10 @@ class GroupPage extends StatelessWidget {
       drawer: MenuDrawer(),
       body: GroupPageBody(),
       backgroundColor: context.watch<StoreViewModel>().theme == Brightness.dark ? Colors.black : Colors.white,
+      onDrawerChanged: (isOpened) {
+      final store = Provider.of<StoreDrawer>(context, listen: false);
+      store.setIsOpened(isOpened);
+    },
     );
   }
 }

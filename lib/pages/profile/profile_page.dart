@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
 import '../../stores/store_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:xingxing_forum_app/stores/store_drawer.dart';
 import 'profile_build_header.dart';
 import 'package:flutter/scheduler.dart';
+
+
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -28,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     return Theme(
       data: Theme.of(context).copyWith(
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(     
               backgroundColor: Colors.blueGrey.withOpacity(_opacity),
               scrolledUnderElevation: 0,
               iconTheme: IconThemeData(
@@ -43,6 +47,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       child: Scaffold(
+      onDrawerChanged: (isOpened) {
+      final store = Provider.of<StoreDrawer>(context, listen: false);
+      store.setIsOpened(isOpened);
+    },
         appBar: AppBar(
         leading: arguments == '/profile' ? IconButton(
           icon: Icon(Icons.arrow_back),
@@ -193,7 +201,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildTopicList() {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -214,7 +222,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildReplyList() {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
       child: ListView.builder(
         itemCount: 10,
         shrinkWrap: true,
@@ -229,7 +237,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildFavoriteList() {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
