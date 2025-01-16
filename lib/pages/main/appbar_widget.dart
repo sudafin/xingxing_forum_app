@@ -94,6 +94,7 @@ class MessageAppBar extends StatelessWidget {
       ),
       title: Text(
         '消息',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       actions: [
         // 添加好友

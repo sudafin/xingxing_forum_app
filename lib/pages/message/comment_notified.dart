@@ -256,11 +256,21 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
         ),
         toolbarHeight: 50,
       ),
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return _buildItem(context, index);
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // 这里添加刷新逻辑
+          // 例如：重新获取数据
+          await Future.delayed(Duration(seconds: 1)); // 模拟网络请求
+          setState(() {
+            // 更新数据
+          });
         },
+        child: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return _buildItem(context, index);
+          },
+        ),
       ),
     );
   }
