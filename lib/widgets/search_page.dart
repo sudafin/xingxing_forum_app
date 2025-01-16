@@ -28,9 +28,10 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 50,
         backgroundColor: backgroundColor,
         title: Container(
-          height: SizeFit.screenHeight * 0.05,
+          height: 35,
           decoration: BoxDecoration(
             color: context.watch<StoreViewModel>().theme == Brightness.light
                 ? Colors.grey[200]
@@ -40,11 +41,11 @@ class _SearchPageState extends State<SearchPage> {
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search, color: textColor),
+              prefixIcon: Icon(Icons.search, color: textColor,size: 18,),
               hintText: '搜索...',
-              hintStyle: TextStyle(color: textColor, fontSize: 16),
+              hintStyle: TextStyle(color: textColor, fontSize: 14),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 10),
+              contentPadding: EdgeInsets.symmetric(vertical: 11.0),
             ),
             style: TextStyle(color: textColor),
             onSubmitted: (value) {
@@ -58,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
             padding: EdgeInsets.only(right: 10),
             child: TextButton(
               child: Text('搜索',
-                  style: TextStyle(color: Colors.blue, fontSize: 20)),
+                  style: TextStyle(color: Colors.blue, fontSize: 14)),
               onPressed: () {
                 // 处理搜索按钮点击
                 String searchText = _searchController.text;
@@ -95,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
     ];
 
     return Container(
-      margin: EdgeInsets.all(10),
+      
       child: Column(
         //缩短与内容的距离
         // spacing: -10,
@@ -148,7 +149,7 @@ class _SearchPageState extends State<SearchPage> {
     ];
 
     return Container(
-      margin:isShowGuess ? EdgeInsets.all(10) : EdgeInsets.zero,
+      margin: EdgeInsets.only(top: 10) ,
       child: Column(
         //缩短与内容的距离
         mainAxisSize: MainAxisSize.min,
@@ -248,7 +249,7 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     return Container(
-      margin: isShowGuess ? EdgeInsets.all(10) : EdgeInsets.zero,
+      margin: isShowGuess ? EdgeInsets.only(top: 10) : EdgeInsets.zero,
       child: Column(
         //缩短与内容的距离
         mainAxisSize: MainAxisSize.min,

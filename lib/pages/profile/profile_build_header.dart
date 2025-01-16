@@ -56,6 +56,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
           children: [
             GestureDetector(
               onTap: () {
+               //TODO 放大图片
                 print('点击头像');
               },
               child: CircleAvatar(

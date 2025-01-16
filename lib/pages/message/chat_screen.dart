@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 
 class ChatScreen extends StatefulWidget {
   final int id;
@@ -31,7 +31,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
     });
@@ -126,16 +125,59 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+      if (!status.isGranted) {
+        // 用户拒绝了权限
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('需要存储权限才能选择图片')),
+          );
+        }
+        return;
+      }
+    }
+    // 请求权限成功后,开始选择图片
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920, // 限制图片大小
+        maxHeight: 1080,
+        imageQuality: 85, // 压缩质量
+      );
     if (image != null) {
       _handleSubmitted(image.path, isMedia: true);
+    }
+    } catch (e) {
+      print('选择图片失败: $e');
     }
   }
 
   Future<void> _pickVideo() async {
-    final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
-    if (video != null) {
-      _handleSubmitted(video.path, isMedia: true);
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+      if (!status.isGranted) {
+        // 用户拒绝了权限
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('需要存储权限才能选择视频')),
+          );
+        }
+        return;
+      }
+    }
+    // 请求权限成功后,开始选择视频
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
+      if (video != null) {
+        _handleSubmitted(video.path, isMedia: true);
+      }
+    } catch (e) {
+      print('选择视频失败: $e');
     }
   }
 
