@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
-import '../../store/store_viewmodel.dart';
+import '../../stores/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'profile_build_header.dart';
 import 'package:flutter/scheduler.dart';

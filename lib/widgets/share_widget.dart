@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:clipboard/clipboard.dart';
 import '../../utils/size_fit.dart';
-import '../../store/store_viewmodel.dart';
+import '../stores/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 

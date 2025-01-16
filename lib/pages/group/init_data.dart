@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../store/store_viewmodel.dart';
+import '../../stores/store_viewmodel.dart';
 
 class GroupNav {
   static List<NavigationRailDestination> groupNavList = [];

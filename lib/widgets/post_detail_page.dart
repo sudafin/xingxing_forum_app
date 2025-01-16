@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'image_preview_page.dart';
 import 'package:provider/provider.dart';
-import '../store/store_viewmodel.dart';
+import '../stores/store_viewmodel.dart';
 
 class PostDetailPage extends StatefulWidget {
   final int? imageCount;

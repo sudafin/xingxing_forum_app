@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:provider/provider.dart';
-import '../../../store/store_viewmodel.dart';
+import '../../../stores/store_viewmodel.dart';
 import '../../../widgets/module_widget.dart';
 import '../../../utils/size_fit.dart';
 class GameProduct extends StatefulWidget {

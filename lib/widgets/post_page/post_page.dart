@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
-import '../../store/store_viewmodel.dart';
+import '../../stores/store_viewmodel.dart';
 import 'image_page.dart';
 import 'video_page.dart';
 import 'additional_page.dart';

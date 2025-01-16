@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../enum/page_type_enum.dart';
-import '../../store/store_viewmodel.dart';
+import '../../stores/store_viewmodel.dart';
 import '../main/appbar_widget.dart';
 import '../main/menu_drawer.dart';
 import 'init_data.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/post_detail_page.dart';
 import '../../widgets/image_preview_page.dart';
 import 'package:provider/provider.dart';
-import '../../store/store_viewmodel.dart';
+import '../../stores/store_viewmodel.dart';
 
 class PopularPage extends StatefulWidget {
   const PopularPage({super.key});
