@@ -117,7 +117,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
   }
 
   Widget _buildInfomation() {
-    return Container(
+    return SizedBox(
       width: 200,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

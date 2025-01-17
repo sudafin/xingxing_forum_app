@@ -226,7 +226,9 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.more_horiz),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/chat_setting');
+            },
           ),
         ],
       ),

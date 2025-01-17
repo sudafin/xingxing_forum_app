@@ -19,7 +19,7 @@ class ModuleWidgetState extends State<ModuleWidget> {
   bool isFavorite = false;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       child: Row(
         children: [
           // 头像
@@ -32,7 +32,7 @@ class ModuleWidgetState extends State<ModuleWidget> {
             width: 10,
           ),
           // 标题和描述还有收藏按钮,需要设置一个容器,设置宽度
-          Container(
+          SizedBox(
             width: SizeFit.screenWidth - 190,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

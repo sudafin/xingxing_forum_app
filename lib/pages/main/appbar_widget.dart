@@ -188,7 +188,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           toolbarHeight: 50,
           title: Image.asset(
             'assets/images/logo_name.png',
-            scale: 1,
+            scale: 1.5,
           ),
           shape: Border.all(color: Color(0xFFFFFFFF), width: 0),
           //滑动时阴影消失
@@ -259,7 +259,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: menuIndex == index ? Colors.blue : Colors.grey[600],
           ),

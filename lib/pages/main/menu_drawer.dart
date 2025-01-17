@@ -34,8 +34,7 @@ class MenuDrawerState extends State<MenuDrawer> {
           itemBuilder: (context, index) {
             final data = datas[index];
             if (data.index != 4 && data.index != 7) {
-              return Container(
-                    
+              return SizedBox(
                     child: 
                     Column(
                       children: [

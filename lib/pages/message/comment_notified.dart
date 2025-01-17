@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import '../../widgets/post_detail_page.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -85,7 +86,7 @@ class _CommentNotifiedPageState extends State<CommentNotifiedPage> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
+    Log.info('Error picking image: $e');
     }
   }
 

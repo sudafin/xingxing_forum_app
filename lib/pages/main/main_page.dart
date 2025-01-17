@@ -31,7 +31,7 @@ class MainPageState extends State<MainPage> {
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
         firstChild: SizedBox.shrink(),  // 隐藏状态
-        secondChild: Container(
+        secondChild: SizedBox(
           height: 70,
           child: ClipRect(
             clipBehavior: Clip.hardEdge,

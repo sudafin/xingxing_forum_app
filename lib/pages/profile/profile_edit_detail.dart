@@ -73,8 +73,8 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
                   ? InkWell(
                       onTap: () {
                         switch (widget.editType) {
+                          //TODO 保存操作
                           case EditType.name:
-                            print('保存昵称');
                             break;
                           case EditType.gender:
                             break;

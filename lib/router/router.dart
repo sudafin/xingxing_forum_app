@@ -19,6 +19,7 @@ import '../pages/screen/splash_screen.dart';
 import '../widgets/post_page/post_page.dart';
 import '../widgets/post_detail_page.dart';
 import '../pages/profile/profile_edit_page.dart';
+import '../pages/message/chat_setting.dart';
 
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
@@ -42,5 +43,6 @@ class RouterConstant{
   '/favorite_notified':(context) => const FavoriteNotifiedPage(),
   '/comment_notified':(context) => const CommentNotifiedPage(),
   '/profile_edit':(context) => const ProfileEdit(),
+  '/chat_setting':(context) => const ChatSettingPage(),
   };
 }

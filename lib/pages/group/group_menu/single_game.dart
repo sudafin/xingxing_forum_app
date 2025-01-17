@@ -11,6 +11,7 @@ class SingleGame extends StatefulWidget {
 }
 
 class _SingleGameState extends State<SingleGame> {
+  @override
    Widget build(BuildContext context) {
     Color backgroundColor =
         context.watch<StoreViewModel>().theme == Brightness.light
@@ -46,7 +47,7 @@ class _SingleGameState extends State<SingleGame> {
         child: ModuleWidget(title: '模块$i', image: AssetImage('assets/images/emoji.png'), description: '描述$i',),
       ));
     }
-    return Container(
+    return SizedBox(
       // 设置宽度不用设置高度,让GridView根据内容自适应高度
       width: SizeFit.screenWidth,
       child:Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import '../../enum/edit_type_enum.dart';
 import 'profile_edit_detail.dart';
 import 'dart:io';
@@ -40,7 +41,7 @@ var status = await Permission.storage.status;
         });
       }
     } catch (e) {
-      print('选择图片失败: $e');
+    Log.info('选择图片失败: $e');
     }
   }
 
@@ -74,7 +75,7 @@ var status = await Permission.storage.status;
                   radius: 50,
                   child: isImage ? ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: Container(
+                child: SizedBox(
                   width: 100,
                   height: 100,
                   child: Image.file(File(imagePath!),fit: BoxFit.cover,),

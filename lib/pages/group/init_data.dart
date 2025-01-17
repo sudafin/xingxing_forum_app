@@ -60,7 +60,7 @@ class GroupNav {
               height: 94,
               color: Colors.blue,
             ): SizedBox.shrink(),
-             Container(
+             SizedBox(
               width: 60,
               child: Column(
               children: [

@@ -48,7 +48,7 @@ class _OnlineGameState extends State<OnlineGame> {
         child: ModuleWidget(title: '模块$i', image: AssetImage('assets/images/emoji.png'), description: '描述$i',),
       ));
     }
-    return Container(
+    return SizedBox(
       // 设置宽度不用设置高度,让GridView根据内容自适应高度
       width: SizeFit.screenWidth,
       child:Column(
