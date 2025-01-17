@@ -7,7 +7,8 @@ enum EditType implements Comparable<EditType> {
   birthday(category: 4, typeName: "生日"),
   address(category: 5, typeName: "地址"),
   job(category: 6, typeName: "职业"),
-  school(category: 7, typeName: "学校");
+  school(category: 7, typeName: "学校"),
+  remark(category: 8, typeName: "简介");
   
   const EditType({required this.category,required this.typeName});  
   final int category;

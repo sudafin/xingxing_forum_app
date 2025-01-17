@@ -123,7 +123,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
         TextButton(onPressed: (){
-         //TODO:关注跳转
+          Navigator.pushNamed(context, '/fans_follow');
         }, child: 
           Column(
             children: [ 
@@ -132,7 +132,9 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
             ],
           ),
           ),
-          TextButton(onPressed: (){}, child: 
+          TextButton(onPressed: (){
+            Navigator.pushNamed(context, '/fans_follow');
+          }, child: 
           Column(
             children: [ 
               Text('100',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
@@ -140,7 +142,9 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
             ],
           ),
           ),
-          TextButton(onPressed: (){}, child: 
+          TextButton(onPressed: (){
+           // TODO获赞的page
+          }, child: 
           Column(
             children: [ 
               Text('100',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),

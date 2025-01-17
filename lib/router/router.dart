@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/error/error_page.dart';
 import '../pages/main/main_page.dart';
+import '../pages/profile/fans_follow.dart';
 import '../pages/home/home_page.dart';
 import '../pages/message/message_page.dart';
 import '../pages/group/group_page.dart';
@@ -44,5 +45,6 @@ class RouterConstant{
   '/comment_notified':(context) => const CommentNotifiedPage(),
   '/profile_edit':(context) => const ProfileEdit(),
   '/chat_setting':(context) => const ChatSettingPage(),
+  '/fans_follow':(context) => const FansFollowPage(),
   };
 }

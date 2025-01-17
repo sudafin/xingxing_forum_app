@@ -140,8 +140,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     // 请求权限成功后,开始选择图片
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
+      
+      final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1920, // 限制图片大小
         maxHeight: 1080,

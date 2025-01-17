@@ -14,11 +14,11 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-final ImagePicker _picker = ImagePicker();
-bool isImage = false;
-String? imagePath;
-Future<void> _pickImage() async {
-var status = await Permission.storage.status;
+  final ImagePicker _picker = ImagePicker();
+  bool isImage = false;
+  String? imagePath;
+  Future<void> _pickImage() async {
+    var status = await Permission.storage.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
       if (!status.isGranted) {
@@ -41,7 +41,7 @@ var status = await Permission.storage.status;
         });
       }
     } catch (e) {
-    Log.info('选择图片失败: $e');
+      Log.info('选择图片失败: $e');
     }
   }
 
@@ -73,17 +73,22 @@ var status = await Permission.storage.status;
                 child: CircleAvatar(
                   backgroundColor: Colors.blue[400]!.withOpacity(0.3),
                   radius: 50,
-                  child: isImage ? ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Image.file(File(imagePath!),fit: BoxFit.cover,),
-                ),
-              ) : Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
+                  child: isImage
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Image.file(
+                              File(imagePath!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
                 ),
               ),
               Positioned(
@@ -92,7 +97,11 @@ var status = await Permission.storage.status;
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[500]!.withOpacity(0.3),
                   radius: 15,
-                  child: Icon(Icons.camera_alt_outlined, color: Colors.blue,size: 20,),
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.blue,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
@@ -100,7 +109,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.name, initialValue: 'momo')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.name, initialValue: 'momo')));
           },
           title: Text('昵称'),
           trailing: Row(
@@ -122,7 +135,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.gender, initialValue: '男')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.gender, initialValue: '男')));
           },
           title: Text('性别'),
           trailing: Row(
@@ -144,7 +161,12 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.email, initialValue: 'momo@gmail.com')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.email,
+                        initialValue: 'momo@gmail.com')));
           },
           title: Text('邮箱'),
           trailing: Row(
@@ -166,7 +188,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.phone, initialValue: '1234567890')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.phone, initialValue: '1234567890')));
           },
           title: Text('手机号'),
           trailing: Row(
@@ -188,7 +214,12 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.birthday, initialValue: '2000-01-01')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.birthday,
+                        initialValue: '2000-01-01')));
           },
           title: Text('生日'),
           trailing: Row(
@@ -210,7 +241,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.address, initialValue: '北京市海淀区')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.address, initialValue: '北京市海淀区')));
           },
           title: Text('地址'),
           trailing: Row(
@@ -232,7 +267,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.job, initialValue: '程序员')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.job, initialValue: '程序员')));
           },
           title: Text('职业'),
           trailing: Row(
@@ -254,7 +293,11 @@ var status = await Permission.storage.status;
         ),
         ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditDetail(editType: EditType.school, initialValue: '北京大学')));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.school, initialValue: '北京大学')));
           },
           title: Text('学校'),
           trailing: Row(
@@ -263,6 +306,32 @@ var status = await Permission.storage.status;
             children: [
               Text(
                 '北京大学',
+                style: TextStyle(fontSize: 14),
+              ),
+              SizedBox(width: 4),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: Colors.grey,
+              ),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileEditDetail(
+                        editType: EditType.remark, initialValue: '个人简介')));
+          },
+          title: Text('简介'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                '个人简介',
                 style: TextStyle(fontSize: 14),
               ),
               SizedBox(width: 4),

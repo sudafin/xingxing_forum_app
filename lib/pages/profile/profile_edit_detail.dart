@@ -42,7 +42,6 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
         break;
       case EditType.birthday:
         selectedDate = DateTime.parse(widget.initialValue ?? '');
-        
         break;
       case EditType.address:
         selectedCity = Result(
@@ -54,6 +53,9 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
         _textController.text = widget.initialValue ?? '';
         break;
       case EditType.school:
+        _textController.text = widget.initialValue ?? '';
+        break;
+      case EditType.remark:
         _textController.text = widget.initialValue ?? '';
         break;
     }
@@ -90,6 +92,8 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
                             break;
                           case EditType.school:
                             break;
+                          case EditType.remark:
+                            break;
                         }
                       },
                       child: Text(
@@ -111,6 +115,7 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
         EditType.address => _buildAddress(),
         EditType.job => _buildJob(),
         EditType.school => _buildSchool(),
+        EditType.remark => _buildRemark()
       },
     );
   }
@@ -444,9 +449,51 @@ class _ProfileEditDetailState extends State<ProfileEditDetail> {
           Text('请输入学校', style: TextStyle(fontSize: 14, color: Colors.black54)),
           SizedBox(height: 10),
           TextField(
-            decoration: InputDecoration(hintText: '请输入学校', hintStyle: TextStyle(color: Colors.grey, fontSize: 14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none), fillColor: Color(0xFFFAFAFA), filled: true, isDense: true, counterStyle: TextStyle(fontSize: 12, color: Colors.black54)),
+            decoration: InputDecoration(
+                hintText: '请输入学校',
+                hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none),
+                fillColor: Color(0xFFFAFAFA),
+                filled: true,
+                isDense: true,
+                counterStyle: TextStyle(fontSize: 12, color: Colors.black54)),
             controller: _textController,
             maxLength: 10,
+            onChanged: (value) {
+              setState(() {
+                isSave = value.isNotEmpty;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRemark() {
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('请输入简介', style: TextStyle(fontSize: 14, color: Colors.black54)),
+          SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+              hintText: '请输入简介',
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none),
+              fillColor: Color(0xFFFAFAFA),
+              filled: true,
+              isDense: true,
+              counterStyle: TextStyle(fontSize: 12, color: Colors.black54)),
+            controller: _textController,
+            maxLength: 100,
+            maxLines: 5,
             onChanged: (value) {
               setState(() {
                 isSave = value.isNotEmpty;
