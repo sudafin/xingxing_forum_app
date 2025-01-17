@@ -187,7 +187,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         leadingWidth: 200,
-        leading: Container(
+        leading: SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -200,11 +200,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   Navigator.pushNamed(context, '/profile');
                 },
                 child: CircleAvatar(
-                  backgroundColor: Colors.grey[400]!.withOpacity(0.3),
+                  
                   radius: 20,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-                    child: Container(
+                    child: SizedBox(
                       width: 40,
                       height: 40,
                       child: Image.network(
