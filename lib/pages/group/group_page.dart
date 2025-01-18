@@ -53,7 +53,7 @@ class _GroupPageBodyState extends State<GroupPageBody> {
       children: [
          NavigationRail(
          //控制导航栏的宽度
-           minWidth: 80,
+           minWidth: 70,
            //控制导航栏的高度
            groupAlignment: -1.15,
             backgroundColor: context.watch<StoreViewModel>().theme == Brightness.light

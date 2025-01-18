@@ -6,8 +6,6 @@ import 'package:xingxing_forum_app/stores/store_drawer.dart';
 import 'profile_build_header.dart';
 import 'package:flutter/scheduler.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -24,6 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     // 获取当前路由名称
@@ -32,11 +31,11 @@ class _ProfilePageState extends State<ProfilePage> {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     return Theme(
       data: Theme.of(context).copyWith(
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(     
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
               backgroundColor: Colors.blueGrey.withOpacity(_opacity),
               scrolledUnderElevation: 0,
               iconTheme: IconThemeData(
-                color: _isTransparent 
+                color: _isTransparent
                     ? (context.watch<StoreViewModel>().theme == Brightness.light
                         ? Colors.white
                         : Colors.black)
@@ -44,18 +43,20 @@ class _ProfilePageState extends State<ProfilePage> {
                         ? Colors.blue
                         : Colors.white),
               ),
-        ),
+            ),
       ),
       child: Scaffold(
-      onDrawerChanged: (isOpened) {
-      final store = Provider.of<StoreDrawer>(context, listen: false);
-      store.setIsOpened(isOpened);
-    },
+        onDrawerChanged: (isOpened) {
+          final store = Provider.of<StoreDrawer>(context, listen: false);
+          store.setIsOpened(isOpened);
+        },
         appBar: AppBar(
-        leading: arguments == '/profile' ? IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ) : null,
+          leading: arguments == '/profile'
+              ? IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                )
+              : null,
           title: !_isTransparent
               ? TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 50, end: 0),
@@ -71,8 +72,8 @@ class _ProfilePageState extends State<ProfilePage> {
               : null,
           toolbarHeight: 60,
         ),
-        drawer: routeName != '/profile'  ? MenuDrawer() : null,
-          body: NotificationListener<ScrollNotification>(
+        drawer: routeName != '/profile' ? MenuDrawer() : null,
+        body: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             if (notification is ScrollUpdateNotification) {
               // 因为我们需要使用回调函数,并且在函数中使用setSate,那么如果页面渲染过快可能导致setSate失败,所以需要使用 SchedulerBinding 在帧结束后更新状态,也就是渲染结束后setState修改状态
@@ -83,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     _opacity = newOpacity.clamp(0.0, 1.0);
                   });
                 }
-                
+
                 final newTransparent = _scrollController.offset < 100;
                 if (newTransparent != _isTransparent) {
                   setState(() {
@@ -143,7 +144,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
           SliverAppBar(
             pinned: false,
             forceElevated: innerBoxIsScrolled,
-            expandedHeight:250,
+            expandedHeight: 250,
             backgroundColor: Colors.blueGrey,
             //把这里的appbar的leading去掉
             leading: SizedBox.shrink(),
@@ -172,7 +173,6 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
                 indicatorWeight: 0.5,
                 labelStyle: TextStyle(fontSize: 16),
                 padding: EdgeInsets.only(left: 100, right: 100),
-                
               ),
             ),
           ),
@@ -195,13 +195,9 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     return ProfileBuildHeader();
   }
 
-
-
-
-
   Widget _buildTopicList() {
     return Container(
-      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -222,7 +218,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildReplyList() {
     return Container(
-      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: ListView.builder(
         itemCount: 10,
         shrinkWrap: true,
@@ -237,7 +233,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   Widget _buildFavoriteList() {
     return Container(
-      margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -256,10 +252,6 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     );
   }
 }
-
-
-
-
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);
@@ -285,4 +277,3 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
-

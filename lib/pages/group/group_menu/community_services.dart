@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import '../../../stores/store_viewmodel.dart';
-import '../../../widgets/module_widget.dart';
+import 'module_widget.dart';
 
 class CommunityServices extends StatefulWidget {
   const CommunityServices({super.key});
@@ -48,13 +48,14 @@ class _CommunityServicesState extends State<CommunityServices> {
         child: ModuleWidget(title: '模块$i', image: AssetImage('assets/images/emoji.png'), description: '描述$i',),
       ));
     }
-    return Container(
+    return SizedBox(
       // 设置宽度不用设置高度,让GridView根据内容自适应高度
       width: SizeFit.screenWidth,
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('社区服务板块', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+          SizedBox(height: 10,),
+          Text('社区服务板块', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           SizedBox(height: 10,),
           // 判断是否隐藏
             ListView.builder(

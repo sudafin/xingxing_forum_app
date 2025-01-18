@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xingxing_forum_app/utils/size_fit.dart';
+
 
 class ModuleWidget extends StatefulWidget {
   final String title;
@@ -23,22 +23,31 @@ class ModuleWidgetState extends State<ModuleWidget> {
       child: Row(
         children: [
           // 头像
-          CircleAvatar(
-            backgroundImage: widget.image,
-            backgroundColor: Colors.transparent,
-            radius: 30,
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, '/module_detail');
+            },
+            child: CircleAvatar(
+              backgroundImage: widget.image,
+              backgroundColor: Colors.transparent,
+              radius: 30,
+            ),
           ),
           SizedBox(
             width: 10,
           ),
           // 标题和描述还有收藏按钮,需要设置一个容器,设置宽度
           SizedBox(
-            width: SizeFit.screenWidth - 190,
+            width: 280,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
             // 标题和描述
-              Column(
+             GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, '/module_detail');
+              },
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -51,7 +60,7 @@ class ModuleWidgetState extends State<ModuleWidget> {
                   ),
                 ],
               ),
-             
+              ),
               // 收藏按钮
               IconButton(
                 onPressed: () {
@@ -60,8 +69,8 @@ class ModuleWidgetState extends State<ModuleWidget> {
                   });
                 },
                 icon: Icon(isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border_outlined),
+                    ? Icons.star
+                    : Icons.star_border),
                 color:isFavorite ? Colors.orange : Colors.grey,
               ),
               ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/utils/size_fit.dart';
 import '../../../stores/store_viewmodel.dart';
-import '../../../widgets/module_widget.dart';
+import 'module_widget.dart';
 
 class FavoriteRecommend extends StatefulWidget {
   const FavoriteRecommend({super.key});
@@ -65,7 +65,8 @@ class _FavoriteRecommendState extends State<FavoriteRecommend> {
         mainAxisSize: MainAxisSize.min, 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('我的收藏', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+          SizedBox(height: 10,),
+          Text('我的收藏', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           SizedBox(height: 10,),
           GridView.builder(
             // 让GridView根据内容自适应高度  

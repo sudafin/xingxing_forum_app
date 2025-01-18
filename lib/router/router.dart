@@ -6,6 +6,7 @@ import '../pages/home/home_page.dart';
 import '../pages/message/message_page.dart';
 import '../pages/group/group_page.dart';
 import '../pages/profile/profile_page.dart';
+import '../pages/group/group_menu/module_detail.dart';
 import '../pages/menu/about/about_page.dart';
 import '../pages/menu/drafts/drafts_page.dart';
 import '../pages/menu/favorite/favorite_page.dart';
@@ -46,5 +47,6 @@ class RouterConstant{
   '/profile_edit':(context) => const ProfileEdit(),
   '/chat_setting':(context) => const ChatSettingPage(),
   '/fans_follow':(context) => const FansFollowPage(),
+  '/module_detail':(context) => const ModuleDetail(),
   };
 }

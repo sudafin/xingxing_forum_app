@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'; 
 import 'package:provider/provider.dart';
 import '../../../stores/store_viewmodel.dart';
-import '../../../widgets/module_widget.dart';
+import 'module_widget.dart';
 import '../../../utils/size_fit.dart';
 class SingleGame extends StatefulWidget {
   const SingleGame({super.key});
@@ -53,7 +53,8 @@ class _SingleGameState extends State<SingleGame> {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('单机游戏板块', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+          SizedBox(height: 10,),
+          Text('单机游戏板块', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           SizedBox(height: 10,),
           // 判断是否隐藏
             ListView.builder(

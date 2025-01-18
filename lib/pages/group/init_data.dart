@@ -43,7 +43,8 @@ class GroupNav {
 
   static Widget _navItem(IconData icon, String text, bool isSelected) {
     return Container(
-        padding: isSelected ? EdgeInsets.fromLTRB(1, 0, 10, 0) : EdgeInsets.all(10),
+        padding: isSelected ? EdgeInsets.zero : EdgeInsets.fromLTRB(2, 5, 2, 5),
+        margin: EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: GroupNav.context != null
               ? GroupNav.context!.watch<StoreViewModel>().theme == Brightness.light
@@ -51,23 +52,22 @@ class GroupNav {
                   : isSelected ? Colors.black : Colors.black54
               : Colors.white,
         ),
-        width:80,
         child: Row(
           mainAxisAlignment: isSelected ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
           children: [
             isSelected ? Container(
               width: 3,
-              height: 94,
+              height: 100,
               color: Colors.blue,
             ): SizedBox.shrink(),
              SizedBox(
-              width: 60,
+              width: 65,
               child: Column(
               children: [
                 isSelected
                     ? Icon(
                         icon,
-                        size: 25,
+                        size: 24,
                         color: Colors.blue,
                       )
                     : SizedBox.shrink(),
@@ -75,7 +75,7 @@ class GroupNav {
                 Text(
                   text,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: isSelected ? Colors.blue : Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
