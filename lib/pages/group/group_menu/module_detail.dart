@@ -8,200 +8,244 @@ class ModuleDetail extends StatefulWidget {
   State<ModuleDetail> createState() => _ModuleDetailState();
 }
 
-class _ModuleDetailState extends State<ModuleDetail> with TickerProviderStateMixin {
+class _ModuleDetailState extends State<ModuleDetail>
+    with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  bool _isTransparent = true;
-  double _opacity = 1.0;
-  
+  bool _isDisplay = false;
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      setState(() {
+        _isDisplay = _scrollController.offset > 0;
+      });
+    });
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
   @override
   void dispose() {
+    _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey.withOpacity(_opacity),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: !_isTransparent
-            ? TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 50, end: 0),
-                duration: const Duration(milliseconds: 300),
-                builder: (context, value, child) {
-                  return Transform.translate(
-                    offset: Offset(0, value),
-                    child: Text('游戏'),
-                  );
-                },
-              )
-            : null,
-        toolbarHeight: 40,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is ScrollUpdateNotification) {
-            // 因为我们需要使用回调函数,并且在函数中使用setSate,那么如果页面渲染过快可能导致setSate失败,所以需要使用 SchedulerBinding 在帧结束后更新状态,也就是渲染结束后setState修改状态
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              final newOpacity = 1 - _scrollController.offset / 100;
-              if (newOpacity != _opacity) {
-                print('newOpacity: $newOpacity');
-                setState(() {
-                  _opacity = newOpacity.clamp(0.0, 1.0);
-                });
-              }
-              final newTransparent = _scrollController.offset < 100;
-              if (newTransparent != _isTransparent) {
-                setState(() {
-                  _isTransparent = newTransparent;
-                });
-              }
-            });
-          }
-          return true;
-        },
-        child: ModulePageBody(
-          scrollController: _scrollController,
-        ),
-      ),
-    );
-  }
-}
-
-class ModulePageBody extends StatefulWidget {
-  final ScrollController scrollController;
-  const ModulePageBody({
-    super.key,
-    required this.scrollController,
-  });
-  @override
-  State<ModulePageBody> createState() => _ModulePageBodyState();
-}
-
-class _ModulePageBodyState extends State<ModulePageBody>
-    with TickerProviderStateMixin {
-  
-  late final TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    
-    _tabController = TabController(length: 4, vsync: this);
-  }
-
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return NestedScrollView(
-      controller: widget.scrollController,
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            pinned: false,
-            forceElevated: innerBoxIsScrolled,
-            expandedHeight: 120,
-            backgroundColor: Colors.blueGrey,
-            //把这里的appbar的leading去掉
-            leading: SizedBox.shrink(),
-            flexibleSpace: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return FlexibleSpaceBar(
-                  background: Container(
-                    color: Colors.blueGrey,
+        controller: _scrollController,
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                toolbarHeight: 40,
+                forceElevated: innerBoxIsScrolled,
+                title: _isDisplay
+                    ? TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 50, end: 0),
+                        duration: const Duration(milliseconds: 300),
+                        builder: (context, value, child) {
+                          return Transform.translate(
+                            offset: Offset(0, value),
+                            child: Text('游戏'),
+                          );
+                        },
+                      )
+                    : null,
+                pinned: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 20,
+                    color: Colors.black54,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                expandedHeight: 180,
+                backgroundColor: Color(0xFFF5F5F5),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: _buildBackground(),
                   collapseMode: CollapseMode.pin,
-                );
-              },
-            ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _SliverAppBarDelegate(
-              TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(text: '新贴'),
-                  Tab(text: '置顶'),
-                  Tab(text: '热帖'),
-                  Tab(text: '精华'),
-                ],
-                indicatorSize: TabBarIndicatorSize.label,
-                dividerHeight: 0,
-                indicatorWeight: 0.5,
-                labelStyle: TextStyle(fontSize: 15),
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
+                ),
               ),
             ),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  splashBorderRadius: BorderRadius.circular(10),
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: '回复'),
+                    Tab(text: '置顶'),
+                    Tab(text: '热帖'),
+                    Tab(text: '精华'),
+                  ],
+                  indicatorSize: TabBarIndicatorSize.label,
+                  dividerHeight: 0,
+                  indicatorWeight: 0.5,
+                  labelStyle: const TextStyle(fontSize: 15),
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                ),
+              ),
+            ),
+          ];
+        },
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                if (_scrollController.offset > 10) {
+                  setState(() {
+                    _isDisplay = true;
+                  });
+                } else {
+                  setState(() {
+                    _isDisplay = false;
+                  });
+                }
+              });
+            }
+            return true;
+          },
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildListView('新回复内容'),
+              _buildListView('置顶内容'),
+              _buildListView('热帖内容'),
+              _buildListView('精华内容'),
+            ],
           ),
-        ];
+        ));
+  }
+
+  Widget _buildListView(String prefix, {int itemCount = 20}) {
+    return Builder(
+      builder: (BuildContext context) {
+        return Material(
+          child: CustomScrollView(
+            physics: const ClampingScrollPhysics(),
+            slivers: [
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverList.builder(
+                itemCount: itemCount,
+                itemBuilder: (context, index) {
+                  return ListTile(title: Text('$prefix $index'));
+                },
+              ),
+            ],
+          ),
+        );
       },
-      //设置body
-      body: TabBarView(
-        controller: _tabController,
+    );
+  }
+
+  Widget _buildBackground() {
+    return Container(
+      padding: EdgeInsets.only(top: 60, left: 10,right: 10),
+      color: Colors.orange[200],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 新回复标签页
-          ListView.builder(
-            itemCount: 10,  // 替换为实际的数据长度
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('新回复内容 $index'),
-              );
-            },
-          ),
-          // 置顶标签页
-          ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('置顶内容 $index'),
-              );
-            },
-          ),
-          // 热帖标签页
-          ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('热帖内容 $index'),
-              );
-            },
-          ),
-          // 精华标签页
-          ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('精华内容 $index'),
-              );
-            },
-          ),
+          _buildModuleHeader(),
+          SizedBox(height: 10,),
+          _buildModuleButton(),
         ],
       ),
     );
   }
+  Widget _buildModuleButton(){
+  return Row(
+    children: [
+      _buildButton('板块说明',onTap: (){}),
+      SizedBox(width: 10),
+      _buildButton('版主',onTap: (){}),
+      SizedBox(width: 10),
+      _buildButton('版规',onTap: (){}),
+    ],
+  );
+ }
+
+  Widget _buildModuleHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildModuleInfo(),
+        _buildButton('收藏',onTap: (){}),
+      ],
+    );
+  }
+
+  Widget _buildModuleInfo() {
+    return Row(
+      children: [
+        _buildModuleImage(),
+        SizedBox(width: 10),
+        _buildModuleText(),
+      ],
+    );
+  }
+
+  Widget _buildModuleImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Image.network(
+        'https://picsum.photos/200/300?random=1',
+        width: 70,
+        height: 70,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildModuleText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '英雄联盟',
+          style: TextStyle(fontSize: 16, color: Colors.black),
+        ),
+        Text(
+          '11.0即将上线',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildButton(String text, {Function()? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+      height: 35,
+      width: 70,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Center(
+        child: Text(
+          text,
+            style: TextStyle(fontSize: 12, color: Colors.black),
+          ),
+        ),
+      ),
+    );
+  }
 }
+ 
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);
@@ -216,15 +260,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-      //设置tabbar的背景颜色.需要使用Material包裹
     return Material(
-      color:  Color(0xFFF5F5F5),
+      color: Color(0xFFF5F5F5),
       child: _tabBar,
     );
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

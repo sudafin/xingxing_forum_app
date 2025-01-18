@@ -15,7 +15,8 @@ class _TestPageState extends State<TestPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('透明度 AppBar'),
-        backgroundColor: Theme.of(context).primaryColor.withOpacity(_appBarOpacity),
+        backgroundColor: Colors.black.withOpacity(0),
+        elevation: 0,
       ),
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
