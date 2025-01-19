@@ -95,7 +95,7 @@ class PostPageState extends State<PostPage> {
               },
               child: Text(
                 '发布',
-                style: TextStyle(fontSize: 18, color: textColor),
+                style: TextStyle(fontSize: 14, color: textColor),
               ),
             ),
           ],
@@ -114,10 +114,16 @@ class PostPageState extends State<PostPage> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text('选择发布版块'),
+                              backgroundColor: theme == Brightness.light
+                                  ? Color(0xFFF5F5F5)
+                                  : Colors.black,
+                              title: Center(child: Text('选择发布版块',style: TextStyle(fontSize: 14,color: textColor),)),
                               content: DropdownButtonFormField<String>(
+                                borderRadius: BorderRadius.circular(10),
                                 decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   contentPadding: EdgeInsets.all(10),
                                 ),
                                 hint: Text('请选择发布版块'),

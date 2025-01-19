@@ -50,7 +50,10 @@ class MainPageState extends State<MainPage> {
                 iconSize: 22,
                 onTap: (index) {
                   setState(() {
+                  // 发帖页面不要通过转换来切换,通过点击来跳转
+                   if(index != 2){
                     currentPageIndex = index;
+                   }
                   });
                 },
               ),

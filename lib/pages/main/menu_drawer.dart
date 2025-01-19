@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/stores/store_viewmodel.dart';
 import 'package:xingxing_forum_app/pages/main/init_data/menu_table_data.dart';
 import 'package:xingxing_forum_app/widgets/share_widget.dart';
-import 'package:xingxing_forum_app/pages/menu/test_page.dart';
+import 'package:xingxing_forum_app/pages/login/spash_screen.dart';
 
 @immutable
 /// 菜单栏
@@ -167,6 +167,6 @@ void navigatorIndex(int index, BuildContext context) {
   } else if (index == 6) {
     Navigator.pushNamed(context, '/about');
   } else if (index == 8) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TestPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MySplashScreen()));
   }
 }
