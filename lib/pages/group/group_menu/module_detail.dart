@@ -78,7 +78,6 @@ class _ModuleDetailState extends State<ModuleDetail>
               pinned: true,
               delegate: _SliverAppBarDelegate(
                 TabBar(
-                  splashBorderRadius: BorderRadius.circular(10),
                   controller: _tabController,
                   tabs: const [
                     Tab(text: '回复'),
@@ -89,9 +88,10 @@ class _ModuleDetailState extends State<ModuleDetail>
                   indicatorSize: TabBarIndicatorSize.label,
                   dividerHeight: 0,
                   indicatorWeight: 0.5,
-                  labelStyle: const TextStyle(fontSize: 15),
+                  labelStyle: const TextStyle(fontSize: 16),
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
+                  padding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -151,23 +151,44 @@ class _ModuleDetailState extends State<ModuleDetail>
   }
 
   Widget _buildBackground() {
-    return Container(
-      padding: EdgeInsets.only(top: 60, left: 10,right: 10),
-      color: Colors.orange[200],
+    return Container(   
+      margin: EdgeInsets.only(top: 60),
+      padding: EdgeInsets.only(top: 10, left: 10,right: 10),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/background_module.png'),
+          fit: BoxFit.cover,
+          opacity: 0.2
+        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 模块头部
           _buildModuleHeader(),
           SizedBox(height: 10,),
+          // 模块按钮
           _buildModuleButton(),
         ],
       ),
     );
   }
+
+  Widget _buildModuleHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildModuleInfo(),
+        _buildButton('加入板块',onTap: (){},width: 70),
+      ],
+    );
+  }
   Widget _buildModuleButton(){
   return Row(
     children: [
-      _buildButton('板块说明',onTap: (){}),
+      _buildButton('板块说明',onTap: (){},width: 70),
       SizedBox(width: 10),
       _buildButton('版主',onTap: (){}),
       SizedBox(width: 10),
@@ -176,17 +197,7 @@ class _ModuleDetailState extends State<ModuleDetail>
   );
  }
 
-  Widget _buildModuleHeader() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildModuleInfo(),
-        _buildButton('收藏',onTap: (){}),
-      ],
-    );
-  }
-
+//模块头部信息
   Widget _buildModuleInfo() {
     return Row(
       children: [
@@ -225,12 +236,12 @@ class _ModuleDetailState extends State<ModuleDetail>
     );
   }
 
-  Widget _buildButton(String text, {Function()? onTap}) {
+  Widget _buildButton(String text, {Function()? onTap,double height=25,double width=60}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      height: 35,
-      width: 70,
+      height: height,
+      width: width,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(20),
@@ -261,7 +272,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Material(
-      color: Color(0xFFF5F5F5),
+      
       child: _tabBar,
     );
   }
