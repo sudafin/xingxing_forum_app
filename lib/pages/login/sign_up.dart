@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../utils/colors.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
-
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+class _SignUpState extends State<SignUp> {
+  String emailSuffix = "";
+  String account = "";
+  bool verifyCodeDown = false;
+  final int _countdown = 60;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController verifyCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,7 +35,7 @@ class _SignInState extends State<SignIn> {
           children: [
             SizedBox(height: size.height * 0.03),
             Text(
-              "你好,再次见面!",
+              "你好,欢迎注册!",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -42,27 +45,14 @@ class _SignInState extends State<SignIn> {
             ),
             const SizedBox(height: 15),
             Text(
-              "欢迎回来,继续分享你的想法!",
+              "欢迎注册,去分享你的想法!",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 27, color: textColor2, height: 1.2),
             ),
             SizedBox(height: size.height * 0.04),
-            // for username and password
-            myTextField("请输入用户名", Colors.white, false, _usernameController),
-            myTextField("请输入密码", Colors.black26, true, _passwordController),
+            myTextField("请输入邮箱", Colors.white, false, emailController),
+            myTextField("请输入验证码", Colors.black26, true, verifyCodeController),
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "忘记密码?               ",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: textColor2,
-                ),
-              ),
-            ),
             SizedBox(height: size.height * 0.04),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -78,7 +68,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     child: const Center(
                       child: Text(
-                        "登录",
+                        "注册",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -111,7 +101,7 @@ class _SignInState extends State<SignIn> {
                       ),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.04),
+                  SizedBox(height: size.height * 0.06),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -119,24 +109,6 @@ class _SignInState extends State<SignIn> {
                       socialIcon("assets/images/apple.png"),
                       socialIcon("assets/images/facebook.png"),
                     ],
-                  ),
-                  SizedBox(height: size.height * 0.07),
-                  Text.rich(
-                    TextSpan(
-                      text: "没有账号? ",
-                      style: TextStyle(
-                        color: textColor2,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      children: const [ TextSpan(
-                      text: "现在注册",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),)]
-                    ),
                   ),
                 ],
               ),
@@ -167,11 +139,12 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Container myTextField(String hint, Color color, bool isPassword, TextEditingController controller) {
+  Container myTextField(String hint, Color color, bool isVerifyCode,
+      TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
-        vertical: 15,
+        vertical: 10,
       ),
       child: TextField(
         controller: controller,
@@ -191,12 +164,102 @@ class _SignInState extends State<SignIn> {
               color: Colors.black45,
               fontSize: 16,
             ),
-            suffixIcon: isPassword
-                ? Icon(
-                    Icons.visibility_off_outlined,
-                    color: color,
-                  )
-                : null),
+            suffixIcon: isVerifyCode
+                ? _buildVerifyCode(color)
+                : _buildEmailSuffic(controller)),
+      ),
+    );
+  }
+
+  Widget _buildVerifyCode(Color color) {
+    return !verifyCodeDown
+        ? TextButton(
+            onPressed: () {
+              setState(() {
+              if(account.isNotEmpty && emailSuffix.isNotEmpty){
+                account = account.contains('@')
+                    ? account.split('@')[0] + emailSuffix
+                    : account + emailSuffix;
+                verifyCodeDown = true;
+              }else{
+                ShowToast.showToast("请输入完整且正确的邮箱");
+              }
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 5,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: color,
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                "发送",
+                style: TextStyle(
+                  color: color,
+                ),
+              ),
+            ),
+          )
+        : 
+        //倒计数
+        Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 15,
+            ),
+            child: TweenAnimationBuilder(
+              duration: Duration(seconds: _countdown),
+              tween: IntTween(begin: _countdown, end: 0),
+              onEnd: () {
+                setState(() {
+                  verifyCodeDown = false;
+                });
+              },
+              builder: (context, value, child) {
+                return Text("${value.toInt()}",style: TextStyle(color: color,fontSize: 16),);
+              },
+            ),
+          );
+  }
+
+  Widget _buildEmailSuffic(TextEditingController controller) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.white, width: 0)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Text('邮箱后缀选择'),
+          value: emailSuffix == "" ? null : emailSuffix,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          items: const [
+            DropdownMenuItem(value: "@gmail.com", child: Text("@gmail.com")),
+            DropdownMenuItem(
+                value: "@hotmail.com", child: Text("@hotmail.com")),
+            DropdownMenuItem(
+                value: "@outlook.com", child: Text("@outlook.com")),
+            DropdownMenuItem(value: "@yahoo.com", child: Text("@yahoo.com")),
+            DropdownMenuItem(value: "@163.com", child: Text("@163.com")),
+            DropdownMenuItem(value: "@qq.com", child: Text("@qq.com")),
+          ],
+          onChanged: (value) {
+            setState(() {
+              account = controller.text;
+              emailSuffix = value!;
+            });
+          },
+        ),
       ),
     );
   }

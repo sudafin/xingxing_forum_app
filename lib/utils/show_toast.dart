@@ -4,7 +4,7 @@ import 'package:xingxing_forum_app/utils/size_fit.dart';
 
 class ShowToast {
   static void showToast(String message) {
-    Fluttertoast.showToast(msg: message);
+    Fluttertoast.showToast(msg: message,textColor: Colors.white,backgroundColor: Color(0xFF555555));
   }
 
   static void showCustomDialog(

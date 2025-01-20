@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../pages/login/sign_in.dart';
   import '../../utils/colors.dart';
+  import '../../pages/login/sign_up.dart';
 
 class MySplashScreen extends StatelessWidget {
   const MySplashScreen({super.key});
@@ -86,10 +87,19 @@ class MySplashScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 5),
                           child: Row(
                             children: [
-                              Container(
-                                height: size.height * 0.08,
-                                width: size.width / 2.2,
-                                decoration: BoxDecoration(
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SignUp(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: size.height * 0.08,
+                                  width: size.width / 2.2,
+                                  decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
@@ -102,6 +112,7 @@ class MySplashScreen extends StatelessWidget {
                                       color: textColor1,
                                     ),
                                   ),
+                                ),
                                 ),
                               ),
                               const Spacer(),
