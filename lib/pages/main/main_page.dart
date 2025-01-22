@@ -25,7 +25,7 @@ class MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: AnimatedCrossFade(
         duration: context.watch<StoreDrawer>().isOpened
-            ? Duration(milliseconds: 0)
+            ? Duration(milliseconds: 10)
             : Duration(milliseconds: 300),
         crossFadeState: context.watch<StoreDrawer>().isOpened
             ? CrossFadeState.showFirst

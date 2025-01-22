@@ -1,51 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/services/test_service.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 
 class TestPage extends StatefulWidget {
+  const TestPage({super.key});
+
   @override
-  _TestPageState createState() => _TestPageState();
+  State<TestPage> createState() => _TestPageState();
 }
 
 class _TestPageState extends State<TestPage> {
-  double _appBarOpacity = 1.0;
-  final double _maxScrollExtent = 200.0;
-  int _count = 10;
+  String res = "";
+   bool isLoading = false;
+  @override
+  
 
+
+  Future<void> getTest() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final response = await TestService().getTest();
+      Log.debug('测试结果: ${response['data']}');
+      setState(() {
+        isLoading = false;
+        this.res = response['data'];
+      });
+    } catch (e) {
+      Log.error('获取测试数据失败: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+  Future<void> postTest() async {
+    final response = await TestService().postTest("测试");
+    Log.debug('测试结果: ${response['data']}');
+  }
+  Future<void> putTest() async {
+    final data = {
+      "userName": "test",
+      "id": 1,
+    };
+    final response = await TestService().putTest(data);
+    Log.debug('测试结果: ${response['data']}');
+  }
+  Future<void> deleteTest() async {
+    final response = await TestService().deleteTest(1);
+    Log.debug('测试结果: ${response['data']}');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('透明度 AppBar'),
-        backgroundColor: Colors.black.withOpacity(0),
-        elevation: 0,
+        title: Text("测试"),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is ScrollNotification) {
-            setState(() {
-              _appBarOpacity = 1 - (notification.metrics.pixels / _maxScrollExtent);
-                _appBarOpacity = 0;
-              if (_appBarOpacity < 0) {
-              } else if (_appBarOpacity > 1) {
-                _appBarOpacity = 1;
-              }
-            });
-          }
-          return true;
-        },
-        child: ListView.builder(
-          itemCount: _count,
-          itemBuilder: (context, index) {
-            return ListTile(title: Text('Item $index'));
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            getTest();
           },
+          child: Text("测试"),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _count++;
-          });
-        },
-        child: Icon(Icons.add),
       ),
     );
   }
