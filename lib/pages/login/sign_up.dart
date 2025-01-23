@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../utils/colors.dart';
+import '../../services/sign_in_up_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -13,8 +14,31 @@ class _SignUpState extends State<SignUp> {
   String account = "";
   bool verifyCodeDown = false;
   final int _countdown = 60;
+  final SignInUpService _signInUpService = SignInUpService();
   TextEditingController emailController = TextEditingController();
   TextEditingController verifyCodeController = TextEditingController();
+  
+  Future<void> sendEmail() async {
+    final response = await _signInUpService.sendEmail(account);
+    if(response['code'] == 200){
+      ShowToast.showToast("发送成功");
+    }else{
+      ShowToast.showToast("发送失败");
+    }
+  }
+  Future<void> signUp(String email, String code) async {
+    Map<String, dynamic> data = {
+      "email": email,
+      "code": code,
+    };
+    final response = await _signInUpService.signUp(data);
+    if(response['code'] == 200){
+      ShowToast.showToast("注册成功");
+    }else{
+      ShowToast.showToast(response['msg']);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -58,12 +82,21 @@ class _SignUpState extends State<SignUp> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(
                 children: [
-                  // for sign in button
-                  Container(
+                 GestureDetector(
+                 onTap: () {
+                  if (emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty) {
+                    //传入的是account,不是controller
+                    signUp(account, verifyCodeController.text);
+                  } else {
+                    ShowToast.showToast("请输入完整且正确的邮箱和验证码");
+                  }
+                  },
+                  child:
+                   Container(
                     width: size.width,
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
-                      color: buttonColor,
+                      color: emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty ? buttonColor : Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Center(
@@ -77,6 +110,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ),
+                ),
                   SizedBox(height: size.height * 0.06),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -181,6 +215,8 @@ class _SignUpState extends State<SignUp> {
                     ? account.split('@')[0] + emailSuffix
                     : account + emailSuffix;
                 verifyCodeDown = true;
+                //发送邮箱验证码请求
+                sendEmail();
               }else{
                 ShowToast.showToast("请输入完整且正确的邮箱");
               }

@@ -168,6 +168,6 @@ void navigatorIndex(int index, BuildContext context) {
   } else if (index == 6) {
     Navigator.pushNamed(context, '/about');
   } else if (index == 8) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TestPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MySplashScreen()));
   }
 }
