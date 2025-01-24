@@ -6,8 +6,11 @@ import 'stores/store_drawer.dart';
 import 'router/router.dart';
 import 'pages/screen/splash_screen.dart';   
 import 'pages/main/main_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main(List<String> args) {
+final navigatorKey = GlobalKey<NavigatorState>();
+void main(List<String> args) async {
+  await Hive.initFlutter();
   runApp(
     MultiProvider(
       providers: [

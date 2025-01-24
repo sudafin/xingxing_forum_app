@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import '../../utils/colors.dart';
-
+import '../../utils/show_toast.dart';
+import '../../services/sign_in_up_service.dart';
+import '../../model/login_response.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -11,7 +15,36 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  SignInUpService signInUpService = SignInUpService();
+  Future<void> signIn(String email, String password) async {
+    Map<String, dynamic> data = {
+      "email": email,
+      "password": password,
+    };
+    Map<String, dynamic> response = await signInUpService.signIn(data);
+    if(response['code'] == 200){
+      if (mounted) {
+      LoginResponse loginResponse = LoginResponse.fromJson(response['data']);
+      //保存token用hive
+       try {
+         final userBox = await Hive.openBox('user');
+         userBox.put('token', loginResponse.token);
+         userBox.put('user', loginResponse.userDTO.toJson());
+         //提示登录成功
+         ShowToast.showToast("登录成功");
+         //跳转到主页
+         if(mounted){
+           Navigator.pushNamed(context, '/home');
+         }
+       } catch (e) {
+         Log.error('Hive错误: $e');
+         ShowToast.showToast("数据存储失败");
+       }
+      }
+    }else{
+      ShowToast.showToast(response['msg']);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,8 +80,7 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(fontSize: 27, color: textColor2, height: 1.2),
             ),
             SizedBox(height: size.height * 0.04),
-            // for username and password
-            myTextField("请输入用户名", Colors.white, false, _usernameController),
+            myTextField("请输入邮箱", Colors.white, false, _usernameController),
             myTextField("请输入密码", Colors.black26, true, _passwordController),
             const SizedBox(height: 10),
             Align(
@@ -65,13 +97,21 @@ class _SignInState extends State<SignIn> {
             ),
             SizedBox(height: size.height * 0.04),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
-                  // for sign in button
+                  GestureDetector(
+                    onTap: () {
+                      if (_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
+                        signIn(_usernameController.text, _passwordController.text);
+                      } else {
+                        ShowToast.showToast("请输入完整信息");
+                      }
+                    },
+                    child:
                   Container(
-                    width: size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    width: size.width * 0.5,
+                    height: size.height * 0.08,
                     decoration: BoxDecoration(
                       color: buttonColor,
                       borderRadius: BorderRadius.circular(15),
@@ -82,10 +122,11 @@ class _SignInState extends State<SignIn> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 18,
                         ),
                       ),
                     ),
+                  ),
                   ),
                   SizedBox(height: size.height * 0.06),
                   Row(
@@ -121,6 +162,13 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                   SizedBox(height: size.height * 0.07),
+                  GestureDetector(
+                    onTap: () {
+                      if (mounted) {
+                        Navigator.pushNamed(context, '/sign_up');
+                      }
+                    },
+                    child:
                   Text.rich(
                     TextSpan(
                       text: "没有账号? ",
@@ -129,7 +177,8 @@ class _SignInState extends State<SignIn> {
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
-                      children: const [ TextSpan(
+                      children: const [
+                       TextSpan(
                       text: "现在注册",
                       style: TextStyle(
                         color: Colors.blue,
@@ -138,6 +187,7 @@ class _SignInState extends State<SignIn> {
                       ),)]
                     ),
                   ),
+                  )
                 ],
               ),
             ),
@@ -171,14 +221,16 @@ class _SignInState extends State<SignIn> {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
-        vertical: 15,
+        vertical: 10,
       ),
       child: TextField(
         controller: controller,
+        obscureText: isPassword,
+        style: TextStyle(fontSize: 12),
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 22,
+              horizontal: 15,
+              vertical: 15,
             ),
             fillColor: Colors.white,
             filled: true,
@@ -189,14 +241,9 @@ class _SignInState extends State<SignIn> {
             hintText: hint,
             hintStyle: const TextStyle(
               color: Colors.black45,
-              fontSize: 16,
+              fontSize: 14,
             ),
-            suffixIcon: isPassword
-                ? Icon(
-                    Icons.visibility_off_outlined,
-                    color: color,
-                  )
-                : null),
+       ),
       ),
     );
   }

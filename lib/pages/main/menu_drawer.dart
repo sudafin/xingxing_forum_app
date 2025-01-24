@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/stores/store_viewmodel.dart';
 import 'package:xingxing_forum_app/pages/main/init_data/menu_table_data.dart';
 import 'package:xingxing_forum_app/widgets/share_widget.dart';
-import 'package:xingxing_forum_app/pages/login/spash_screen.dart';
+import 'package:xingxing_forum_app/pages/login/sign_spash_screen.dart';
 import 'package:xingxing_forum_app/pages/menu/test_page.dart';
+import 'package:hive/hive.dart';
 
-@immutable
 /// 菜单栏
 class MenuDrawer extends StatefulWidget {
   const MenuDrawer({super.key});
@@ -117,7 +117,15 @@ class MenuDrawerState extends State<MenuDrawer> {
                               content: Text('确定要退出登录吗？'),
                               actions: [
                                 TextButton(onPressed: () {Navigator.pop(context);}, child: Text('取消')),
-                                TextButton(onPressed: () {Navigator.pop(context);}, child: Text('确定')),
+                                TextButton(onPressed: () async {
+                                  //退出登录
+                                  Navigator.pop(context);
+                                  //清空token
+                                  final userBox = await Hive.openBox('user');
+                                  userBox.clear();
+                                  //跳转到登录页面
+                                  Navigator.pushNamed(context, '/sign_in');
+                                }, child: Text('确定')),
                               ],
                             ));
                           },
@@ -168,6 +176,6 @@ void navigatorIndex(int index, BuildContext context) {
   } else if (index == 6) {
     Navigator.pushNamed(context, '/about');
   } else if (index == 8) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MySplashScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignSplashScreen()));
   }
 }

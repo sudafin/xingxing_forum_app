@@ -17,7 +17,8 @@ class _SignUpState extends State<SignUp> {
   final SignInUpService _signInUpService = SignInUpService();
   TextEditingController emailController = TextEditingController();
   TextEditingController verifyCodeController = TextEditingController();
-  
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordConfirmController = TextEditingController();
   Future<void> sendEmail() async {
     final response = await _signInUpService.sendEmail(account);
     if(response['code'] == 200){
@@ -26,14 +27,18 @@ class _SignUpState extends State<SignUp> {
       ShowToast.showToast("发送失败");
     }
   }
-  Future<void> signUp(String email, String code) async {
+  Future<void> signUp(String email, String code, String password) async {
     Map<String, dynamic> data = {
       "email": email,
       "code": code,
+      "password": password,
     };
     final response = await _signInUpService.signUp(data);
     if(response['code'] == 200){
       ShowToast.showToast("注册成功");
+      if (mounted) {
+        Navigator.pushNamed(context, '/login');
+      }
     }else{
       ShowToast.showToast(response['msg']);
     }
@@ -74,29 +79,35 @@ class _SignUpState extends State<SignUp> {
               style: TextStyle(fontSize: 27, color: textColor2, height: 1.2),
             ),
             SizedBox(height: size.height * 0.04),
-            myTextField("请输入邮箱", Colors.white, false, emailController),
-            myTextField("请输入验证码", Colors.black26, true, verifyCodeController),
+            myTextField("请输入邮箱", Colors.white, true, false, emailController),
+            myTextField("请输入验证码", Colors.black26, true, true, verifyCodeController),
+            myTextField("请输入密码", Colors.white, false, false, passwordController),
+            myTextField("请再次输入密码", Colors.white, false, false, passwordConfirmController),
             const SizedBox(height: 10),
             SizedBox(height: size.height * 0.04),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                  GestureDetector(
                  onTap: () {
-                  if (emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty) {
+                  if (emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty && passwordController.text.isNotEmpty && passwordConfirmController.text.isNotEmpty) {
                     //传入的是account,不是controller
-                    signUp(account, verifyCodeController.text);
+                    if(passwordController.text == passwordConfirmController.text){
+                      signUp(account, verifyCodeController.text, passwordController.text);
+                    }else{
+                      ShowToast.showToast("两次密码不一致");
+                    }
                   } else {
-                    ShowToast.showToast("请输入完整且正确的邮箱和验证码");
+                    ShowToast.showToast("请输入完整信息");
                   }
                   },
                   child:
                    Container(
-                    width: size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    width: size.width * 0.5,
+                    height: size.height * 0.08,
                     decoration: BoxDecoration(
-                      color: emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty ? buttonColor : Colors.grey,
+                      color:verifyCodeDown? buttonColor : Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Center(
@@ -105,7 +116,7 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -173,19 +184,23 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Container myTextField(String hint, Color color, bool isVerifyCode,
+  Container myTextField(String hint, Color color, bool isDisplaySuffix,
+  bool isVerifyCode,
       TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
-        vertical: 10,
+        vertical: 5,
       ),
-      child: TextField(
+      child: TextField( 
         controller: controller,
+        //密码输入框不显示密码
+        obscureText: !isDisplaySuffix,
+        style: TextStyle(fontSize: 12),
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 22,
+              horizontal: 15,
+              vertical: 15,
             ),
             fillColor: Colors.white,
             filled: true,
@@ -196,11 +211,13 @@ class _SignUpState extends State<SignUp> {
             hintText: hint,
             hintStyle: const TextStyle(
               color: Colors.black45,
-              fontSize: 16,
+              fontSize: 14,
             ),
-            suffixIcon: isVerifyCode
+            suffixIcon: isDisplaySuffix ?isVerifyCode
                 ? _buildVerifyCode(color)
-                : _buildEmailSuffic(controller)),
+                : _buildEmailSuffic(controller):
+                null
+                ),
       ),
     );
   }
@@ -277,7 +294,7 @@ class _SignUpState extends State<SignUp> {
           value: emailSuffix == "" ? null : emailSuffix,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 12,
           ),
           items: const [
             DropdownMenuItem(value: "@gmail.com", child: Text("@gmail.com")),

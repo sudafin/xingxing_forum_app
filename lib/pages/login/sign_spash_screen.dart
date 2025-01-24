@@ -3,8 +3,8 @@ import '../../pages/login/sign_in.dart';
   import '../../utils/colors.dart';
   import '../../pages/login/sign_up.dart';
 
-class MySplashScreen extends StatelessWidget {
-  const MySplashScreen({super.key});
+class SignSplashScreen extends StatelessWidget {
+  const SignSplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

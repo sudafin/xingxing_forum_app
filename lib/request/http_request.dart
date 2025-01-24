@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
+import 'package:xingxing_forum_app/router/router.dart';
 import '../config/config.dart';
+import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
+import '../main.dart'; // 假设navigatorKey在main.dart中定义
+
 class HttpRequest{ 
   static final  BaseOptions _baseOptions = BaseOptions(
     baseUrl: HttpConfig.baseURL,
@@ -29,13 +34,46 @@ class HttpRequest{
     //拦截器
     Interceptor interceptor = InterceptorsWrapper(
     //请求拦截器
-    onRequest: (options, handler){
+    onRequest: (options, handler) async {
+      // 添加Token处理
+      try {
+        final userBox = await Hive.openBox('user');
+        String? token = userBox.get('token');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+      } catch (e) {
+        Log.error("获取Token失败: $e");
+      }
+      
       Log.debug ("请求网址:${options.uri}");
       return handler.next(options);
     },
     //响应拦截器
-    onResponse: (response, handler){
+    onResponse: (response, handler) async {
       Log.debug ("请求响应拦截器:${response.data}");
+      //如果响应码为401，表示未授权，跳转到登录页面
+      if(response.statusCode == 401){
+        final userBox = await Hive.openBox('user');
+        await userBox.clear();
+        // 使用全局导航key替代context
+        if(navigatorKey.currentState != null){
+          navigatorKey.currentState?.pushReplacementNamed('/sign_in');
+        }
+      }
+      //如果响应码为403，表示没有权限，跳转到主页
+      if(response.statusCode == 403){
+        if(navigatorKey.currentState != null){
+          navigatorKey.currentState?.pushReplacementNamed('/home');
+        }
+      }
+      //如果响应码为404，表示资源未找到，跳转到主页
+      if(response.statusCode == 404){
+        if(navigatorKey.currentState != null){
+          navigatorKey.currentState?.pushReplacementNamed('/home');
+        }
+      }
+      
       return handler.next(response);
     },
     //请求错误拦截器
