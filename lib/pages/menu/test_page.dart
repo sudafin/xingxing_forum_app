@@ -10,12 +10,8 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  String res = "";
+  String res = "结果";
    bool isLoading = false;
-  @override
-  
-
-
   Future<void> getTest() async {
     setState(() {
       isLoading = true;
@@ -25,7 +21,7 @@ class _TestPageState extends State<TestPage> {
       Log.debug('测试结果: ${response['data']}');
       setState(() {
         isLoading = false;
-        this.res = response['data'];
+        res = response['data'];
       });
     } catch (e) {
       Log.error('获取测试数据失败: $e');
@@ -34,22 +30,7 @@ class _TestPageState extends State<TestPage> {
       });
     }
   }
-  Future<void> postTest() async {
-    final response = await TestService().postTest("测试");
-    Log.debug('测试结果: ${response['data']}');
-  }
-  Future<void> putTest() async {
-    final data = {
-      "userName": "test",
-      "id": 1,
-    };
-    final response = await TestService().putTest(data);
-    Log.debug('测试结果: ${response['data']}');
-  }
-  Future<void> deleteTest() async {
-    final response = await TestService().deleteTest(1);
-    Log.debug('测试结果: ${response['data']}');
-  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,11 +38,21 @@ class _TestPageState extends State<TestPage> {
         title: Text("测试"),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            getTest();
-          },
-          child: Text("测试"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Text(res,style: TextStyle(fontSize: 20,color: Colors.blue),),
+            ElevatedButton(
+              onPressed: () {
+                getTest();
+                setState(() {
+                  
+                });
+              },
+              child: Text("测试"),
+            ),
+            
+          ],
         ),
       ),
     );

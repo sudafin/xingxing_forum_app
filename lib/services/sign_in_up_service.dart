@@ -14,5 +14,6 @@ class SignInUpService {
     final response = await HttpRequest.request('/$prefix/login', method: 'POST', data: data);
     return response;
   }
+
 }
 

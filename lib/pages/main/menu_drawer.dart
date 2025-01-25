@@ -201,6 +201,6 @@ void navigatorIndex(int index, BuildContext context) {
     Navigator.pushNamed(context, '/about');
   } else if (index == 8) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SignSplashScreen()));
+        context, MaterialPageRoute(builder: (context) => TestPage()));
   }
 }

@@ -30,6 +30,7 @@ class _SignInState extends State<SignIn> {
        try {
          final userBox = await Hive.openBox('user');
          userBox.put('token', loginResponse.token);
+         userBox.put('refreshToken', loginResponse.refreshToken);
          userBox.put('user', loginResponse.userDTO.toJson());
          //提示登录成功
          ShowToast.showToast("登录成功");

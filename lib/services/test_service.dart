@@ -5,7 +5,7 @@ import '../utils/log.dart';
 class TestService {
   Future<Map<String, dynamic>> getTest() async {
     try {
-      final response = await HttpRequest.request('/test');
+      final response = await HttpRequest.request('/user/test',method: 'GET');
       return response;
     } catch (e) {
       Log.error('API请求失败: $e');
