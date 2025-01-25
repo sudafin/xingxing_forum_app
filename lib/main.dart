@@ -7,10 +7,14 @@ import 'router/router.dart';
 import 'pages/screen/splash_screen.dart';   
 import 'pages/main/main_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'pages/login/sign_spash_screen.dart';
 
+//用于全局导航时没有context情况下,需要使用GlobalKey<NavigatorState>来跳转
 final navigatorKey = GlobalKey<NavigatorState>();
+Box? userBox;
 void main(List<String> args) async {
   await Hive.initFlutter();
+  userBox = await Hive.openBox('user');
   runApp(
     MultiProvider(
       providers: [
@@ -147,12 +151,24 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: const Locale('zh', 'CN'),
+
+      navigatorKey: navigatorKey,
       routes: RouterConstant.routerConstantMap,
       //启动页5s然后跳转到main页
       home: FutureBuilder(
         future: Future.delayed(Duration(seconds: 0), () {
-          hasShownSplash = true; // 设置状态为已显示
-          return const MainPage();
+          hasShownSplash = true; 
+          //如果token存在，跳转到主页
+          if(userBox != null){
+            String? token = userBox!.get('token');
+            if(token != null){
+              return const MainPage();
+            }else{
+              return const SignSplashScreen();
+            }
+          }else{
+            return const SignSplashScreen();
+          }
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting && !hasShownSplash) {

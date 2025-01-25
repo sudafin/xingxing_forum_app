@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/pages/main/main_page.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
 import '../../utils/colors.dart';
 import '../../utils/show_toast.dart';
@@ -32,9 +33,9 @@ class _SignInState extends State<SignIn> {
          userBox.put('user', loginResponse.userDTO.toJson());
          //提示登录成功
          ShowToast.showToast("登录成功");
-         //跳转到主页
+         //跳转到主页,需要清除堆栈
          if(mounted){
-           Navigator.pushNamed(context, '/home');
+           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
          }
        } catch (e) {
          Log.error('Hive错误: $e');

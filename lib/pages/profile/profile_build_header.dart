@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import '../../model/login_response.dart';
 
 class ProfileBuildHeader extends StatefulWidget {
   const ProfileBuildHeader({super.key});
@@ -7,6 +9,19 @@ class ProfileBuildHeader extends StatefulWidget {
 }
 
 class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
+  UserDTO? _user;
+  Future<UserDTO> _getUser() async {
+    final userBox = await Hive.openBox('user');
+    final user = userBox.get('user');
+    final userMap = Map<String, dynamic>.from(user as Map);
+    _user = UserDTO.fromJson(userMap);
+    return _user!;
+  }
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +91,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
                   Row(
                     children: [
                       Text(
-                        '用户名',
+                        _user?.nickName ?? '未设置用户名',
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -91,7 +106,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
                     ],
                   ),
                   Text(
-                    'UID:1234567890',
+                    'UID:${_user?.id}',
                     style: TextStyle(fontSize: 12, color: Colors.white54),
                   ),
                   Text(
@@ -109,7 +124,7 @@ class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
     return Container(
       padding: EdgeInsets.only(left: 18),
       child: Text(
-        '个人简介',
+        _user?.bio ?? '未设置个人简介',
         style: TextStyle(
             fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
       ),

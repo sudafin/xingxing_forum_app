@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/pages/main/main_page.dart';
 import '../../pages/login/sign_in.dart';
   import '../../utils/colors.dart';
   import '../../pages/login/sign_up.dart';
@@ -16,10 +17,11 @@ class SignSplashScreen extends StatelessWidget {
         width: size.width,
         child: Stack(
           children: [
+          //背景图片
             Align(
               alignment: Alignment.topCenter,
               child: Container(
-                height: size.height * 0.53,
+                height: size.height * 0.50,
                 width: size.width,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
@@ -35,8 +37,24 @@ class SignSplashScreen extends StatelessWidget {
                 ),
               ),
             ),
+            //顶部appbar
             Positioned(
-              top: size.height * 0.6,
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back,color: Colors.white,),
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
+                  },
+                ),
+              ),
+            ),
+            Positioned(
+              top: size.height * 0.53,
               left: 0,
               right: 0,
               child: Center(

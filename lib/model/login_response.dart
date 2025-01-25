@@ -7,11 +7,12 @@ class LoginResponse {
   LoginResponse.fromJson(Map<String, dynamic> json) 
     : userDTO = UserDTO.fromJson(json['userDTO'] as Map<String, dynamic>),
       token = json['token'] as String;
-
+    
   Map<String, dynamic> toJson() => {
     'userDTO': userDTO.toJson(),
     'token': token,
   };
+  
 }
 
 class UserDTO {

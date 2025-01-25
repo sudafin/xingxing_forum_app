@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
 import '../pages/error/error_page.dart';
-import '../pages/main/main_page.dart';
 import '../pages/profile/fans_follow.dart';
 import '../pages/home/home_page.dart';
 import '../pages/message/message_page.dart';
@@ -9,6 +8,7 @@ import '../pages/group/group_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/login/sign_up.dart';
 import '../pages/login/sign_in.dart';
+import '../pages/login/sign_spash_screen.dart';
 import '../pages/group/group_menu/module_detail.dart';
 import '../pages/menu/about/about_page.dart';
 import '../pages/menu/drafts/drafts_page.dart';
@@ -30,7 +30,7 @@ import 'package:hive/hive.dart';
 class RouterConstant{
   static final Map<String,WidgetBuilder> routerConstantMap = {
   '/splash':(context) => const SplashScreen(),
-  '/main':(context) => const MainPage(),
+  '/sign_spash_screen':(context) => const SignSplashScreen(),
   '/home':(context) => const HomePage(),
   '/message':(context) => const MessagePage(),
   '/group':(context) => const GroupPage(),
@@ -57,8 +57,11 @@ class RouterConstant{
   };
 }
 
+//用于检查token是否存在,如果存在则跳转到主页,否则跳转到登录页面
 class AuthWrapper extends StatefulWidget {
+  //子组件
   final Widget child;
+  //构造函数
   const AuthWrapper({super.key, required this.child});
 
   @override
@@ -103,9 +106,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    //如果正在检查token，显示加载中
+    //isChecking为true,表示正在检查token,显示加载中,isChecking为false,表示检查完成,如果.有token就显示子组件,没有就在上面处理跳转到登录,这里需要使用SizeBox来占位,反之出现当前页面的留影
     return _isChecking 
         ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-        : widget.child;
+        : _hasToken 
+            ? widget.child
+            : const SizedBox.shrink();
   }
 }

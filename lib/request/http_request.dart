@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
-import 'package:xingxing_forum_app/router/router.dart';
 import '../config/config.dart';
 import 'package:hive/hive.dart';
-import 'package:flutter/material.dart';
 import '../main.dart'; // 假设navigatorKey在main.dart中定义
 
 class HttpRequest{ 
