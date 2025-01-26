@@ -63,6 +63,7 @@ dependencies:
   extended_text_field: ^16.0.2
   emoji_picker_flutter: ^4.2.0
   city_pickers: ^1.1.0
+  qiniu_flutter_sdk: ^0.7.0
   
 dev_dependencies:
   flutter_test:

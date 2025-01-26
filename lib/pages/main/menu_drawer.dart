@@ -6,6 +6,7 @@ import 'package:xingxing_forum_app/widgets/share_widget.dart';
 import 'package:xingxing_forum_app/pages/login/sign_spash_screen.dart';
 import 'package:xingxing_forum_app/pages/menu/test_page.dart';
 import 'package:hive/hive.dart';
+import 'package:xingxing_forum_app/pages/login/sgin_info.dart';
 
 /// 菜单栏
 class MenuDrawer extends StatefulWidget {
@@ -201,6 +202,6 @@ void navigatorIndex(int index, BuildContext context) {
     Navigator.pushNamed(context, '/about');
   } else if (index == 8) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TestPage()));
+        context, MaterialPageRoute(builder: (context) => SignInfo()));
   }
 }

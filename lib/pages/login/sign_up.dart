@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../utils/colors.dart';
-import '../../services/sign_in_up_service.dart';
+import '../../services/user_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
