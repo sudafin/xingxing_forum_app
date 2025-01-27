@@ -41,7 +41,7 @@ class HttpRequest{
           String? refreshToken = userBox.get('refreshToken');
           try{
             final response = await HttpRequest.request(
-            '/user/refresh',
+            '/user/token/refresh',
             method: 'GET',
             params: {'refreshToken': refreshToken},
           );

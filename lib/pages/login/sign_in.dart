@@ -4,6 +4,7 @@ import 'package:xingxing_forum_app/utils/log.dart';
 import '../../utils/colors.dart';
 import '../../utils/show_toast.dart';
 import '../../services/user_service.dart';
+import '../../services/forum_service.dart';
 import '../../model/login_response.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 class SignIn extends StatefulWidget {
@@ -16,13 +17,13 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  SignInUpService signInUpService = SignInUpService();
+  UserService signInUpService = UserService();
   Future<void> signIn(String email, String password) async {
     Map<String, dynamic> data = {
       "email": email,
       "password": password,
     };
-    Map<String, dynamic> response = await signInUpService.signIn(data);
+    Map<String, dynamic> response = await UserService.signIn(data);
     if(response['code'] == 200){
       if (mounted) {
       LoginResponse loginResponse = LoginResponse.fromJson(response['data']);
@@ -32,6 +33,8 @@ class _SignInState extends State<SignIn> {
          userBox.put('token', loginResponse.token);
          userBox.put('refreshToken', loginResponse.refreshToken);
          userBox.put('user', loginResponse.userDTO.toJson());
+        await UserService.getOssToken();
+        await ForumService().getForum();
          //提示登录成功
          ShowToast.showToast("登录成功");
          //跳转到主页,需要清除堆栈
@@ -103,9 +106,9 @@ class _SignInState extends State<SignIn> {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
-                        signIn(_usernameController.text, _passwordController.text);
+                        await signIn(_usernameController.text, _passwordController.text);
                       } else {
                         ShowToast.showToast("请输入完整信息");
                       }

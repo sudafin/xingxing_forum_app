@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/services/user_service.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
+import 'package:hive/hive.dart';
 import '../../utils/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -37,20 +40,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
   final FocusNode _schoolFocus = FocusNode();
 
 
-  final List<String> _interestModulesOptions = const [
-    '阅读',
-    '运动',
-    '音乐',
-    '旅行',
-    '美食',
-    '摄影',
-    '游戏',
-    '编程',
-    '电影',
-    '绘画',
-    '舞蹈',
-    '手作'
-  ];
+  List<String> _interestModulesOptions= [];
   final Set<String> _selectedInterestModules = {};
 
   
@@ -64,13 +54,18 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
   final double _avatarSize = 100.0;
   String? _avatarKey;
 
+
   late final AnimationController _shakeController;
 
-  
-
+  //获取板块
+  Future<void> _getInterestModules() async {
+    Box forumBox =  Hive.box('forum');
+    _interestModulesOptions = forumBox.get('childrenForumList') ?? [];
+  }
   @override
-  void initState() {
+  void initState()  {
     super.initState();
+    _getInterestModules();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 600),
@@ -153,8 +148,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _birthdayController.text =
-            "${picked.year}-${picked.month}-${picked.day}";
+        _birthdayController.text = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
       });
     }
   }
@@ -308,6 +302,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                         color: Colors.grey[500],
                                       ),
                                     ),
+                                    maxLength: 10,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return '请输入用户名';
@@ -339,6 +334,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                         color: Colors.grey[500],
                                       ),
                                     ),
+                                    maxLength: 100,
                                   ),
                                   SizedBox(height: 15),
                                   TextFormField(
@@ -355,6 +351,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                       filled: true,
                                       fillColor: Colors.white.withOpacity(0.8),
                                     ),
+                                    maxLength: 10,
                                   ),
                                   SizedBox(height: 15),
                                   TextFormField(
@@ -371,9 +368,9 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                       filled: true,
                                       fillColor: Colors.white.withOpacity(0.8),
                                     ),
+                                    maxLength: 10,
                                   ),
                                   SizedBox(height: 15),
-
                                   // 生日选择
                                   TextFormField(
                                     focusNode: _birthdayFocus,
@@ -403,13 +400,12 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                       border: InputBorder.none,
                                       filled: true,
                                       fillColor: Colors.white.withOpacity(0.8),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(Icons.calendar_today),
-                                        onPressed: () => _selectDate(context),
-                                      ),
+                                      suffixIcon: 
+                                       Icon(Icons.calendar_today),
                                     ),
                                     onTap: () {
                                       FocusScope.of(context).requestFocus(FocusNode());
+                                      _selectDate(context);
                                     },
                                   ),
                                   SizedBox(height: 15),
@@ -510,7 +506,7 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                     child: ElevatedButton(
                                       focusNode: _avatarFocus,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: primaryColor,
+                                        backgroundColor: Colors.blue[400],
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(10),
                                         ),
@@ -518,9 +514,16 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                       onPressed: () async {
                                         bool isValid = true;
                                         // 必填字段验证
-                                        if (_fullNameController.text.isEmpty ||
-                                            _birthdayController.text.isEmpty ||
-                                            _genderController.text.isEmpty) {
+                                        if (_fullNameController.text.isEmpty ){
+                                          ShowToast.showToast('请输入用户名');
+                                          isValid = false;
+                                        }
+                                        if (_birthdayController.text.isEmpty ){
+                                          ShowToast.showToast('请选择出生日期');
+                                          isValid = false;
+                                        }
+                                        if (_genderController.text.isEmpty ){
+                                          ShowToast.showToast('请选择性别');
                                           isValid = false;
                                         }
                                         
@@ -535,20 +538,16 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
                                           isValid = false;
                                           ShowToast.showToast('请选择兴趣爱好');
                                         }
-
                                         if (!isValid) {
+                                        //执行动画
                                           _triggerShakeAnimation();
                                           return;
                                         }
-
                                         try {
-                                          await _mockRegister();
-                                          // 注册成功处理
-                                          Navigator.pushReplacementNamed(context, '/home');
+                                           await _insertUserInfo();
                                         } catch (e) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text('注册失败: ${e.toString()}')),
-                                          );
+                                          ShowToast.showToast('注册失败');
+                                          Log.error('注册失败: $e');
                                         }
                                       },
                                       child: Text(
@@ -715,11 +714,11 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
 
   Map<String, dynamic> _buildRequestData() {
     return {
-      'username': _fullNameController.text,
-      'birthday': _birthdayController.text,
-      'gender': _genderController.text,
+      'userName': _fullNameController.text,
+      'birthday': _selectedDate?.toIso8601String().split('T')[0],
+      'sex': _genderController.text,
       'interestModules': _selectedInterestModules.toList(),
-      'avatar': _avatarKey, // 未选择时为null
+      'avatar': _avatarKey,
       'bio': _bioController.text.isNotEmpty ? _bioController.text : null,
       'occupation': _occupationController.text.isNotEmpty 
           ? _occupationController.text 
@@ -730,10 +729,15 @@ class _SignInfoState extends State<SignInfo> with TickerProviderStateMixin {
     };
   }
 
-  Future<void> _mockRegister() async {
+  Future<void> _insertUserInfo() async {
     final requestData = _buildRequestData();
-    print('正在发送注册请求，数据：$requestData');
-    await Future.delayed(Duration(seconds: 2)); // 模拟网络延迟
+    Log.debug('requestData: $requestData');
+    var response = await UserService.insertUserInfo(requestData);
+    if(response['code'] == 200){
+      ShowToast.showToast('注册成功');
+    }else{
+      Log.error('注册失败: ${response['message']}');
+    }
   }
 }
 

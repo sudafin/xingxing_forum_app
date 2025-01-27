@@ -24,6 +24,7 @@ import '../pages/screen/splash_screen.dart';
 import '../widgets/post_page/post_page.dart';
 import '../widgets/post_detail_page.dart';
 import '../pages/profile/profile_edit_page.dart';
+import '../pages/login/sgin_info.dart';
 import '../pages/message/chat_setting.dart';
 import 'package:hive/hive.dart';
 
@@ -52,6 +53,7 @@ class RouterConstant{
   '/chat_setting':(context) => const AuthWrapper(child: ChatSettingPage()),
   '/fans_follow':(context) => const AuthWrapper(child: FansFollowPage()),
   '/module_detail':(context) => const AuthWrapper(child:ModuleDetail()),
+  '/sign_info':(context) => const AuthWrapper(child:SignInfo()),
   '/sign_up':(context) => const SignUp(),
   '/sign_in':(context) => const SignIn(),
   };

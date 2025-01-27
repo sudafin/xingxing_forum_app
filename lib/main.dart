@@ -9,13 +9,12 @@ import 'pages/main/main_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/login/sign_spash_screen.dart';
 import 'services/user_service.dart';
+import 'services/forum_service.dart';
 //用于全局导航时没有context情况下,需要使用GlobalKey<NavigatorState>来跳转
 final navigatorKey = GlobalKey<NavigatorState>();
 Box? userBox;
 void main(List<String> args) async {
   await Hive.initFlutter();
-  userBox = await Hive.openBox('user');
-  await SignInUpService().getOssToken();
   runApp(
     MultiProvider(
       providers: [

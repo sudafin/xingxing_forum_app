@@ -14,13 +14,20 @@ class _SignUpState extends State<SignUp> {
   String account = "";
   bool verifyCodeDown = false;
   final int _countdown = 60;
-  final SignInUpService _signInUpService = SignInUpService();
   TextEditingController emailController = TextEditingController();
   TextEditingController verifyCodeController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
   Future<void> sendEmail() async {
-    final response = await _signInUpService.sendEmail(account);
+    if(emailController.text.isEmpty){
+      ShowToast.showToast("请输入邮箱");
+      return;
+    }
+    if(emailController.text.contains('@')){
+      ShowToast.showToast("请输入正确的邮箱");
+      return;
+    }
+    final response = await UserService.sendEmail(account);
     if(response['code'] == 200){
       ShowToast.showToast("发送成功");
     }else{
@@ -33,11 +40,11 @@ class _SignUpState extends State<SignUp> {
       "code": code,
       "password": password,
     };
-    final response = await _signInUpService.signUp(data);
+    final response = await UserService.signUp(data);
     if(response['code'] == 200){
       ShowToast.showToast("注册成功");
       if (mounted) {
-        Navigator.pushNamed(context, '/login');
+        Navigator.pushNamedAndRemoveUntil(context, '/sign_info', (route) => false);
       }
     }else{
       ShowToast.showToast(response['msg']);
@@ -90,11 +97,13 @@ class _SignUpState extends State<SignUp> {
               child: Column(
                 children: [
                  GestureDetector(
-                 onTap: () {
+                 onTap: () async {
                   if (emailController.text.isNotEmpty && verifyCodeController.text.isNotEmpty && passwordController.text.isNotEmpty && passwordConfirmController.text.isNotEmpty) {
                     //传入的是account,不是controller
                     if(passwordController.text == passwordConfirmController.text){
-                      signUp(account, verifyCodeController.text, passwordController.text);
+                      await signUp(account, verifyCodeController.text, passwordController.text);
+                      if (!context.mounted) return;
+                      Navigator.pushNamed(context, '/sign_info');
                     }else{
                       ShowToast.showToast("两次密码不一致");
                     }
@@ -225,19 +234,22 @@ class _SignUpState extends State<SignUp> {
   Widget _buildVerifyCode(Color color) {
     return !verifyCodeDown
         ? TextButton(
-            onPressed: () {
+            onPressed: () async {
               setState(() {
+              if(emailController.text.contains('@')){
+                ShowToast.showToast("请输入正确的邮箱");
+                return;
+              }
               if(account.isNotEmpty && emailSuffix.isNotEmpty){
                 account = account.contains('@')
                     ? account.split('@')[0] + emailSuffix
                     : account + emailSuffix;
                 verifyCodeDown = true;
-                //发送邮箱验证码请求
-                sendEmail();
               }else{
                 ShowToast.showToast("请输入完整且正确的邮箱");
               }
               });
+              await sendEmail();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(
