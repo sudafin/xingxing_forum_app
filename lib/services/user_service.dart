@@ -1,7 +1,6 @@
-import 'package:xingxing_forum_app/utils/log.dart';
-
 import '../request/http_request.dart';
 import 'package:hive/hive.dart';
+import '../model/user_login_response.dart';
 class UserService {
   static String prefix = "user";
   static Future<Map<String, dynamic>> sendEmail(String email) async {
@@ -24,6 +23,11 @@ class UserService {
   static Future<Map<String, dynamic>> insertUserInfo(Map<String, dynamic> data) async {
     final response = await HttpRequest.request('/$prefix/info', method: 'POST', data: data);
     return response;
+  }
+  static Future<UserInfo> getUserInfo(int userId) async {
+    final response = await HttpRequest.request('/$prefix/info/$userId', method: 'GET');
+    UserInfo userInfo = UserInfo.fromJson(response['data']);  
+    return userInfo;
   }
 }
 

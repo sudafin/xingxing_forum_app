@@ -197,10 +197,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/profile', arguments:1);
                 },
                 child: CircleAvatar(
-                  
                   radius: 20,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),

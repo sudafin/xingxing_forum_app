@@ -5,7 +5,7 @@ import '../../utils/colors.dart';
 import '../../utils/show_toast.dart';
 import '../../services/user_service.dart';
 import '../../services/forum_service.dart';
-import '../../model/login_response.dart';
+import '../../model/user_login_response.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -32,7 +32,7 @@ class _SignInState extends State<SignIn> {
          final userBox = await Hive.openBox('user');
          userBox.put('token', loginResponse.token);
          userBox.put('refreshToken', loginResponse.refreshToken);
-         userBox.put('user', loginResponse.userDTO.toJson());
+         userBox.put('user', loginResponse.userInfo.toJson());
         await UserService.getOssToken();
         await ForumService().getForum();
          //提示登录成功

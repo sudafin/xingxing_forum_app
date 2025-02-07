@@ -1,24 +1,24 @@
 class LoginResponse {
-  final UserDTO userDTO;
+  final UserInfo userInfo;
   final String token;
   final String refreshToken;
 
-  LoginResponse({required this.userDTO, required this.token, required this.refreshToken});
+  LoginResponse({required this.userInfo, required this.token, required this.refreshToken});
 
   LoginResponse.fromJson(Map<String, dynamic> json) 
-    : userDTO = UserDTO.fromJson(json['userDTO'] as Map<String, dynamic>),
+    : userInfo = UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
       token = json['token'] as String,
       refreshToken = json['refreshToken'] as String;
 
   Map<String, dynamic> toJson() => {
-    'userDTO': userDTO.toJson(),
+    'userInfo': userInfo.toJson(),
     'token': token,
     'refreshToken': refreshToken,
   };
   
 }
 
-class UserDTO {
+class UserInfo {
   int id;
   String? nickName;
   String email;
@@ -32,8 +32,12 @@ class UserDTO {
   DateTime? birthday;
   String? profession;
   String? school;
+  int? followCount;
+  int? fansCount;
+  int? likeCount;
 
-  UserDTO({
+
+  UserInfo({
     required this.id,
     this.nickName,
     required this.email,
@@ -47,9 +51,12 @@ class UserDTO {
     required this.birthday,
     required this.profession,
     required this.school,
+    required this.followCount,
+    required this.fansCount,
+    required this.likeCount,
   });
 
-  UserDTO.fromJson(Map<String, dynamic> json) 
+  UserInfo.fromJson(Map<String, dynamic> json) 
     : id = json['id'] is int ? json['id'] as int : int.parse(json['id'] as String),
       nickName = json['nickName'] as String?,
       email = json['email'] as String,
@@ -57,13 +64,15 @@ class UserDTO {
       bio = json['bio'] as String?,
       active = json['active'] as bool?,
       admin = json['admin'] as bool?,
-      sex = json['sex'] as int?,
+      sex = json['sex'] != null ? (json['sex'] is int ? json['sex'] as int : int.parse(json['sex'] as String)) : null,
       ipAddress = json['ipAddress'] as String?,
       address = json['address'] as String?,
       birthday = json['birthday'] != null ? DateTime.parse(json['birthday'] as String) : null,
       profession = json['profession'] as String?,
-      school = json['school'] as String?;
-
+      school = json['school'] as String?,
+      followCount = json['followCount'] != null ? (json['followCount'] is int ? json['followCount'] as int : int.parse(json['followCount'] as String)) : null,
+      fansCount = json['fansCount'] != null ? (json['fansCount'] is int ? json['fansCount'] as int : int.parse(json['fansCount'] as String)) : null,
+      likeCount = json['likeCount'] != null ? (json['likeCount'] is int ? json['likeCount'] as int : int.parse(json['likeCount'] as String)) : null;
 
   Map<String, dynamic> toJson() {
     return {
@@ -74,6 +83,15 @@ class UserDTO {
       'bio': bio,
       'active': active,
       'admin': admin,
+      'sex': sex,
+      'ipAddress': ipAddress,
+      'address': address,
+      'birthday': birthday?.toIso8601String(),
+      'profession': profession,
+      'school': school,
+      'followCount': followCount,
+      'fansCount': fansCount,
+      'likeCount': likeCount,
     };
   }
 }

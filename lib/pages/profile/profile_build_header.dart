@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import '../../model/login_response.dart';
+import '../../model/user_login_response.dart';
 
 class ProfileBuildHeader extends StatefulWidget {
-  const ProfileBuildHeader({super.key});
+  final int? arguments;
+  const ProfileBuildHeader({super.key, this.arguments});
   @override
-  State<ProfileBuildHeader> createState() => _ProfileBuildHeaderState();
+  State<ProfileBuildHeader> createState() => ProfileBuildHeaderState();
 }
 
-class _ProfileBuildHeaderState extends State<ProfileBuildHeader> {
-  UserDTO? _user;
-  Future<UserDTO> _getUser() async {
+class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
+  UserInfo? _user;
+  int? _arguments;
+  Future<void> _getUser() async {
     final userBox = await Hive.openBox('user');
     final user = userBox.get('user');
     final userMap = Map<String, dynamic>.from(user as Map);
-    _user = UserDTO.fromJson(userMap);
-    return _user!;
+    setState(() {
+      _user = UserInfo.fromJson(userMap);
+    });
   }
+
   @override
   void initState() {
     super.initState();
     _getUser();
   }
+
+  // 添加一个公共刷新方法
+  Future<void> refreshUser() async {
+   print('refreshUser');
+    await _getUser();
+    setState(() {
+    //测试更改姓名
+    _user!.nickName = 'test';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

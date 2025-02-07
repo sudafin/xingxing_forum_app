@@ -8,8 +8,7 @@ import 'pages/screen/splash_screen.dart';
 import 'pages/main/main_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/login/sign_spash_screen.dart';
-import 'services/user_service.dart';
-import 'services/forum_service.dart';
+
 //用于全局导航时没有context情况下,需要使用GlobalKey<NavigatorState>来跳转
 final navigatorKey = GlobalKey<NavigatorState>();
 Box? userBox;
@@ -156,7 +155,7 @@ class _MyAppState extends State<MyApp> {
       routes: RouterConstant.routerConstantMap,
       //启动页5s然后跳转到main页
       home: FutureBuilder(
-        future: Future.delayed(Duration(seconds: 0), () {
+        future: Future.delayed(Duration(seconds: 1), () {
           hasShownSplash = true; 
           //如果token存在，跳转到主页
           if(userBox != null){

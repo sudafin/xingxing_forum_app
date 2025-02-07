@@ -6,6 +6,7 @@ import 'package:xingxing_forum_app/stores/store_drawer.dart';
 import 'profile_build_header.dart';
 import 'package:flutter/scheduler.dart';
 
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -51,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
           store.setIsOpened(isOpened);
         },
         appBar: AppBar(
-          leading: arguments == '/profile'
+          leading: routeName == '/profile'
               ? IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () => Navigator.pop(context),
@@ -76,16 +77,15 @@ class _ProfilePageState extends State<ProfilePage> {
         body: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             if (notification is ScrollUpdateNotification) {
-              // 因为我们需要使用回调函数,并且在函数中使用setSate,那么如果页面渲染过快可能导致setSate失败,所以需要使用 SchedulerBinding 在帧结束后更新状态,也就是渲染结束后setState修改状态
               SchedulerBinding.instance.addPostFrameCallback((_) {
-                final newOpacity = 1 - _scrollController.offset / 210;
+                final effectiveOffset = _scrollController.offset < 0 ? 0 : _scrollController.offset;
+                final newOpacity = 1 - effectiveOffset / 210;
                 if (newOpacity != _opacity) {
                   setState(() {
                     _opacity = newOpacity.clamp(0.0, 1.0);
                   });
                 }
-
-                final newTransparent = _scrollController.offset < 100;
+                final newTransparent = effectiveOffset < 100;
                 if (newTransparent != _isTransparent) {
                   setState(() {
                     _isTransparent = newTransparent;
@@ -122,11 +122,30 @@ class ProfilePageBody extends StatefulWidget {
 
 class _ProfilePageBodyState extends State<ProfilePageBody>
     with TickerProviderStateMixin {
+  bool _isLoading = false;
   late final TabController _tabController;
+  // 声明 GlobalKey，用于获取 ProfileBuildHeader 的状态,在刷新时使用它去调用刷新方法
+  final GlobalKey<ProfileBuildHeaderState> _headerKey = GlobalKey<ProfileBuildHeaderState>();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+  
+  Future<void> _handleRefresh() async {
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(Duration(seconds: 1)); // 模拟刷新操作
+    
+    // 调用 header 的刷新方法
+    await (_headerKey.currentState as ProfileBuildHeaderState).refreshUser();
+    
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -137,68 +156,75 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      controller: widget.scrollController,
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            pinned: false,
-            forceElevated: innerBoxIsScrolled,
-            expandedHeight: 250,
-            backgroundColor: Colors.blueGrey,
-            //把这里的appbar的leading去掉
-            leading: SizedBox.shrink(),
-            flexibleSpace: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return FlexibleSpaceBar(
-                  background: _buildHeader(),
-                  collapseMode: CollapseMode.pin,
-                );
-              },
-            ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _SliverAppBarDelegate(
-              TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: '主题'),
-                  Tab(text: '回复'),
-                  Tab(text: '收藏'),
-                ],
-                indicatorSize: TabBarIndicatorSize.label,
-                dividerHeight: 0,
-                labelPadding: EdgeInsets.only(top: 12),
-                indicatorWeight: 0.5,
-                labelStyle: TextStyle(fontSize: 16),
-                padding: EdgeInsets.only(left: 100, right: 100),
+    return RefreshIndicator(
+      notificationPredicate: (_) => true,
+      onRefresh: _handleRefresh,
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowIndicator();
+          return true;
+        },
+        child: NestedScrollView(
+          floatHeaderSlivers: true,
+          controller: widget.scrollController,
+          physics: const AlwaysScrollableScrollPhysics(parent: ClampingScrollPhysics()),
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                pinned: false,
+                forceElevated: innerBoxIsScrolled,
+                expandedHeight: 250,
+                backgroundColor: Colors.blueGrey,
+                leading: SizedBox.shrink(),
+                flexibleSpace: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return FlexibleSpaceBar(
+                      // 传入 GlobalKey到ProfileBuildHeader中
+                      background: ProfileBuildHeader(key: _headerKey, arguments: widget.arguments),
+                      collapseMode: CollapseMode.pin,
+                    );
+                  },
+                ),
               ),
-            ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _SliverAppBarDelegate(
+                  TabBar(
+                    controller: _tabController,
+                    tabs: const [
+                      Tab(text: '主题'),
+                      Tab(text: '回复'),
+                      Tab(text: '收藏'),
+                    ],
+                    indicatorSize: TabBarIndicatorSize.label,
+                    dividerHeight: 0,
+                    labelPadding: EdgeInsets.only(top: 12),
+                    indicatorWeight: 0.5,
+                    labelStyle: TextStyle(fontSize: 16),
+                    padding: EdgeInsets.only(left: 100, right: 100),
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildTopicList(),
+              _buildReplyList(),
+              _buildFavoriteList(),
+            ],
           ),
-        ];
-      },
-      //设置body
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildTopicList(),
-          _buildReplyList(),
-          _buildFavoriteList(),
-        ],
+        ),
       ),
     );
-  }
-
-//设置个人资料
-  Widget _buildHeader() {
-    return ProfileBuildHeader();
   }
 
   Widget _buildTopicList() {
     return Container(
       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GridView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 1.5,
@@ -220,6 +246,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     return Container(
       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
         itemCount: 10,
         shrinkWrap: true,
         itemBuilder: (context, index) {
@@ -235,6 +262,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
     return Container(
       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GridView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 1.5,
