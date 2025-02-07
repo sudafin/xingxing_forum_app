@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import '../../model/user_login_response.dart';
+import '../../services/user_service.dart';
 
 class ProfileBuildHeader extends StatefulWidget {
   final int? arguments;
@@ -12,29 +14,94 @@ class ProfileBuildHeader extends StatefulWidget {
 class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
   UserInfo? _user;
   int? _arguments;
-  Future<void> _getUser() async {
-    final userBox = await Hive.openBox('user');
-    final user = userBox.get('user');
-    final userMap = Map<String, dynamic>.from(user as Map);
-    setState(() {
-      _user = UserInfo.fromJson(userMap);
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _getUser();
+    _arguments = widget.arguments;
+    if (_arguments == null) {
+      _getOwnUser(false);
+    } else {
+      _getOtherUser(_arguments!);
+    }
   }
 
-  // 添加一个公共刷新方法
+  Future<void> _getOwnUser(bool isRefresh) async {
+    if (!isRefresh) {
+      try {
+        final userBox = await Hive.openBox('user');
+        final localUser = userBox.get('user');
+        if (localUser != null) {
+          final userMap = Map<String, dynamic>.from(localUser as Map);
+          if (mounted) {
+            setState(() {
+              _user = UserInfo.fromJson(userMap);
+            });
+          }
+        } else {
+          Log.error ("本地未找到用户数据");
+        }
+      } catch (e) {
+        Log.error ("读取或解析用户数据出错：$e");
+      }
+    } else {
+      // 刷新时先确保 _user 有效
+      if (_user == null) {
+        try {
+          final userBox = await Hive.openBox('user');
+          final localUser = userBox.get('user');
+          if (localUser != null) {
+            final userMap = Map<String, dynamic>.from(localUser as Map);
+            _user = UserInfo.fromJson(userMap);
+          } else {
+            Log.error("刷新时本地未找到用户数据");
+            return;
+          }
+        } catch (e) {
+          Log.error("刷新时读取或解析本地用户数据出错：$e");
+          return;
+        }
+      }
+      if (_user == null) {
+        Log.error("用户信息为空，无法刷新");
+        return;
+      }
+      // 调用接口刷新用户数据
+      try {
+        UserInfo updatedUser = await UserService.
+        getUserInfo(_user!.id);
+        if (mounted) {
+          setState(() {
+            _user = updatedUser;
+          });
+        }
+      } catch (e) {
+        Log.error("获取用户信息失败：$e");
+      }
+    }
+  }
+
+  Future<void> _getOtherUser(int userId) async {
+    try {
+      UserInfo userInfo = await UserService.getUserInfo(userId);
+      if (mounted) {
+        setState(() {
+          _user = userInfo;
+        });
+      }
+    } catch (e) {
+      Log.error("获取其他用户信息失败：$e");
+    }
+  }
+
   Future<void> refreshUser() async {
-   print('refreshUser');
-    await _getUser();
-    setState(() {
-    //测试更改姓名
-    _user!.nickName = 'test';
-    });
+    if (_arguments == null) {
+      print('刷新自己的用户信息');
+      await _getOwnUser(true);
+    } else {
+      print('刷新其他用户信息');
+      await _getOtherUser(_arguments!);
+    }
   }
 
   @override
@@ -106,7 +173,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
                   Row(
                     children: [
                       Text(
-                        _user?.nickName ?? '未设置用户名',
+                        _user?.nickname ?? '未设置用户名',
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -157,7 +224,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
         }, child: 
           Column(
             children: [ 
-              Text('100',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
+              Text('${_user?.followCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
               Text('关注',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
             ],
           ),
@@ -167,17 +234,17 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
           }, child: 
           Column(
             children: [ 
-              Text('100',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
+              Text('${_user?.fansCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
               Text('粉丝',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
             ],
           ),
           ),
           TextButton(onPressed: (){
-           // TODO获赞的page
+           
           }, child: 
           Column(
             children: [ 
-              Text('100',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
+              Text('${_user?.likeCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
               Text('获赞',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
             ],
           ),

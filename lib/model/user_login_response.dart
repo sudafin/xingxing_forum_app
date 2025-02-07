@@ -5,81 +5,90 @@ class LoginResponse {
 
   LoginResponse({required this.userInfo, required this.token, required this.refreshToken});
 
-  LoginResponse.fromJson(Map<String, dynamic> json) 
-    : userInfo = UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
-      token = json['token'] as String,
-      refreshToken = json['refreshToken'] as String;
+  LoginResponse.fromJson(Map<String, dynamic> json)
+      : userInfo = UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
+        token = json['token'] as String,
+        refreshToken = json['refreshToken'] as String;
 
   Map<String, dynamic> toJson() => {
-    'userInfo': userInfo.toJson(),
-    'token': token,
-    'refreshToken': refreshToken,
-  };
-  
+        'userInfo': userInfo.toJson(),
+        'token': token,
+        'refreshToken': refreshToken,
+      };
 }
 
 class UserInfo {
-  int id;
-  String? nickName;
-  String email;
-  String? avatar;
-  String? bio;
-  bool? active;
-  bool? admin;
-  int? sex;
-  String? ipAddress;
-  String? address;
-  DateTime? birthday;
-  String? profession;
-  String? school;
-  int? followCount;
-  int? fansCount;
-  int? likeCount;
-
+  final int id;
+  final String nickname;
+  final String avatar;
+  final String? email;
+  final String? bio;
+  final bool? active;
+  final bool? admin;
+  final int? sex;
+  final String? ipAddress;
+  final String? address;
+  final DateTime? birthday;
+  final String? profession;
+  final String? school;
+  final int? followCount;
+  final int? fansCount;
+  final int? likeCount;
 
   UserInfo({
     required this.id,
-    this.nickName,
-    required this.email,
-    this.avatar,
+    required this.nickname,
+    required this.avatar,
+    this.email,
     this.bio,
-    required this.active,
-    required this.admin,
-    required this.sex,
-    required this.ipAddress,
-    required this.address,
-    required this.birthday,
-    required this.profession,
-    required this.school,
-    required this.followCount,
-    required this.fansCount,
-    required this.likeCount,
+    this.active,
+    this.admin,
+    this.sex,
+    this.ipAddress,
+    this.address,
+    this.birthday,
+    this.profession,
+    this.school,
+    this.followCount,
+    this.fansCount,
+    this.likeCount,
   });
 
-  UserInfo.fromJson(Map<String, dynamic> json) 
-    : id = json['id'] is int ? json['id'] as int : int.parse(json['id'] as String),
-      nickName = json['nickName'] as String?,
-      email = json['email'] as String,
-      avatar = json['avatar'] as String?,
-      bio = json['bio'] as String?,
-      active = json['active'] as bool?,
-      admin = json['admin'] as bool?,
-      sex = json['sex'] != null ? (json['sex'] is int ? json['sex'] as int : int.parse(json['sex'] as String)) : null,
-      ipAddress = json['ipAddress'] as String?,
-      address = json['address'] as String?,
-      birthday = json['birthday'] != null ? DateTime.parse(json['birthday'] as String) : null,
-      profession = json['profession'] as String?,
-      school = json['school'] as String?,
-      followCount = json['followCount'] != null ? (json['followCount'] is int ? json['followCount'] as int : int.parse(json['followCount'] as String)) : null,
-      fansCount = json['fansCount'] != null ? (json['fansCount'] is int ? json['fansCount'] as int : int.parse(json['fansCount'] as String)) : null,
-      likeCount = json['likeCount'] != null ? (json['likeCount'] is int ? json['likeCount'] as int : int.parse(json['likeCount'] as String)) : null;
+  UserInfo.fromJson(Map<String, dynamic> json)
+      : id = json['id'] is int ? json['id'] as int : int.parse(json['id'].toString()),
+        // nickname为必填字段，如缺失则默认赋值为空字符串，可根据实际需求做异常处理
+        nickname = json['nickname'] as String? ?? '',
+        // avatar为必填字段，如缺失则默认赋值为空字符串
+        avatar = json['avatar'] as String? ?? '',
+        // email、bio等都允许为空
+        email = json['email'] as String?,
+        bio = json['bio'] as String?,
+        active = json['active'] as bool?,
+        admin = json['admin'] as bool?,
+        sex = json['sex'] != null
+            ? (json['sex'] is int ? json['sex'] as int : int.tryParse(json['sex'].toString()))
+            : null,
+        ipAddress = json['ipAddress'] as String?,
+        address = json['address'] as String?,
+        birthday = json['birthday'] != null ? DateTime.tryParse(json['birthday'].toString()) : null,
+        profession = json['profession'] as String?,
+        school = json['school'] as String?,
+        followCount = json['followCount'] != null
+            ? (json['followCount'] is int ? json['followCount'] as int : int.tryParse(json['followCount'].toString()))
+            : null,
+        fansCount = json['fansCount'] != null
+            ? (json['fansCount'] is int ? json['fansCount'] as int : int.tryParse(json['fansCount'].toString()))
+            : null,
+        likeCount = json['likeCount'] != null
+            ? (json['likeCount'] is int ? json['likeCount'] as int : int.tryParse(json['likeCount'].toString()))
+            : null;
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'nickName': nickName,
-      'email': email,
+      'nickname': nickname,
       'avatar': avatar,
+      'email': email,
       'bio': bio,
       'active': active,
       'admin': admin,

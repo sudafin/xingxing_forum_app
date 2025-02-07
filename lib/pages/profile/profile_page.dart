@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xingxing_forum_app/pages/main/menu_drawer.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import '../../stores/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/stores/store_drawer.dart';
@@ -139,10 +140,16 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
       _isLoading = true;
     });
     await Future.delayed(Duration(seconds: 1)); // 模拟刷新操作
-    
-    // 调用 header 的刷新方法
-    await (_headerKey.currentState as ProfileBuildHeaderState).refreshUser();
-    
+
+    // 先检查 headerKey 的 currentState 是否可用
+    if (_headerKey.currentState != null && _headerKey.currentState!.mounted) {
+      await (_headerKey.currentState as ProfileBuildHeaderState).refreshUser();
+    } else {
+      // 如果不可用，可记录日志或执行其他刷新操作
+      Log.error("ProfileBuildHeaderState 不可用，可能已被重建或 dispose");
+    }
+
+    print('刷新完成');
     setState(() {
       _isLoading = false;
     });

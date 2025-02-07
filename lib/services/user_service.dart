@@ -1,3 +1,5 @@
+import 'package:xingxing_forum_app/utils/log.dart';
+
 import '../request/http_request.dart';
 import 'package:hive/hive.dart';
 import '../model/user_login_response.dart';
@@ -27,6 +29,7 @@ class UserService {
   static Future<UserInfo> getUserInfo(int userId) async {
     final response = await HttpRequest.request('/$prefix/info/$userId', method: 'GET');
     UserInfo userInfo = UserInfo.fromJson(response['data']);  
+    Log.info('userInfo: ${userInfo.toJson()}');
     return userInfo;
   }
 }
