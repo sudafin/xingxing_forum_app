@@ -4,6 +4,7 @@ import 'package:xingxing_forum_app/utils/log.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../model/user_login_response.dart';
 import '../../services/user_service.dart';
+import '../../widgets/image_preview_page.dart';
 
 class ProfileBuildHeader extends StatefulWidget {
   final int? arguments;
@@ -40,10 +41,10 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
             });
           }
         } else {
-          Log.error ("本地未找到用户数据");
+          Log.error("本地未找到用户数据");
         }
       } catch (e) {
-        Log.error ("读取或解析用户数据出错：$e");
+        Log.error("读取或解析用户数据出错：$e");
       }
     } else {
       // 刷新时先确保 _user 有效
@@ -69,8 +70,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
       }
       // 调用接口刷新用户数据
       try {
-        UserInfo updatedUser = await UserService.
-        getUserInfo(_user!.id.toInt());
+        UserInfo updatedUser = await UserService.getUserInfo(_user!.id.toInt());
         if (mounted) {
           setState(() {
             _user = updatedUser;
@@ -128,8 +128,8 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
             child: Padding(
               padding: EdgeInsets.all(2),
               child: Icon(
-                Icons.male_outlined,
-                color: Colors.lightBlue,
+                _user?.sex == 0 ? Icons.male_outlined : Icons.female_outlined,
+                color: _user?.sex == 0 ? Colors.blue : Colors.pink,
                 size: 20,
               ),
             ),
@@ -155,17 +155,25 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
           children: [
             GestureDetector(
               onTap: () {
-               //TODO 放大图片
-                print('点击头像');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImagePreviewPage(
+                      imageUrl: _user!.avatar,
+                      heroTag: 'avatar',
+                    ),
+                  ),
+                );
               },
-              child: CircleAvatar(
-                backgroundColor: Colors.grey[400]!.withOpacity(0.3),
-                radius: 50,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-              ),
+              child: _user?.avatar != null
+                  ? CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(_user!.avatar),
+                    )
+                  : Icon(
+                      Icons.person,
+                      size: 50,
+                    ),
             ),
             Expanded(
               child: Column(
@@ -182,6 +190,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(width: 8),
+                      //TODO 等级区域
                       Image.asset(
                         'assets/images/level1.png',
                         width: 30,
@@ -221,35 +230,63 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        TextButton(onPressed: (){
-          Navigator.pushNamed(context, '/fans_follow');
-        }, child: 
-          Column(
-            children: [ 
-              Text('${_user?.followCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
-              Text('关注',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
-            ],
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/fans_follow');
+            },
+            child: Column(
+              children: [
+                Text(
+                  '${_user?.followCount ?? 0}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '关注',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[300]),
+                ),
+              ],
+            ),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/fans_follow');
+            },
+            child: Column(
+              children: [
+                Text(
+                  '${_user?.fansCount ?? 0}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '粉丝',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[300]),
+                ),
+              ],
+            ),
           ),
-          TextButton(onPressed: (){
-            Navigator.pushNamed(context, '/fans_follow');
-          }, child: 
-          Column(
-            children: [ 
-              Text('${_user?.fansCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
-              Text('粉丝',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
-            ],
-          ),
-          ),
-          TextButton(onPressed: (){
-           
-          }, child: 
-          Column(
-            children: [ 
-              Text('${_user?.likeCount ?? 0}',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),),
-              Text('获赞',style: TextStyle(fontSize: 14,color: Colors.grey[300]),),
-            ],
-          ),
+          TextButton(
+            onPressed: () {},
+            child: Column(
+              children: [
+                Text(
+                  '${_user?.likeCount ?? 0}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '获赞',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[300]),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -259,20 +296,23 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
   Widget _buildButton() {
     return Row(
       children: [
-      Container(
-        width: 100,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.grey[400]!.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white,width: 1),
-        ),
-        child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/profile_edit');
-          },
-          child: Text('编辑资料',style: TextStyle(fontSize: 14,color: Colors.white),),
-        ),
+        Container(
+          width: 100,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.grey[400]!.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white, width: 1),
+          ),
+          child: TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile_edit');
+            },
+            child: Text(
+              '编辑资料',
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
+          ),
         ),
         SizedBox(width: 15),
         Container(
@@ -281,16 +321,19 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
           decoration: BoxDecoration(
             color: Colors.grey[400]!.withOpacity(0.3),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.white,width: 1),
+            border: Border.all(color: Colors.white, width: 1),
           ),
           child: Center(
             child: IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/settings');
               },
-              icon: Icon(Icons.settings_outlined,color: Colors.white,size: 20,),
+              icon: Icon(
+                Icons.settings_outlined,
+                color: Colors.white,
+                size: 20,
+              ),
               padding: EdgeInsets.zero,
-              
             ),
           ),
         ),

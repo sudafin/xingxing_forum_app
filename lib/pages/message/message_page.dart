@@ -16,9 +16,9 @@ class MessagePage extends StatelessWidget {
       drawer: MenuDrawer(),
       body: MessagePageBody(),
       onDrawerChanged: (isOpened) {
-      final store = Provider.of<StoreDrawer>(context, listen: false);
-      store.setIsOpened(isOpened);
-    },
+        final store = Provider.of<StoreDrawer>(context, listen: false);
+        store.setIsOpened(isOpened);
+      },
     );
   }
 }
@@ -54,79 +54,78 @@ class _MessagePageBodyState extends State<MessagePageBody> {
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-        _buildActionButton('赞或收藏', 'assets/images/collection.png', () {
-          Navigator.pushNamed(context, '/favorite_notified');
-        }, 0),
-        _buildActionButton('新增关注', 'assets/images/person.png', () {
-          Navigator.pushNamed(context, '/follow_notified');
-        }, 1),
-        _buildActionButton('评论或@', 'assets/images/notification.png', () {
-          Navigator.pushNamed(context, '/comment_notified');
-        }, 2),
-      ],
-    ));
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildActionButton('赞或收藏', 'assets/images/collection.png', () {
+              Navigator.pushNamed(context, '/favorite_notified');
+            }, 0),
+            _buildActionButton('新增关注', 'assets/images/person.png', () {
+              Navigator.pushNamed(context, '/follow_notified');
+            }, 1),
+            _buildActionButton('评论或@', 'assets/images/notification.png', () {
+              Navigator.pushNamed(context, '/comment_notified');
+            }, 2),
+          ],
+        ));
   }
 
   Widget _buildActionButton(
       String title, String iconPath, Function onTap, int index) {
     return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
+        onTap: () {
+          onTap();
+        },
+        child: Column(
           children: [
-            // 背景层
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: index == 0
-                    ? Color(0xFF76ACF9).withOpacity(0.2)
-                    : index == 1
-                        ? Color(0xFF928EF9).withOpacity(0.2)
-                        : Color(0xFFF57476).withOpacity(0.2), // 背景颜色
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white, width: 5),
-              ),
-            ),
-            // 图片层
-            Image.asset(iconPath, width: 30, height: 30),
-            // 右上角显示数字
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  '99+',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // 背景层
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: index == 0
+                        ? Color(0xFF76ACF9).withOpacity(0.2)
+                        : index == 1
+                            ? Color(0xFF928EF9).withOpacity(0.2)
+                            : Color(0xFFF57476).withOpacity(0.2), // 背景颜色
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white, width: 5),
                   ),
                 ),
-              ),
+                // 图片层
+                Image.asset(iconPath, width: 30, height: 30),
+                // 右上角显示数字
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '99+',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
             ),
           ],
-        ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-        ),
-      ],
-      )
-    );
+        ));
   }
 
   Widget _buildBody(double height) {
@@ -155,26 +154,16 @@ class _MessagePageBodyState extends State<MessagePageBody> {
           children: [
             //头像
             CircleAvatar(
-              backgroundColor: Colors.grey[400]!.withOpacity(0.3),
               radius: 25,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  child: Image.network(
-                    'https://picsum.photos/200/300?random=1',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              backgroundImage:
+                  NetworkImage('https://picsum.photos/200/300?random=1'),
             ),
             Expanded(
               child: ListTile(
                 title: Text(
                   '联系人名字',
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: Colors.black),
                 ),
