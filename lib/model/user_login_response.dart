@@ -2,18 +2,22 @@ class LoginResponse {
   final UserInfo userInfo;
   final String token;
   final String refreshToken;
+  final bool isFirstLogin;
 
-  LoginResponse({required this.userInfo, required this.token, required this.refreshToken});
+
+  LoginResponse({required this.userInfo, required this.token, required this.refreshToken, required this.isFirstLogin});
 
   LoginResponse.fromJson(Map<String, dynamic> json)
       : userInfo = UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
         token = json['token'] as String,
-        refreshToken = json['refreshToken'] as String;
+        refreshToken = json['refreshToken'] as String,
+        isFirstLogin = json['isFirstLogin'] as bool;
 
   Map<String, dynamic> toJson() => {
         'userInfo': userInfo.toJson(),
         'token': token,
         'refreshToken': refreshToken,
+        'isFirstLogin': isFirstLogin,
       };
 }
 

@@ -4,8 +4,6 @@ import 'package:xingxing_forum_app/stores/store_viewmodel.dart';
 import 'package:xingxing_forum_app/pages/main/init_data/menu_table_data.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
 import 'package:xingxing_forum_app/widgets/share_widget.dart';
-import 'package:xingxing_forum_app/pages/login/sign_spash_screen.dart';
-import 'package:xingxing_forum_app/pages/menu/test_page.dart';
 import 'package:hive/hive.dart';
 import 'package:xingxing_forum_app/pages/login/sgin_info.dart';
 
@@ -144,7 +142,7 @@ class MenuDrawerState extends State<MenuDrawer> {
                                               // 添加 mounted 检查
                                               if (!context.mounted) return;
                                               //跳转到登录页面
-                                              Navigator.pushNamed(
+                                              Navigator.pushReplacementNamed(
                                                   context, '/sign_in');
                                             },
                                             child: Text('确定')),

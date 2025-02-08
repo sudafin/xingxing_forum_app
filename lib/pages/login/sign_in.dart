@@ -25,7 +25,7 @@ class _SignInState extends State<SignIn> {
     };
     Map<String, dynamic> response = await UserService.signIn(data);
     if(response['code'] == 200){
-      if (mounted) {
+      
       LoginResponse loginResponse = LoginResponse.fromJson(response['data']);
       //保存token用hive
        try {
@@ -40,17 +40,22 @@ class _SignInState extends State<SignIn> {
         await ForumService().getForum();
          //提示登录成功
          ShowToast.showToast("登录成功");
-         //跳转到主页,需要清除堆栈
-         if(mounted){
-           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
+         //查看是否是初次登录,这里不需要清除堆栈,因为用户可能登录不对账号需要返回
+         if(loginResponse.isFirstLogin){
+          if(mounted){
+            Navigator.pushNamed(context, '/sign_info');
+          }
+         }else{
+           //如果是非初次登录,跳转到主页,需要清除堆栈
+           if(mounted){
+             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
+           }
          }
        } catch (e) {
          Log.error('Hive错误: $e');
-         ShowToast.showToast("数据存储失败");
        }
-      }
     }else{
-      ShowToast.showToast(response['msg']);
+      Log.error(response['msg']);
     }
   }
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../utils/colors.dart';
 import '../../services/user_service.dart';
@@ -31,7 +32,7 @@ class _SignUpState extends State<SignUp> {
     if(response['code'] == 200){
       ShowToast.showToast("发送成功");
     }else{
-      ShowToast.showToast("发送失败");
+      Log.error(response['msg']);
     }
   }
   Future<void> signUp(String email, String code, String password) async {
@@ -43,11 +44,8 @@ class _SignUpState extends State<SignUp> {
     final response = await UserService.signUp(data);
     if(response['code'] == 200){
       ShowToast.showToast("注册成功");
-      if (mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, '/sign_info', (route) => false);
-      }
     }else{
-      ShowToast.showToast(response['msg']);
+      Log.error(response['msg']);
     }
   }
 

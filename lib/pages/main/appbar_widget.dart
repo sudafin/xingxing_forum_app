@@ -185,7 +185,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
     return Column(
        children: [
         AppBar(
-          toolbarHeight: 50,
+          toolbarHeight: 55,
           title: Image.asset(
             'assets/images/logo_name.png',
             scale: 1.5,
@@ -248,6 +248,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
             HomePageChangeEvent(homeIndex: homeIndex, menuIndex: menuIndex));
       },
       child: Container(
+      
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(

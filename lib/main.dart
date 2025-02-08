@@ -17,7 +17,6 @@ void main(List<String> args) async {
  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   userBox = await Hive.openBox('user');
-  print('userBox: ${userBox?.toMap()}');
   runApp(
     MultiProvider(
       providers: [
