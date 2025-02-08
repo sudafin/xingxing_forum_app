@@ -13,7 +13,11 @@ import 'pages/login/sign_spash_screen.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 Box? userBox;
 void main(List<String> args) async {
+ // 检测hive是否初始化
+ WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  userBox = await Hive.openBox('user');
+  print('userBox: ${userBox?.toMap()}');
   runApp(
     MultiProvider(
       providers: [

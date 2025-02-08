@@ -28,9 +28,9 @@ class UserService {
   }
   static Future<UserInfo> getUserInfo(int userId) async {
     final response = await HttpRequest.request('/$prefix/info/$userId', method: 'GET');
-    UserInfo userInfo = UserInfo.fromJson(response['data']);  
-    Log.info('userInfo: ${userInfo.toJson()}');
-    return userInfo;
+      UserInfo userInfo = UserInfo.fromJson(response['data']);  
+      Log.info('userInfo: ${userInfo.toJson()}');
+      return userInfo;
   }
 }
 

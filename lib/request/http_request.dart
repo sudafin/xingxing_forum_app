@@ -34,7 +34,11 @@ class HttpRequest{
       },
       //错误拦截器,错误码不是2xx时进入的拦截器
       onError: (error, handler) async {
-        Log.debug("请求错误拦截器:${error.message}");
+      // 处理400错误,接收后端返回的错误信息
+        if(error.response?.statusCode == 400){
+          ShowToast.showToast(error.response?.data['msg']);
+          return handler.next(error);
+        }
         // 处理401未授权错误
         if (error.response?.statusCode == 401) {
           final userBox = await Hive.openBox('user');
@@ -83,6 +87,7 @@ class HttpRequest{
             navigatorKey.currentState?.pushReplacementNamed('/home');
           }
         }
+
         //如果请求失败，打印错误信息
         if (error.type == DioExceptionType.connectionError) {
           Log.error("无法连接到服务器，请检查网络连接或服务器地址");

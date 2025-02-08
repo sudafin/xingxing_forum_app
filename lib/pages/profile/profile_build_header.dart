@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:xingxing_forum_app/utils/log.dart';
+import 'package:xingxing_forum_app/utils/show_toast.dart';
 import '../../model/user_login_response.dart';
 import '../../services/user_service.dart';
 
@@ -29,7 +30,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
   Future<void> _getOwnUser(bool isRefresh) async {
     if (!isRefresh) {
       try {
-        final userBox = await Hive.openBox('user');
+        final userBox = Hive.box('user');
         final localUser = userBox.get('user');
         if (localUser != null) {
           final userMap = Map<String, dynamic>.from(localUser as Map);
@@ -48,7 +49,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
       // 刷新时先确保 _user 有效
       if (_user == null) {
         try {
-          final userBox = await Hive.openBox('user');
+          final userBox = Hive.box('user');
           final localUser = userBox.get('user');
           if (localUser != null) {
             final userMap = Map<String, dynamic>.from(localUser as Map);
@@ -69,7 +70,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
       // 调用接口刷新用户数据
       try {
         UserInfo updatedUser = await UserService.
-        getUserInfo(_user!.id);
+        getUserInfo(_user!.id.toInt());
         if (mounted) {
           setState(() {
             _user = updatedUser;
@@ -90,6 +91,7 @@ class ProfileBuildHeaderState extends State<ProfileBuildHeader> {
         });
       }
     } catch (e) {
+      ShowToast.showToast(e.toString());
       Log.error("获取其他用户信息失败：$e");
     }
   }

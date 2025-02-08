@@ -29,10 +29,13 @@ class _SignInState extends State<SignIn> {
       LoginResponse loginResponse = LoginResponse.fromJson(response['data']);
       //保存token用hive
        try {
-         final userBox = await Hive.openBox('user');
-         userBox.put('token', loginResponse.token);
-         userBox.put('refreshToken', loginResponse.refreshToken);
-         userBox.put('user', loginResponse.userInfo.toJson());
+         final userBox = Hive.box('user');
+         var userData = loginResponse.userInfo.toJson();
+         // 将id转换为字符串然后存储在hive,避免丢失精度
+         userData['id'] = loginResponse.userInfo.id.toString();
+         await userBox.put('token', loginResponse.token);
+         await userBox.put('refreshToken', loginResponse.refreshToken);
+         await userBox.put('user', userData);
         await UserService.getOssToken();
         await ForumService().getForum();
          //提示登录成功

@@ -149,7 +149,7 @@ class _ProfilePageBodyState extends State<ProfilePageBody>
       Log.error("ProfileBuildHeaderState 不可用，可能已被重建或 dispose");
     }
 
-    print('刷新完成');
+
     setState(() {
       _isLoading = false;
     });

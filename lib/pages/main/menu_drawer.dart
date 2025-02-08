@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xingxing_forum_app/stores/store_viewmodel.dart';
 import 'package:xingxing_forum_app/pages/main/init_data/menu_table_data.dart';
+import 'package:xingxing_forum_app/utils/log.dart';
 import 'package:xingxing_forum_app/widgets/share_widget.dart';
 import 'package:xingxing_forum_app/pages/login/sign_spash_screen.dart';
 import 'package:xingxing_forum_app/pages/menu/test_page.dart';
@@ -137,13 +138,11 @@ class MenuDrawerState extends State<MenuDrawer> {
                                               //退出登录
                                               Navigator.pop(context);
                                               //清空token
-                                              final userBox =
-                                                  await Hive.openBox('user');
-                                              await userBox.clear();
-
+                                              final userBox = Hive.box('user');
+                                              var res = await userBox.clear();
+                                              Log.debug('清空userBox: $res');
                                               // 添加 mounted 检查
                                               if (!context.mounted) return;
-
                                               //跳转到登录页面
                                               Navigator.pushNamed(
                                                   context, '/sign_in');
